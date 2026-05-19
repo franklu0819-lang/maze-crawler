@@ -116,10 +116,15 @@ def update_memory(obs, config):
     if my_factories:
         uid, data = my_factories[0]
         STATE["my_factory"] = (uid, data[1], data[2], data[3])
-        # Track factory stuck counter
+        # Track factory "no north progress" counter
+        # (resets only on northward movement, not on south backtrack)
         pos = (data[1], data[2])
-        if pos == STATE.get("factory_last_pos"):
-            STATE["factory_stuck"] = STATE.get("factory_stuck", 0) + 1
+        last_pos = STATE.get("factory_last_pos")
+        if last_pos is not None:
+            if data[2] > last_pos[1]:  # moved north = progress
+                STATE["factory_stuck"] = 0
+            else:  # same pos, or moved south/east/west
+                STATE["factory_stuck"] = STATE.get("factory_stuck", 0) + 1
         else:
             STATE["factory_stuck"] = 0
         STATE["factory_last_pos"] = pos
@@ -478,28 +483,35 @@ def on_friendly_mine(uid, data, obs):
 def choose_scout_target(uid, data, obs, config):
     c, r = data[1], data[2]
 
-    # Prioritize nearby crystals
+    # Top priority: nearby crystals (energy income)
     crystals = nearby_visible_crystals(obs)
     if crystals:
         best = None
         best_score = -inf
         for cell, energy in crystals:
             dist = manhattan((c, r), cell)
-            score = energy / max(1, dist)
-            score += 0.15 * (cell[1] - r)
+            if dist == 0:
+                continue
+            score = energy / max(1, dist) * 2
+            # Prefer north crystals to stay safe from scroll
+            score += 0.3 * (cell[1] - r)
             if score > best_score:
                 best_score = score
                 best = cell
-        if best is not None and best_score >= 6:
+        if best is not None:
             return best
 
-    # Explore: push north in current half, don't cross central wall blindly
-    target_row = min(obs.northBound, r + 8)
+    # Follow factory and explore slightly ahead
+    if STATE["my_factory"] is not None:
+        _, fc, fr, _ = STATE["my_factory"]
+        # Explore 4-6 cells ahead of factory
+        target = (fc, min(obs.northBound, fr + 6))
+        return target
 
-    # Zigzag within own half for better coverage
+    # Fallback: explore north
+    target_row = min(obs.northBound, r + 8)
     half = config.width // 2
     if c < half:
-        # Stay in left half
         target_col = max(0, min(half - 2, c + (2 if STATE["turn"] % 20 < 10 else -2)))
     else:
         target_col = max(half + 1, min(config.width - 1, c + (2 if STATE["turn"] % 20 < 10 else -2)))
@@ -510,11 +522,15 @@ def choose_scout_target(uid, data, obs, config):
 def choose_worker_target(uid, data, obs, config):
     c, r = data[1], data[2]
 
-    # Follow factory to clear its path north
+    # Follow factory closely and clear walls in its path
     if STATE["my_factory"] is not None:
         _, fc, fr, _ = STATE["my_factory"]
-        # Stay near factory, slightly north
-        target = (fc, min(obs.northBound, fr + 3))
+        # Check if there's a wall directly north of factory
+        if has_north_wall(fc, fr):
+            # Go to factory's north neighbor cell to remove that wall
+            return (fc, fr + 1)
+        # Stay just north of factory to clear upcoming walls
+        target = (fc, min(obs.northBound, fr + 2))
         return target
 
     return (c, min(obs.northBound, r + 6))
@@ -535,14 +551,28 @@ def choose_miner_target(uid, data, obs, config):
 
 
 def remove_direction_if_blocked(uid, data, obs, config, actions, reserved):
-    """Remove any wall that blocks northward movement for the factory."""
+    """Remove walls blocking factory's northward path."""
     c, r = data[1], data[2]
     build_cd = data[7] if len(data) > 7 else 0
     if build_cd != 0 or data[3] < getattr(config, "wallRemoveCost", 100):
         return False
 
-    # Check all four directions for walls that matter
-    # Priority: north wall blocking factory path
+    # Priority: remove walls that block the factory's path north
+    if STATE["my_factory"] is not None:
+        _, fc, fr, _ = STATE["my_factory"]
+        # If we're adjacent to factory, remove wall in factory's desired direction
+        if abs(c - fc) + abs(r - fr) <= 2:
+            # Check if factory's north is blocked
+            factory_north_blocked = has_north_wall(fc, fr)
+            if factory_north_blocked and fr + 1 == r and fc == c:
+                # We're at factory's north cell, remove north wall here
+                w = wall_bits_at(c, r)
+                if w is not None and (w & BIT_N):
+                    actions[uid] = "REMOVE_NORTH"
+                    reserved.add((c, r))
+                    return True
+
+    # General: remove walls blocking north movement
     for d, bit, opp_bit in [("NORTH", BIT_N, BIT_S), ("EAST", BIT_E, BIT_W),
                              ("WEST", BIT_W, BIT_E)]:
         dc, dr, _ = DIRS[d]
@@ -562,13 +592,12 @@ def remove_direction_if_blocked(uid, data, obs, config, actions, reserved):
 
 
 def factory_move_direction(c, r, obs, config, occupied, reserved):
-    """BFS-based factory movement. Finds detour paths through known cells,
-    allows south backtracking when factory is stuck."""
+    """Factory movement with priority: NORTH > EAST/WEST > BFS detour > SOUTH."""
     start = (c, r)
     stuck = STATE.get("factory_stuck", 0)
     safety = r - obs.southBound
 
-    # Direct NORTH if no known wall (fast path)
+    # 1. Direct NORTH if no known wall (fast path)
     if not known_blocked(c, r, "NORTH", obs, config):
         nxt = (c, r + 1)
         if in_bounds(nxt[0], nxt[1], obs, config) and nxt not in reserved:
@@ -576,23 +605,19 @@ def factory_move_direction(c, r, obs, config, occupied, reserved):
             if not any(o[1][4] == obs.player for o in occ):
                 return "NORTH"
 
-    # BFS through known cells to find a detour toward north
-    target = (c, min(obs.northBound, r + 15))
-    step = bfs_first_step(start, target, obs, config, north_bias=True)
-    if step and step in MOVE_ACTIONS:
-        dc, dr, _ = DIRS[step]
+    # 2. BFS through known cells for north-only detour (no south)
+    target = (c, min(obs.northBound, r + 25))
+    bfs_step = bfs_first_step(start, target, obs, config, north_bias=True)
+    if bfs_step and bfs_step in MOVE_ACTIONS:
+        dc, dr, _ = DIRS[bfs_step]
         nxt = (c + dc, r + dr)
         if in_bounds(nxt[0], nxt[1], obs, config) and nxt not in reserved:
             occ = occupied.get(nxt, [])
             if not any(o[1][4] == obs.player for o in occ):
-                if dr >= 0:  # Not going south
-                    return step
-                # Going south: only if safety gap allows backtracking
-                min_safety = 3 if stuck >= 6 else 5
-                if safety >= min_safety:
-                    return step
+                if dr >= 0:  # NORTH, EAST, or WEST only
+                    return bfs_step
 
-    # Try EAST/WEST through unknown territory
+    # 3. EAST/WEST through unknown territory (explore instead of backtrack)
     for d in ["EAST", "WEST"]:
         if not known_blocked(c, r, d, obs, config):
             dc, dr, _ = DIRS[d]
@@ -602,16 +627,26 @@ def factory_move_direction(c, r, obs, config, occupied, reserved):
                 if not any(o[1][4] == obs.player for o in occ):
                     return d
 
-    # SOUTH backtrack when stuck (lower threshold when desperate)
-    min_south_safety = 2 if stuck >= 6 else 4
-    if safety >= min_south_safety and not known_blocked(c, r, "SOUTH", obs, config):
+    # 4. BFS south path (only if truly stuck and safety allows)
+    if bfs_step and bfs_step == "SOUTH" and stuck >= 4:
+        min_safety = 2 if stuck >= 6 else 4
+        if safety >= min_safety:
+            nxt = (c, r - 1)
+            if in_bounds(nxt[0], nxt[1], obs, config) and nxt not in reserved:
+                occ = occupied.get(nxt, [])
+                if not any(o[1][4] == obs.player for o in occ):
+                    if not known_blocked(c, r, "SOUTH", obs, config):
+                        return "SOUTH"
+
+    # 5. Direct south when very stuck
+    if stuck >= 6 and safety >= 2 and not known_blocked(c, r, "SOUTH", obs, config):
         nxt = (c, r - 1)
         if in_bounds(nxt[0], nxt[1], obs, config) and nxt not in reserved:
             occ = occupied.get(nxt, [])
             if not any(o[1][4] == obs.player for o in occ):
                 return "SOUTH"
 
-    # Absolute last resort: NORTH anyway
+    # 6. Absolute last resort: NORTH anyway (even through wall)
     if in_bounds(c, r + 1, obs, config) and (c, r + 1) not in reserved:
         return "NORTH"
 
@@ -639,12 +674,12 @@ def decide_factory(uid, data, obs, config, actions, reserved, occupied, rng):
     if jump_cd == 0 and r + 2 <= obs.northBound:
         north_walled = known_blocked(c, r, "NORTH", obs, config)
         stuck = STATE.get("factory_stuck", 0)
-        if north_walled or stuck >= 8:
+        if north_walled or stuck >= 6:
             actions[uid] = "JUMP_NORTH"
             reserved.add((c, r + 2))
             return True
 
-    # === PRIORITY 2: Move ===
+    # === PRIORITY 2: Move (always move when possible) ===
     if move_cd == 0:
         d = factory_move_direction(c, r, obs, config, occupied, reserved)
         if d:
@@ -654,17 +689,10 @@ def decide_factory(uid, data, obs, config, actions, reserved, occupied, rng):
             actions[uid] = d
             return True
 
-    # === PRIORITY 3: Build when safe and on cooldown ===
-    if build_cd == 0 and spawn_clear and safety_gap >= 10:
-        if scout_count < 1 and energy >= getattr(config, "scoutCost", 50) + 200:
-            actions[uid] = "BUILD_SCOUT"
-            reserved.add(spawn)
-            return True
-        if worker_count < 1 and energy >= getattr(config, "workerCost", 200) + 200:
-            actions[uid] = "BUILD_WORKER"
-            reserved.add(spawn)
-            return True
-        if scout_count < 2 and energy >= getattr(config, "scoutCost", 50) + 300:
+    # === PRIORITY 3: Build when factory can't move AND is very safe ===
+    if move_cd != 0 and build_cd == 0 and spawn_clear and safety_gap >= 10:
+        scout_cost = getattr(config, "scoutCost", 50)
+        if scout_count < 1 and energy >= scout_cost + 200:
             actions[uid] = "BUILD_SCOUT"
             reserved.add(spawn)
             return True
@@ -720,6 +748,23 @@ def decide_nonfactory(uid, data, obs, config, actions, reserved, occupied, rng):
 
     # Keep units moving north to escape scroll
     safety_gap = r - obs.southBound
+
+    # Scouts near factory: move away to unblock factory's north path
+    if rtype == TYPE_SCOUT and STATE["my_factory"] is not None:
+        _, fc, fr, _ = STATE["my_factory"]
+        if c == fc and r == fr + 1:
+            # We're directly north of factory, MOVE AWAY
+            for d in ["NORTH", "EAST", "WEST"]:
+                if not known_blocked(c, r, d, obs, config):
+                    dc2, dr2, _ = DIRS[d]
+                    nxt = (c + dc2, r + dr2)
+                    if in_bounds(nxt[0], nxt[1], obs, config) and nxt not in reserved:
+                        occ2 = occupied.get(nxt, [])
+                        if not any(o[1][4] == obs.player for o in occ2):
+                            actions[uid] = d
+                            reserved.add(nxt)
+                            return True
+
     if safety_gap <= 3 and rtype != TYPE_SCOUT:
         # Non-scout units in danger: just go north
         step = target_to_step((c, r), (c, min(obs.northBound, r + 6)), obs, config,
