@@ -5,16 +5,14 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from kaggle_environments import make as _make
 from agent import agent, STATE, TYPE_FACTORY
 
-NUM_GAMES = 50
+NUM_GAMES = 500
 SEEDS = [i * 137 + 42 for i in range(NUM_GAMES)]
 
 
 def main():
     results = []
     for i, seed in enumerate(SEEDS):
-        STATE.update({"turn": 0, "walls": {}, "nodes": set(), "mines": {},
-                       "enemy_factory": None, "my_factory": None, "enemy_seen": {},
-                       "factory_stuck": 0, "factory_last_pos": None})
+        STATE.update({"turn": 0, "nodes": set(), "last_factory_pos": None, "factory_stuck": 0})
         fresh = _make("crawl", configuration={"randomSeed": seed}, debug=True)
         fresh.run([agent, "random"])
         steps = fresh.steps
