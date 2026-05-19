@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+.game_log.txt
+game_data.json
+.DS_Store
+.claude/
