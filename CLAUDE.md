@@ -81,6 +81,10 @@ Self-contained bundles combining `agent_v3.py` logic + embedded weights (~576KB)
 - **`train_v2.py`** — BC pre-training (from agent_v2 expert data) + PPO fine-tuning with GAE advantage estimation, clipped surrogate objective, entropy regularization, and value baseline. Opponent: random.
 - **`train_v3.py`** — Same as train_v2 but with self-play: 70% of games use same-model greedy opponent, 30% random. Prevents strategy collapse via mixing.
 - **`train_v6.py`** — Same as train_v2 but with fixed opponents: 50% v3 + 30% v5 + 20% random. Loads agent_submit_v3.py and agent_submit_v5.py as separate modules with independent STATE dicts.
+- **`train_v10.py`** — Factory-only NN PPO training (9-action space, 137-dim input). Command line args: `UNIT_WEIGHT VERSION NUM_ITER`.
+- **`train_v11.py`** — All-unit NN PPO training (13-action unified space, 149-dim input). Shared network controls all unit types with type-specific masking.
+- **`train_v15.py`** — All-unit NN PPO training with v10-based reward + per-unit shaping. Args: `VERSION NUM_ITER DELTA_UNITS`. Reward: delta_e/1000 + delta_gap×1.0 + delta_units×W + survival +0.01 + terminal +5/-1. Shaping: REMOVE +0.05, TRANSFORM +0.1, scout_ahead +0.01.
+- **`train_v16.py`** — Same as train_v15 but REINFORCE (no value baseline, Monte Carlo returns).
 
 ### Key Game Mechanics (from analysis.md)
 
@@ -96,7 +100,9 @@ Two approaches exist:
 - **Pessimistic** (`agent_v2.py`): `blocked()` treats unseen cells as walls. BFS only through known passable cells. Fallback: `known_blocked()` allows unknown cells for greedy exploration.
 - **Optimistic** (`agent_v1.py`): `can_go()` treats unseen cells as passable. BFS explores aggressively but may hit actual walls.
 
-### Reward Shaping (shared by all training scripts)
+### Reward Shaping
+
+**Factory-only training (train.py through train_v10.py):**
 
 5 per-step reward components + discounted returns (gamma=0.99):
 - Gap reward: `(factory_row - southBound) / 20` × W_GAP
@@ -105,11 +111,35 @@ Two approaches exist:
 - Survival reward: W_SURVIVAL (per-step bonus)
 - Outcome reward: terminal only, WIN +3.0 / LOSS -1.0
 
+**All-unit training (train_v11.py through train_v16.py):**
+
+Team reward (shared across all units per step):
+- `delta_total_energy / 1000` — energy changes including unit deaths, mine income
+- `delta_gap × 1.0` — factory progress vs scroll boundary
+- `delta_units × W` — unit count changes (W = 0.1 or 0.2)
+- `+ 0.01` survival bonus
+
+Per-unit behavioral shaping:
+- Worker REMOVE: +0.05
+- Miner TRANSFORM: +0.1
+- Scout ahead of factory: +0.01
+
+Terminal: +5 (win) / -1 (loss) / 0 (draw)
+
 ## State Management
 
 Agents use module-level `STATE` dicts that persist across turns within a single game. **Must reset STATE between games** in test runners — each test file has its own reset logic. The key fields: `turn`, `walls`, `nodes`, `mines`, `enemy_seen`, `factory_stuck`, `factory_last_pos`.
 
 When using fixed opponents (train_v6.py), each opponent module has its own independent STATE dict that must be reset before each game.
+
+## Reference
+
+- **`reference/README.md`** — Game rules (English)
+- **`reference/README_zh.md`** — Game rules (Chinese translation)
+- **`reference/AGENTS.md`** — Agent API documentation
+- **`reference/main.py`** — Starter agent example
+
+## State Management (old)
 
 ## Kaggle Submission Constraints
 
@@ -120,9 +150,21 @@ When using fixed opponents (train_v6.py), each opponent module has its own indep
 
 ## Training Results
 
+### Factory-only NN (9-action, 137-dim input)
+
 | Version | Method | Best WR (50-game batch) | 500-game Eval vs Random | vs v3 Head-to-Head |
 |---------|--------|------------------------|------------------------|--------------------|
 | v3 | REINFORCE + Reward Shaping | 96% | 77.0% (385W-99L-16D) | — |
 | v4 | BC + PPO vs random | 90% | 77.4% (387W-99L-14D) | — |
 | v5 | BC + PPO + SelfPlay (70/30) | 70% | 81.2% (406W-80L-14D) | 55.6% (278W-207L-15D) |
 | v6 | BC + PPO vs 50%v3+30%v5+20%rand | 84% | 83.0% (415W-75L-10D) | 83.0% (415W-75L-10D) |
+
+### All-unit NN (13-action, 149-dim input)
+
+| Version | Method | Reward | Best WR | 500-game Eval |
+|---------|--------|--------|---------|---------------|
+| v25 | PPO, delta_gap×0.5, terminal +5/-1 | v11 reward | 67% | 64.4% (322W-124L-54D) |
+| v14 | PPO, delta_gap×0.1, delta_units×0.05 | v15 weak | 51% | — |
+| v15 | REINFORCE, same as v14 | v15 weak | 47% | — |
+| v16 | PPO, delta_gap×1.0, delta_units×0.1 | v10-based | training... | — |
+| v17 | PPO, delta_gap×1.0, delta_units×0.2 | v10-based | training... | — |

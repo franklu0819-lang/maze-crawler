@@ -1,8 +1,8 @@
-"""Pure PPO from scratch vs random, with shaped reward.
+"""PPO training with NN controlling ALL units (shared network, unified action space).
 
-No BC pre-training. Random weight initialization.
-PPO with GAE advantage estimation, clipped surrogate, entropy regularization.
-Reward: delta_total_energy/1000 + delta_unit_count*0.25 + 0.01(survival) + terminal(+10/-1).
+Factory, scout, worker, miner all use the same network.
+13-action space with type-specific masking.
+Team reward: delta_total_energy/1000 + delta_units*W + delta_gap*0.5 + 0.01 + terminal.
 """
 import sys, os, random, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -17,22 +17,25 @@ from agent_v1 import (
     STATE, TYPE_FACTORY, TYPE_SCOUT, TYPE_WORKER, TYPE_MINER,
     parse_key, in_bounds, wb, can_go, update_state,
     friendly_at, DIRS,
-    scout_action, worker_action, miner_action,
+    BIT_N, BIT_E, BIT_S, BIT_W,
 )
 
 # ─── Constants ───────────────────────────────────────────────────────
 
 GRID_R = 2
 WALL_CH = 5
-NUM_SCALARS = 12
-INPUT_SIZE = (2*GRID_R+1)**2 * WALL_CH + NUM_SCALARS
+NUM_SCALARS = 24
+INPUT_SIZE = (2*GRID_R+1)**2 * WALL_CH + NUM_SCALARS  # 125+24=149
 
-ACTIONS = [
-    "NORTH", "EAST", "WEST", "SOUTH", "JUMP_NORTH",
-    "BUILD_WORKER", "BUILD_SCOUT", "BUILD_MINER", "IDLE",
+ACTION_STRINGS = [
+    "NORTH", "EAST", "WEST", "SOUTH",                # 0-3: move
+    "JUMP_NORTH",                                     # 4
+    "REMOVE_NORTH", "REMOVE_EAST", "REMOVE_WEST",    # 5-7: worker
+    "BUILD_WORKER", "BUILD_SCOUT", "BUILD_MINER",     # 8-10: factory
+    "TRANSFORM",                                       # 11: miner
+    "IDLE",                                            # 12
 ]
-NUM_ACTIONS = len(ACTIONS)
-ACTION_TO_IDX = {a: i for i, a in enumerate(ACTIONS)}
+NUM_ACTIONS = len(ACTION_STRINGS)
 
 GAMMA = 0.99
 GAE_LAMBDA = 0.95
@@ -45,16 +48,9 @@ MAX_GRAD_NORM = 0.5
 
 # ─── Feature Extraction ──────────────────────────────────────────────
 
-def extract(obs, config, my_player, occupied):
-    factory = None
-    for uid, d in obs.robots.items():
-        if d[4] == my_player and d[0] == TYPE_FACTORY:
-            factory = (uid, d)
-            break
-    if factory is None:
-        return None, None
-
-    uid, data = factory
+def extract_unit(obs, config, my_player, occupied, reserved, actions, uid, data):
+    """Extract features and action mask for any unit type."""
+    utype = data[0]
     c, r, energy = data[1], data[2], data[3]
     move_cd = data[5] if len(data) > 5 else 0
     jump_cd = data[6] if len(data) > 6 else 0
@@ -62,13 +58,15 @@ def extract(obs, config, my_player, occupied):
     gap = r - obs.southBound
     w = config.width
     turn = STATE["turn"]
+    stuck = STATE.get("factory_stuck", 0)
 
+    # 5x5 wall grid centered on unit
     grid = np.zeros((5, 5, 5), dtype=np.float32)
     for dr in range(-2, 3):
         for dc in range(-2, 3):
-            nc, nr = c + dc, r + dr
-            idx = (nr - obs.southBound) * w + nc
-            if (0 <= nc < w and obs.southBound <= nr <= obs.northBound
+            nc, nr2 = c + dc, r + dr
+            idx = (nr2 - obs.southBound) * w + nc
+            if (0 <= nc < w and obs.southBound <= nr2 <= obs.northBound
                     and 0 <= idx < len(obs.walls)):
                 v = obs.walls[idx]
                 if v != -1:
@@ -78,45 +76,147 @@ def extract(obs, config, my_player, occupied):
                     ]
     wall_flat = grid.flatten()
 
+    # Unit counts
     sc = sum(1 for d in obs.robots.values() if d[4] == my_player and d[0] == TYPE_SCOUT)
     wc = sum(1 for d in obs.robots.values() if d[4] == my_player and d[0] == TYPE_WORKER)
     mc = sum(1 for d in obs.robots.values() if d[4] == my_player and d[0] == TYPE_MINER)
     has_nodes = float(bool(getattr(obs, "miningNodes", {})))
-    stuck = STATE.get("factory_stuck", 0)
+
+    # Factory info
+    factory_pos = None
+    for uid2, d2 in obs.robots.items():
+        if d2[4] == my_player and d2[0] == TYPE_FACTORY:
+            factory_pos = (d2[1], d2[2])
+            break
+
+    # Non-factory: distance/direction to factory
+    dist_factory = 0.0
+    at_factory_spawn = 0.0
+    dir_factory = [0.0, 0.0, 0.0, 0.0]
+    if factory_pos and utype != TYPE_FACTORY:
+        fc, fr = factory_pos
+        dist_factory = (abs(c - fc) + abs(r - fr)) / 20.0
+        at_factory_spawn = float(c == fc and r == fr + 1)
+        if fr > r: dir_factory[0] = 1.0
+        if fc > c: dir_factory[1] = 1.0
+        if fc < c: dir_factory[2] = 1.0
+        if fr < r: dir_factory[3] = 1.0
+
+    # Mining node check
+    visible_nodes = set(parse_key(k) for k in (getattr(obs, "miningNodes", {}) or {}))
+    is_on_node = float((c, r) in visible_nodes)
+
+    # Nearest enemy
+    nearest_enemy = 20.0
+    for uid2, d2 in obs.robots.items():
+        if d2[4] != my_player:
+            dist = abs(d2[1] - c) + abs(d2[2] - r)
+            if dist < nearest_enemy:
+                nearest_enemy = dist
+    nearest_enemy /= 10.0
 
     scalars = np.array([
-        gap / 20.0, energy / 1000.0, move_cd / 5.0, jump_cd / 20.0,
-        build_cd / 10.0, c / max(1, w - 1), turn / 500.0,
-        sc / 3.0, wc / 2.0, mc / 2.0, has_nodes, stuck / 10.0,
+        float(utype == TYPE_FACTORY), float(utype == TYPE_SCOUT),
+        float(utype == TYPE_WORKER), float(utype == TYPE_MINER),
+        gap / 20.0, energy / 1000.0, move_cd / 5.0,
+        c / max(1, w - 1), turn / 500.0,
+        sc / 3.0, wc / 2.0, mc / 2.0,
+        has_nodes, stuck / 10.0,
+        jump_cd / 20.0, build_cd / 10.0,
+        dist_factory, at_factory_spawn,
+        *dir_factory, nearest_enemy, is_on_node,
     ], dtype=np.float32)
 
     features = np.concatenate([wall_flat, scalars])
 
+    # ── Action mask ──
     mask = np.zeros(NUM_ACTIONS, dtype=np.float32)
+
+    # MOVE (0-3): all types
     if move_cd == 0:
         for i, d in enumerate(["NORTH", "EAST", "WEST", "SOUTH"]):
-            if can_go(obs, config, c, r, d):
+            if not can_go(obs, config, c, r, d):
+                continue
+            dc2, dr2, _ = DIRS[d]
+            nxt = (c + dc2, r + dr2)
+            if nxt in reserved:
+                continue
+            if utype == TYPE_FACTORY:
+                occ = occupied.get(nxt, [])
+                friendlies = [o for o in occ if o[1][4] == my_player and o[1][0] != TYPE_FACTORY]
+                if friendlies:
+                    all_moving = all(o[0] in actions and actions[o[0]] in DIRS for o in friendlies)
+                    if not all_moving:
+                        continue
                 mask[i] = 1.0
-    if jump_cd == 0 and turn > 2 and in_bounds(c, r + 2, obs, config):
-        mask[4] = 1.0
-    s_ok = can_go(obs, config, c, r, "NORTH") and in_bounds(c, r + 1, obs, config)
-    if move_cd != 0 and build_cd == 0 and s_ok:
-        spawn = (c, r + 1)
-        if not friendly_at(occupied, spawn, my_player):
-            if energy >= getattr(config, "workerCost", 200): mask[5] = 1.0
-            if energy >= getattr(config, "scoutCost", 50): mask[6] = 1.0
-            if has_nodes and energy >= getattr(config, "minerCost", 300): mask[7] = 1.0
-    mask[8] = 1.0
+            else:
+                if not friendly_at(occupied, nxt, my_player):
+                    mask[i] = 1.0
+
+    # JUMP_NORTH (4): factory only
+    if utype == TYPE_FACTORY and jump_cd == 0 and turn > 2:
+        if in_bounds(c, r + 2, obs, config):
+            mask[4] = 1.0
+
+    # REMOVE (5-7): worker only
+    if utype == TYPE_WORKER:
+        wall_cost = getattr(config, "wallRemoveCost", 100)
+        if energy >= wall_cost:
+            wv = wb(obs, config, c, r)
+            if wv is not None:
+                if wv & BIT_N: mask[5] = 1.0
+                if wv & BIT_E: mask[6] = 1.0
+                if wv & BIT_W: mask[7] = 1.0
+
+    # BUILD (8-10): factory only
+    if utype == TYPE_FACTORY and move_cd != 0 and build_cd == 0:
+        s_ok = can_go(obs, config, c, r, "NORTH") and in_bounds(c, r + 1, obs, config)
+        if s_ok:
+            spawn = (c, r + 1)
+            if not friendly_at(occupied, spawn, my_player):
+                if energy >= getattr(config, "workerCost", 200): mask[8] = 1.0
+                if energy >= getattr(config, "scoutCost", 50): mask[9] = 1.0
+                if has_nodes and energy >= getattr(config, "minerCost", 300): mask[10] = 1.0
+
+    # TRANSFORM (11): miner only
+    if utype == TYPE_MINER:
+        transform_cost = getattr(config, "transformCost", 100)
+        if (c, r) in visible_nodes and energy >= transform_cost + 1:
+            mask[11] = 1.0
+
+    # IDLE (12): always valid
+    mask[12] = 1.0
     if mask.sum() == 0:
-        mask[8] = 1.0
+        mask[12] = 1.0
 
     return features, mask
+
+
+# ─── Action Execution ────────────────────────────────────────────────
+
+def execute_action(uid, data, action_idx, actions_dict, reserved):
+    c, r = data[1], data[2]
+    a_str = ACTION_STRINGS[action_idx]
+    actions_dict[uid] = a_str
+
+    if action_idx <= 3:  # MOVE
+        dc, dr, _ = DIRS[a_str]
+        reserved.add((c + dc, r + dr))
+    elif action_idx == 4:  # JUMP_NORTH
+        reserved.add((c, r + 2))
+    elif 5 <= action_idx <= 7:  # REMOVE
+        reserved.add((c, r))
+    elif 8 <= action_idx <= 10:  # BUILD
+        reserved.add((c, r + 1))
+    elif action_idx == 11:  # TRANSFORM
+        reserved.add((c, r))
+    else:  # IDLE
+        reserved.add((c, r))
 
 
 # ─── Reward ──────────────────────────────────────────────────────────
 
 def _total_energy(robots, player):
-    """Sum of all friendly unit energies (including factory)."""
     total = 0
     for d in robots.values():
         if d[4] == player:
@@ -129,7 +229,6 @@ def _unit_count(robots, player):
 
 
 def _compute_step_reward(obs, config, my_player, prev_total_energy, prev_units, prev_gap):
-    """Delta total energy + unit build/death + gap + survival bonus."""
     total_e = _total_energy(obs.robots, my_player)
     delta_e = (total_e - prev_total_energy) / 1000.0
     cur_units = _unit_count(obs.robots, my_player)
@@ -140,7 +239,7 @@ def _compute_step_reward(obs, config, my_player, prev_total_energy, prev_units, 
         if d[4] == my_player and d[0] == TYPE_FACTORY:
             my_gap = d[2] - obs.southBound
             break
-    delta_gap = (my_gap - prev_gap) * 1.0
+    delta_gap = (my_gap - prev_gap) * 0.5
 
     return delta_e + delta_units + delta_gap + 0.01
 
@@ -186,7 +285,7 @@ def _reset_state():
 def run_ppo_game(model, seed, explore=True):
     _reset_state()
     env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-    traj = []
+    unit_trajs = {}  # uid -> [(feat, ai, mask, log_p, val, step_r)]
     prev_total_energy = [0]
     prev_units = [0]
     prev_gap = [0]
@@ -195,53 +294,62 @@ def run_ppo_game(model, seed, explore=True):
         my_player = obs.player
         update_state(obs, config, my_player)
 
+        # Compute step reward (shared by all units this turn)
+        step_r = _compute_step_reward(obs, config, my_player,
+                                       prev_total_energy[0], prev_units[0], prev_gap[0])
+        prev_total_energy[0] = _total_energy(obs.robots, my_player)
+        prev_units[0] = _unit_count(obs.robots, my_player)
+        for uid2, d2 in obs.robots.items():
+            if d2[4] == my_player and d2[0] == TYPE_FACTORY:
+                prev_gap[0] = d2[2] - obs.southBound
+                break
+
         actions = {}
         reserved = set()
         occupied = {}
         for uid2, d2 in obs.robots.items():
             occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
 
-        for uid2, d2 in obs.robots.items():
-            if d2[4] == my_player and d2[0] == TYPE_SCOUT:
-                scout_action(uid2, d2, obs, config, actions, reserved, occupied, my_player)
-        for uid2, d2 in obs.robots.items():
-            if uid2 not in actions and d2[4] == my_player and d2[0] == TYPE_WORKER:
-                worker_action(uid2, d2, obs, config, actions, reserved, occupied, my_player)
-        for uid2, d2 in obs.robots.items():
-            if uid2 not in actions and d2[4] == my_player and d2[0] == TYPE_MINER:
-                miner_action(uid2, d2, obs, config, actions, reserved, occupied, my_player)
+        # Process units in order: scouts -> workers -> miners -> factory
+        for unit_type in [TYPE_SCOUT, TYPE_WORKER, TYPE_MINER, TYPE_FACTORY]:
+            for uid2, d2 in obs.robots.items():
+                if uid2 in actions:
+                    continue
+                if d2[4] != my_player or d2[0] != unit_type:
+                    continue
 
-        for uid2, d2 in obs.robots.items():
-            if d2[4] == my_player and d2[0] == TYPE_FACTORY:
-                feat, msk = extract(obs, config, my_player, occupied)
-                if feat is not None:
-                    step_r = _compute_step_reward(obs, config, my_player, prev_total_energy[0], prev_units[0], prev_gap[0])
-                    prev_total_energy[0] = _total_energy(obs.robots, my_player)
-                    prev_units[0] = _unit_count(obs.robots, my_player)
-                    for uid2, d2 in obs.robots.items():
-                        if d2[4] == my_player and d2[0] == TYPE_FACTORY:
-                            prev_gap[0] = d2[2] - obs.southBound
-                            break
-                    s = torch.FloatTensor(feat).unsqueeze(0)
-                    m = torch.FloatTensor(msk).unsqueeze(0)
-                    with torch.no_grad():
-                        if explore:
-                            ai, log_p, val = model.get_action(s, m)
-                            traj.append((feat.copy(), ai.item(), msk.copy(),
-                                         log_p.item(), val.item(), step_r))
-                            ai = ai.item()
-                        else:
-                            probs, val = model(s, m)
-                            ai = torch.argmax(probs).item()
-                    actions[uid2] = ACTIONS[ai]
-                break
+                feat, msk = extract_unit(obs, config, my_player, occupied,
+                                          reserved, actions, uid2, d2)
+                if feat is None:
+                    continue
+
+                s = torch.FloatTensor(feat).unsqueeze(0)
+                m = torch.FloatTensor(msk).unsqueeze(0)
+                with torch.no_grad():
+                    if explore:
+                        ai, log_p, val = model.get_action(s, m)
+                        ai_item = ai.item()
+                        log_p_item = log_p.item()
+                        val_item = val.item()
+                    else:
+                        probs, val = model(s, m)
+                        ai_item = torch.argmax(probs).item()
+                        log_p_item = 0.0
+                        val_item = val.item()
+
+                if uid2 not in unit_trajs:
+                    unit_trajs[uid2] = []
+                unit_trajs[uid2].append(
+                    (feat.copy(), ai_item, msk.copy(), log_p_item, val_item, step_r))
+
+                execute_action(uid2, d2, ai_item, actions, reserved)
 
         return actions
 
     env.run([ppo_agent, "random"])
     final = env.steps[-1]
     r0, r1 = final[0].reward, final[1].reward
-    return traj, r0, r1
+    return unit_trajs, r0, r1
 
 
 # ─── GAE ─────────────────────────────────────────────────────────────
@@ -260,10 +368,7 @@ def compute_gae(traj, terminal_reward, gamma=GAMMA, lam=GAE_LAMBDA):
     gae = 0.0
 
     for t in reversed(range(T)):
-        if t == T - 1:
-            next_value = 0.0
-        else:
-            next_value = values[t + 1]
+        next_value = values[t + 1] if t < T - 1 else 0.0
         delta = rewards[t] + gamma * next_value - values[t]
         gae = delta + gamma * lam * gae
         advantages[t] = gae
@@ -317,13 +422,13 @@ def _next_version():
     return v
 
 
-def train(num_iter=500, batch=50, lr=0.0003, version=None):
+def train(num_iter=200, batch=50, lr=0.0003, version=None):
     if version is None:
         version = _next_version()
     save_path = f"nn_weights_v{version}.pt"
-    print(f"=== Train v{version} (Pure PPO from scratch vs random) ===")
-    print(f"  Reward: delta_total_energy/1000 + delta_units*0.25 + 0.01(survival) + terminal +10/-1")
-    print(f"  Opponent: 100% random")
+    print(f"=== Train v{version} (All-unit NN, Pure PPO vs random) ===")
+    print(f"  Input: {INPUT_SIZE} | Actions: {NUM_ACTIONS}")
+    print(f"  Reward: delta_e/1000 + delta_units*{UNIT_WEIGHT} + delta_gap*0.5 + 0.01 + terminal +10/-1")
     print(f"  Iterations: {num_iter} | Batch: {batch}")
     print(f"  Weights -> {save_path}")
 
@@ -339,20 +444,21 @@ def train(num_iter=500, batch=50, lr=0.0003, version=None):
 
         for _ in range(batch):
             seed = random.randint(0, 999999)
-            traj, r0, r1 = run_ppo_game(model, seed, explore=True)
+            unit_trajs, r0, r1 = run_ppo_game(model, seed, explore=True)
 
             if r0 > r1:
                 wins += 1
 
             terminal_r = 10.0 if r0 > r1 else (-1.0 if r0 < r1 else 0.0)
-            advs, rets = compute_gae(traj, terminal_r)
-            for i, (feat, ai, msk, lp, val, sr) in enumerate(traj):
-                all_feat.append(feat)
-                all_act.append(ai)
-                all_mask.append(msk)
-                all_old_lp.append(lp)
-                all_adv.append(advs[i])
-                all_ret.append(rets[i])
+            for uid, traj in unit_trajs.items():
+                advs, rets = compute_gae(traj, terminal_r)
+                for i, (feat, ai, msk, lp, val, sr) in enumerate(traj):
+                    all_feat.append(feat)
+                    all_act.append(ai)
+                    all_mask.append(msk)
+                    all_old_lp.append(lp)
+                    all_adv.append(advs[i])
+                    all_ret.append(rets[i])
 
         if not all_adv:
             continue
@@ -406,9 +512,10 @@ def export_weights(model, version, path=None):
 
 UNIT_WEIGHT = float(sys.argv[1]) if len(sys.argv) > 1 else 0.25
 VERSION_OVERRIDE = int(sys.argv[2]) if len(sys.argv) > 2 else None
+NUM_ITER = int(sys.argv[3]) if len(sys.argv) > 3 else 200
 
 if __name__ == "__main__":
-    model, ver, best = train(num_iter=200, batch=100, lr=0.0003, version=VERSION_OVERRIDE)
+    model, ver, best = train(num_iter=NUM_ITER, batch=100, lr=0.0003, version=VERSION_OVERRIDE)
     model.load_state_dict(torch.load(f"nn_weights_v{ver}.pt"))
     evaluate_vs_random(model)
     export_weights(model, ver)
