@@ -1,0 +1,643 @@
+/Users/leo/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+OpenSpiel exception: Unknown game 'connect_four_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+OpenSpiel exception: Unknown game 'go_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+OpenSpiel exception: Unknown game 'tic_tac_toe_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+OpenSpiel exception: Unknown game 'universal_poker_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+[kaggle_environments.envs.open_spiel.open_spiel] INFO: Successfully loaded OpenSpiel environments: 2.
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    open_spiel_chess
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    open_spiel_gin_rummy
+[kaggle_environments.envs.open_spiel.open_spiel] INFO: OpenSpiel games skipped: 4.
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    connect_four
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    go(board_size=9)
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    tic_tac_toe
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    universal_poker(betting=nolimit,bettingAbstraction=fullgame,blind=1 2,firstPlayer=2 1 1 1,numBoardCards=0 3 1 1,numHoleCards=2,numPlayers=2,numRanks=13,numRounds=4,numSuits=4,stack=400 400)
+Loading environment cabt failed: dlopen(/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so, 0x0006): tried: '/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so' (slice is not valid mach-o file), '/System/Volumes/Preboot/Cryptexes/OS/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so' (no such file), '/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so' (slice is not valid mach-o file)
+termcolor not installed, skipping dependency
+No pygame installed, ignoring import
+  Step reward: delta_gap*0.5 + delta_units*0.1
+  Terminal: +5.0 / -1 / 0 (draw)
+  Shaping: REMOVE +0.1, TRANSFORM +0.5, non-factory survival +0.01
+  Training: 100% self-play | Mixed eval every 10 iters (100 games: 50% self-best, 25% v6, 25% random)
+  Entropy: 0.02
+  Iterations: 2000 | Batch: 100
+  Weights -> nn_weights_v50.pt
+  Loaded v6 eval opponent from /Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py
+[  1/2000] SP= 91.0% best=  0.0% p=-0.0003 v=12.9467 e=0.647 n=1741 t=8s
+[  2/2000] SP= 96.0% best=  0.0% p=-0.0001 v=13.1892 e=0.680 n=1754 t=16s
+[  3/2000] SP= 88.0% best=  0.0% p=-0.0000 v=11.1416 e=0.679 n=1768 t=23s
+[  4/2000] SP= 82.0% best=  0.0% p=0.0003 v=9.2107 e=0.664 n=1941 t=31s
+[  5/2000] SP= 69.0% best=  0.0% p=0.0000 v=6.8957 e=0.648 n=2143 t=40s
+[  6/2000] SP= 57.0% best=  0.0% p=-0.0002 v=5.4091 e=0.644 n=2373 t=48s
+[  7/2000] SP= 66.0% best=  0.0% p=-0.0003 v=5.0908 e=0.616 n=2452 t=57s
+[  8/2000] SP= 68.0% best=  0.0% p=-0.0008 v=4.6065 e=0.620 n=2556 t=66s
+[  9/2000] SP= 66.0% best=  0.0% p=-0.0016 v=4.5173 e=0.599 n=2555 t=75s
+/Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py:156: RuntimeWarning: divide by zero encountered in matmul
+  x = np.maximum(0, x @ WEIGHTS['net.0.weight'].T + WEIGHTS['net.0.bias'])
+/Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py:156: RuntimeWarning: overflow encountered in matmul
+  x = np.maximum(0, x @ WEIGHTS['net.0.weight'].T + WEIGHTS['net.0.bias'])
+/Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py:156: RuntimeWarning: invalid value encountered in matmul
+  x = np.maximum(0, x @ WEIGHTS['net.0.weight'].T + WEIGHTS['net.0.bias'])
+/Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py:157: RuntimeWarning: divide by zero encountered in matmul
+  x = np.maximum(0, x @ WEIGHTS['net.2.weight'].T + WEIGHTS['net.2.bias'])
+/Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py:157: RuntimeWarning: overflow encountered in matmul
+  x = np.maximum(0, x @ WEIGHTS['net.2.weight'].T + WEIGHTS['net.2.bias'])
+/Users/leo/Projects/kaggle/maze-crawler/agent_submit_v6.py:157: RuntimeWarning: invalid value encountered in matmul
+  x = np.maximum(0, x @ WEIGHTS['net.2.weight'].T + WEIGHTS['net.2.bias'])
+  -> New best mixed eval WR 23% saved
+[ 10/2000] SP= 59.0% best= 23.0% p=-0.0025 v=4.9180 e=0.599 n=2440 eval_M= 23.0% t=84s
+[ 11/2000] SP= 56.0% best= 23.0% p=-0.0019 v=5.0634 e=0.577 n=2668 t=102s
+[ 12/2000] SP= 50.0% best= 23.0% p=-0.0012 v=5.3355 e=0.604 n=3007 t=111s
+[ 13/2000] SP= 26.0% best= 23.0% p=-0.0008 v=5.8639 e=0.568 n=3472 t=121s
+[ 14/2000] SP= 18.0% best= 23.0% p=-0.0003 v=5.3952 e=0.588 n=3326 t=131s
+[ 15/2000] SP= 19.0% best= 23.0% p=-0.0000 v=5.1680 e=0.608 n=3354 t=140s
+[ 16/2000] SP= 29.0% best= 23.0% p=0.0004 v=4.3323 e=0.575 n=3535 t=150s
+[ 17/2000] SP= 26.0% best= 23.0% p=0.0001 v=4.2855 e=0.573 n=3639 t=160s
+[ 18/2000] SP= 34.0% best= 23.0% p=0.0002 v=4.2609 e=0.585 n=3551 t=170s
+[ 19/2000] SP= 25.0% best= 23.0% p=0.0002 v=3.9031 e=0.602 n=3471 t=180s
+  -> New best mixed eval WR 39% saved
+[ 20/2000] SP= 30.0% best= 39.0% p=0.0001 v=4.1343 e=0.599 n=3335 eval_M= 39.0% t=190s
+[ 21/2000] SP= 24.0% best= 39.0% p=-0.0000 v=3.9093 e=0.604 n=3156 t=210s
+[ 22/2000] SP= 21.0% best= 39.0% p=-0.0001 v=3.4798 e=0.592 n=3491 t=220s
+[ 23/2000] SP= 25.0% best= 39.0% p=-0.0001 v=3.5244 e=0.607 n=3173 t=230s
+[ 24/2000] SP= 27.0% best= 39.0% p=-0.0002 v=4.1351 e=0.602 n=3509 t=239s
+[ 25/2000] SP= 21.0% best= 39.0% p=-0.0001 v=3.5400 e=0.609 n=3315 t=249s
+[ 26/2000] SP= 21.0% best= 39.0% p=-0.0002 v=3.4642 e=0.601 n=3495 t=259s
+[ 27/2000] SP= 22.0% best= 39.0% p=-0.0003 v=3.7234 e=0.607 n=3383 t=269s
+[ 28/2000] SP= 30.0% best= 39.0% p=-0.0002 v=4.5016 e=0.596 n=3239 t=278s
+[ 29/2000] SP= 16.0% best= 39.0% p=-0.0003 v=2.8286 e=0.589 n=3557 t=288s
+[ 30/2000] SP= 17.0% best= 39.0% p=-0.0004 v=2.8608 e=0.600 n=3589 eval_M= 19.0% t=298s
+[ 31/2000] SP= 17.0% best= 39.0% p=-0.0007 v=3.2525 e=0.597 n=3486 t=320s
+[ 32/2000] SP= 19.0% best= 39.0% p=-0.0002 v=3.1672 e=0.584 n=3411 t=330s
+[ 33/2000] SP= 20.0% best= 39.0% p=-0.0005 v=2.9319 e=0.604 n=3679 t=341s
+[ 34/2000] SP= 19.0% best= 39.0% p=-0.0009 v=3.0734 e=0.577 n=3848 t=351s
+[ 35/2000] SP= 18.0% best= 39.0% p=-0.0012 v=2.6049 e=0.557 n=3890 t=361s
+[ 36/2000] SP= 23.0% best= 39.0% p=-0.0006 v=3.5758 e=0.541 n=4343 t=372s
+[ 37/2000] SP= 14.0% best= 39.0% p=-0.0005 v=2.3849 e=0.564 n=4239 t=383s
+[ 38/2000] SP= 31.0% best= 39.0% p=-0.0004 v=4.2968 e=0.536 n=4026 t=393s
+[ 39/2000] SP= 23.0% best= 39.0% p=0.0002 v=3.1021 e=0.548 n=4404 t=405s
+[ 40/2000] SP= 29.0% best= 39.0% p=0.0003 v=3.9015 e=0.558 n=4421 eval_M= 31.0% t=416s
+[ 41/2000] SP= 14.0% best= 39.0% p=0.0001 v=2.6132 e=0.575 n=4168 t=439s
+[ 42/2000] SP= 12.0% best= 39.0% p=-0.0006 v=2.2432 e=0.550 n=3992 t=449s
+[ 43/2000] SP=  9.0% best= 39.0% p=-0.0010 v=2.0024 e=0.538 n=4392 t=460s
+[ 44/2000] SP= 20.0% best= 39.0% p=-0.0003 v=2.9114 e=0.522 n=4516 t=471s
+[ 45/2000] SP= 18.0% best= 39.0% p=-0.0005 v=3.0053 e=0.529 n=4672 t=483s
+[ 46/2000] SP= 15.0% best= 39.0% p=-0.0005 v=2.4119 e=0.519 n=5564 t=495s
+[ 47/2000] SP= 11.0% best= 39.0% p=-0.0008 v=2.0248 e=0.514 n=4857 t=507s
+[ 48/2000] SP= 13.0% best= 39.0% p=-0.0011 v=2.0595 e=0.481 n=5928 t=519s
+[ 49/2000] SP= 14.0% best= 39.0% p=-0.0004 v=2.3107 e=0.475 n=5226 t=531s
+  -> New best mixed eval WR 54% saved
+[ 50/2000] SP=  9.0% best= 54.0% p=-0.0006 v=1.4893 e=0.456 n=5917 eval_M= 54.0% t=544s
+[ 51/2000] SP= 15.0% best= 54.0% p=-0.0001 v=2.4394 e=0.443 n=6206 t=571s
+[ 52/2000] SP= 15.0% best= 54.0% p=0.0002 v=2.3024 e=0.444 n=6334 t=584s
+[ 53/2000] SP= 19.0% best= 54.0% p=0.0007 v=2.5652 e=0.463 n=6632 t=598s
+[ 54/2000] SP= 14.0% best= 54.0% p=0.0003 v=2.3461 e=0.487 n=5600 t=610s
+[ 55/2000] SP= 18.0% best= 54.0% p=-0.0005 v=2.7040 e=0.489 n=5849 t=623s
+[ 56/2000] SP= 19.0% best= 54.0% p=0.0003 v=2.9366 e=0.494 n=5238 t=635s
+[ 57/2000] SP= 15.0% best= 54.0% p=-0.0008 v=2.3036 e=0.489 n=5072 t=647s
+[ 58/2000] SP= 15.0% best= 54.0% p=-0.0008 v=2.4528 e=0.481 n=5556 t=659s
+[ 59/2000] SP= 21.0% best= 54.0% p=-0.0007 v=2.9691 e=0.460 n=5739 t=672s
+[ 60/2000] SP= 15.0% best= 54.0% p=-0.0004 v=2.3349 e=0.455 n=5406 eval_M= 33.0% t=684s
+[ 61/2000] SP= 14.0% best= 54.0% p=-0.0008 v=1.8808 e=0.450 n=6566 t=713s
+[ 62/2000] SP= 17.0% best= 54.0% p=-0.0001 v=2.7122 e=0.440 n=6696 t=727s
+[ 63/2000] SP=  7.0% best= 54.0% p=-0.0002 v=1.3315 e=0.438 n=6785 t=740s
+[ 64/2000] SP= 15.0% best= 54.0% p=-0.0002 v=2.2166 e=0.432 n=6633 t=754s
+[ 65/2000] SP= 18.0% best= 54.0% p=0.0002 v=2.5563 e=0.436 n=6549 t=767s
+[ 66/2000] SP= 19.0% best= 54.0% p=0.0015 v=2.5709 e=0.455 n=6896 t=781s
+[ 67/2000] SP= 14.0% best= 54.0% p=0.0003 v=2.2644 e=0.471 n=6011 t=794s
+[ 68/2000] SP= 13.0% best= 54.0% p=-0.0024 v=1.9256 e=0.449 n=6074 t=806s
+[ 69/2000] SP= 20.0% best= 54.0% p=-0.0011 v=2.9231 e=0.426 n=5517 t=818s
+[ 70/2000] SP= 11.0% best= 54.0% p=-0.0000 v=1.7292 e=0.423 n=7012 eval_M= 40.0% t=832s
+[ 71/2000] SP= 21.0% best= 54.0% p=-0.0004 v=2.5608 e=0.410 n=6677 t=862s
+[ 72/2000] SP= 24.0% best= 54.0% p=0.0004 v=3.0295 e=0.419 n=6810 t=876s
+[ 73/2000] SP= 14.0% best= 54.0% p=0.0001 v=1.9593 e=0.428 n=7648 t=891s
+[ 74/2000] SP= 11.0% best= 54.0% p=-0.0008 v=1.6994 e=0.419 n=7311 t=905s
+[ 75/2000] SP= 18.0% best= 54.0% p=-0.0005 v=2.6185 e=0.411 n=7210 t=919s
+[ 76/2000] SP= 10.0% best= 54.0% p=-0.0006 v=1.4651 e=0.406 n=6457 t=932s
+[ 77/2000] SP= 18.0% best= 54.0% p=-0.0003 v=2.4787 e=0.392 n=7915 t=947s
+[ 78/2000] SP= 19.0% best= 54.0% p=0.0002 v=2.5383 e=0.400 n=6975 t=961s
+[ 79/2000] SP= 20.0% best= 54.0% p=0.0002 v=2.3157 e=0.419 n=7637 t=976s
+[ 80/2000] SP= 12.0% best= 54.0% p=-0.0005 v=1.9067 e=0.415 n=7023 eval_M= 39.0% t=990s
+[ 81/2000] SP= 20.0% best= 54.0% p=-0.0003 v=2.7546 e=0.402 n=7017 t=1020s
+[ 82/2000] SP= 18.0% best= 54.0% p=-0.0002 v=2.2007 e=0.396 n=6606 t=1034s
+[ 83/2000] SP= 22.0% best= 54.0% p=-0.0000 v=2.5827 e=0.403 n=6990 t=1048s
+[ 84/2000] SP= 16.0% best= 54.0% p=-0.0002 v=2.2159 e=0.409 n=7408 t=1062s
+[ 85/2000] SP= 17.0% best= 54.0% p=-0.0003 v=2.0764 e=0.388 n=7886 t=1077s
+[ 86/2000] SP= 27.0% best= 54.0% p=-0.0000 v=2.7705 e=0.379 n=8166 t=1092s
+[ 87/2000] SP= 20.0% best= 54.0% p=0.0004 v=2.6703 e=0.393 n=7804 t=1106s
+[ 88/2000] SP= 23.0% best= 54.0% p=0.0004 v=2.5509 e=0.405 n=8229 t=1122s
+[ 89/2000] SP= 22.0% best= 54.0% p=-0.0001 v=2.6501 e=0.411 n=7529 t=1136s
+[ 90/2000] SP= 19.0% best= 54.0% p=-0.0008 v=2.4238 e=0.399 n=7455 eval_M= 40.0% t=1150s
+[ 91/2000] SP= 21.0% best= 54.0% p=-0.0006 v=2.5243 e=0.381 n=7800 t=1182s
+[ 92/2000] SP= 29.0% best= 54.0% p=0.0000 v=2.8441 e=0.385 n=8586 t=1197s
+[ 93/2000] SP= 22.0% best= 54.0% p=0.0000 v=2.3981 e=0.388 n=7226 t=1212s
+[ 94/2000] SP= 25.0% best= 54.0% p=-0.0003 v=2.6601 e=0.384 n=8394 t=1227s
+[ 95/2000] SP= 18.0% best= 54.0% p=-0.0005 v=2.2052 e=0.381 n=7320 t=1241s
+[ 96/2000] SP= 27.0% best= 54.0% p=-0.0003 v=3.0398 e=0.367 n=8591 t=1256s
+[ 97/2000] SP= 21.0% best= 54.0% p=-0.0000 v=2.3832 e=0.368 n=8379 t=1272s
+[ 98/2000] SP= 18.0% best= 54.0% p=-0.0003 v=2.1913 e=0.359 n=7561 t=1286s
+[ 99/2000] SP= 23.0% best= 54.0% p=-0.0003 v=2.6489 e=0.350 n=8194 t=1301s
+[100/2000] SP= 29.0% best= 54.0% p=0.0003 v=3.0413 e=0.367 n=8028 eval_M= 35.0% t=1316s
+[101/2000] SP= 23.0% best= 54.0% p=-0.0001 v=2.5938 e=0.366 n=7413 t=1347s
+[102/2000] SP= 21.0% best= 54.0% p=-0.0002 v=2.6098 e=0.366 n=7907 t=1361s
+[103/2000] SP= 28.0% best= 54.0% p=-0.0001 v=3.2192 e=0.345 n=7816 t=1376s
+[104/2000] SP= 29.0% best= 54.0% p=0.0005 v=2.9521 e=0.363 n=7994 t=1391s
+[105/2000] SP= 22.0% best= 54.0% p=-0.0000 v=2.4806 e=0.364 n=8084 t=1406s
+[106/2000] SP= 27.0% best= 54.0% p=-0.0001 v=2.8492 e=0.361 n=8133 t=1421s
+[107/2000] SP= 26.0% best= 54.0% p=0.0001 v=2.8869 e=0.373 n=8353 t=1436s
+[108/2000] SP= 34.0% best= 54.0% p=-0.0001 v=3.3004 e=0.371 n=7254 t=1450s
+[109/2000] SP= 31.0% best= 54.0% p=0.0001 v=3.2816 e=0.373 n=6934 t=1464s
+[110/2000] SP= 20.0% best= 54.0% p=-0.0009 v=2.3704 e=0.362 n=8229 eval_M= 35.0% t=1479s
+[111/2000] SP= 24.0% best= 54.0% p=-0.0009 v=2.8202 e=0.358 n=8046 t=1510s
+[112/2000] SP= 22.0% best= 54.0% p=-0.0002 v=2.5066 e=0.338 n=7972 t=1525s
+[113/2000] SP= 27.0% best= 54.0% p=-0.0001 v=2.9503 e=0.345 n=7976 t=1540s
+[114/2000] SP= 34.0% best= 54.0% p=0.0002 v=3.2295 e=0.358 n=8089 t=1555s
+[115/2000] SP= 26.0% best= 54.0% p=0.0004 v=2.6658 e=0.359 n=8797 t=1570s
+[116/2000] SP= 20.0% best= 54.0% p=-0.0002 v=2.5970 e=0.359 n=7142 t=1585s
+[117/2000] SP= 26.0% best= 54.0% p=-0.0008 v=2.6892 e=0.340 n=8524 t=1600s
+[118/2000] SP= 23.0% best= 54.0% p=-0.0006 v=2.8077 e=0.342 n=7745 t=1615s
+[119/2000] SP= 29.0% best= 54.0% p=-0.0001 v=2.8428 e=0.342 n=8975 t=1632s
+[120/2000] SP= 23.0% best= 54.0% p=0.0001 v=2.3961 e=0.343 n=8983 eval_M= 39.0% t=1648s
+[121/2000] SP= 27.0% best= 54.0% p=0.0000 v=2.9236 e=0.352 n=7483 t=1678s
+[122/2000] SP= 31.0% best= 54.0% p=0.0000 v=2.9184 e=0.362 n=8449 t=1693s
+[123/2000] SP= 25.0% best= 54.0% p=-0.0001 v=2.6535 e=0.361 n=8241 t=1709s
+[124/2000] SP= 22.0% best= 54.0% p=-0.0004 v=2.4270 e=0.361 n=8577 t=1724s
+[125/2000] SP= 20.0% best= 54.0% p=-0.0009 v=2.2621 e=0.336 n=8062 t=1739s
+[126/2000] SP= 26.0% best= 54.0% p=-0.0001 v=2.5948 e=0.330 n=9795 t=1756s
+[127/2000] SP= 26.0% best= 54.0% p=0.0001 v=2.7252 e=0.340 n=8419 t=1772s
+[128/2000] SP= 24.0% best= 54.0% p=0.0005 v=2.5289 e=0.356 n=8120 t=1787s
+[129/2000] SP= 24.0% best= 54.0% p=-0.0002 v=2.4208 e=0.352 n=9347 t=1803s
+[130/2000] SP= 22.0% best= 54.0% p=-0.0001 v=2.5723 e=0.352 n=8376 eval_M= 39.0% t=1819s
+[131/2000] SP= 26.0% best= 54.0% p=0.0001 v=2.6713 e=0.355 n=8626 t=1850s
+[132/2000] SP= 32.0% best= 54.0% p=0.0008 v=3.0155 e=0.361 n=8100 t=1865s
+[133/2000] SP= 31.0% best= 54.0% p=0.0004 v=3.1414 e=0.377 n=8214 t=1880s
+[134/2000] SP= 26.0% best= 54.0% p=-0.0004 v=2.7841 e=0.365 n=8678 t=1896s
+[135/2000] SP= 19.0% best= 54.0% p=-0.0006 v=2.4365 e=0.359 n=7457 t=1910s
+[136/2000] SP= 20.0% best= 54.0% p=-0.0012 v=2.1306 e=0.333 n=8638 t=1926s
+[137/2000] SP= 27.0% best= 54.0% p=-0.0008 v=2.4622 e=0.314 n=9558 t=1942s
+[138/2000] SP= 23.0% best= 54.0% p=0.0001 v=2.3967 e=0.310 n=9699 t=1958s
+[139/2000] SP= 32.0% best= 54.0% p=-0.0000 v=3.0245 e=0.332 n=9209 t=1975s
+[140/2000] SP= 27.0% best= 54.0% p=0.0005 v=2.7009 e=0.344 n=8012 eval_M= 39.0% t=1989s
+[141/2000] SP= 19.0% best= 54.0% p=0.0001 v=2.3989 e=0.346 n=8035 t=2021s
+[142/2000] SP= 25.0% best= 54.0% p=-0.0001 v=2.7101 e=0.339 n=8365 t=2036s
+[143/2000] SP= 29.0% best= 54.0% p=-0.0003 v=2.8971 e=0.337 n=7923 t=2051s
+[144/2000] SP= 20.0% best= 54.0% p=-0.0001 v=2.2235 e=0.331 n=9427 t=2067s
+[145/2000] SP= 22.0% best= 54.0% p=-0.0007 v=2.3882 e=0.325 n=8684 t=2082s
+[146/2000] SP= 25.0% best= 54.0% p=-0.0005 v=2.7729 e=0.312 n=8620 t=2098s
+[147/2000] SP= 26.0% best= 54.0% p=-0.0000 v=2.8142 e=0.330 n=8167 t=2113s
+[148/2000] SP= 29.0% best= 54.0% p=0.0002 v=2.7816 e=0.331 n=8343 t=2129s
+[149/2000] SP= 24.0% best= 54.0% p=-0.0001 v=2.4556 e=0.329 n=9011 t=2146s
+[150/2000] SP= 32.0% best= 54.0% p=-0.0001 v=3.1088 e=0.323 n=8194 eval_M= 40.0% t=2161s
+[151/2000] SP= 23.0% best= 54.0% p=-0.0001 v=2.5389 e=0.331 n=7818 t=2193s

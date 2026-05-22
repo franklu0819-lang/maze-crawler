@@ -1,0 +1,1462 @@
+/Users/leo/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+OpenSpiel exception: Unknown game 'connect_four_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+OpenSpiel exception: Unknown game 'go_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+OpenSpiel exception: Unknown game 'tic_tac_toe_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+OpenSpiel exception: Unknown game 'universal_poker_proxy'. Available games are:
+2048
+add_noise
+amazons
+backgammon
+bargaining
+battleship
+blackjack
+blotto
+breakthrough
+bridge
+bridge_uncontested_bidding
+cached_tree
+catch
+checkers
+chess
+cliff_walking
+clobber
+coin_game
+colored_trails
+connect_four
+coop_box_pushing
+coop_to_1p
+coordinated_mp
+crazy_eights
+cribbage
+cursor_go
+dark_chess
+dark_hex
+dark_hex_ir
+deep_sea
+dots_and_boxes
+dou_dizhu
+efg_game
+einstein_wurfelt_nicht
+euchre
+first_sealed_auction
+gin_rummy
+go
+goofspiel
+hanabi
+havannah
+hearts
+hex
+hive
+kriegspiel
+kuhn_poker
+laser_tag
+latent_ttt
+leduc_poker
+lewis_signaling
+liars_dice
+liars_dice_ir
+lines_of_action
+maedn
+mancala
+markov_soccer
+matching_pennies_3p
+matrix_bos
+matrix_brps
+matrix_cd
+matrix_coordination
+matrix_mp
+matrix_pd
+matrix_rps
+matrix_rpsw
+matrix_sh
+matrix_shapleys_game
+mfg_crowd_modelling
+mfg_crowd_modelling_2d
+mfg_dynamic_routing
+mfg_garnet
+misere
+mnk
+morpion_solitaire
+negotiation
+nfg_game
+nim
+nine_mens_morris
+normal_form_extensive_game
+oh_hell
+oshi_zumo
+othello
+oware
+pathfinding
+pentago
+phantom_go
+phantom_ttt
+phantom_ttt_ir
+pig
+quoridor
+rbc
+repeated_game
+repeated_leduc_poker
+repeated_poker
+restricted_nash_response
+sheriff
+skat
+solitaire
+spades
+start_at
+stones_and_gems
+tarok
+tic_tac_toe
+tiny_bridge_2p
+tiny_bridge_4p
+tiny_hanabi
+trade_comm
+turn_based_simultaneous_game
+twixt
+ultimate_tic_tac_toe
+universal_poker
+y
+zerosum
+[kaggle_environments.envs.open_spiel.open_spiel] INFO: Successfully loaded OpenSpiel environments: 2.
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    open_spiel_chess
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    open_spiel_gin_rummy
+[kaggle_environments.envs.open_spiel.open_spiel] INFO: OpenSpiel games skipped: 4.
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    connect_four
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    go(board_size=9)
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    tic_tac_toe
+[kaggle_environments.envs.open_spiel.open_spiel] INFO:    universal_poker(betting=nolimit,bettingAbstraction=fullgame,blind=1 2,firstPlayer=2 1 1 1,numBoardCards=0 3 1 1,numHoleCards=2,numPlayers=2,numRanks=13,numRounds=4,numSuits=4,stack=400 400)
+Loading environment cabt failed: dlopen(/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so, 0x0006): tried: '/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so' (slice is not valid mach-o file), '/System/Volumes/Preboot/Cryptexes/OS/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so' (no such file), '/Users/leo/Library/Python/3.9/lib/python/site-packages/kaggle_environments/envs/cabt/cg/libcg.so' (slice is not valid mach-o file)
+termcolor not installed, skipping dependency
+No pygame installed, ignoring import
+  Step reward: delta_gap*0.5 + delta_units*0.1
+  Terminal: +5.0 / -1 / 0 (draw)
+  Shaping: REMOVE +0.1, TRANSFORM +0.5, non-factory survival +0.01
+  Training: 100% self-play | Eval vs random every 10 iters (100 games)
+  Entropy: 0.02
+  Iterations: 2000 | Batch: 100
+  Weights -> nn_weights_v49.pt
+[  1/2000] SP= 19.0% best=  0.0% p=-0.0007 v=2.8761 e=0.580 n=3613 t=10s
+[  2/2000] SP= 24.0% best=  0.0% p=-0.0005 v=3.5765 e=0.598 n=3309 t=20s
+[  3/2000] SP= 26.0% best=  0.0% p=-0.0001 v=3.5885 e=0.597 n=3215 t=30s
+[  4/2000] SP= 18.0% best=  0.0% p=-0.0002 v=2.8678 e=0.603 n=2834 t=39s
+[  5/2000] SP=  8.0% best=  0.0% p=-0.0001 v=1.5187 e=0.584 n=3618 t=50s
+[  6/2000] SP= 11.0% best=  0.0% p=0.0002 v=2.0377 e=0.593 n=3698 t=60s
+[  7/2000] SP= 16.0% best=  0.0% p=-0.0007 v=2.4412 e=0.578 n=3262 t=70s
+[  8/2000] SP= 16.0% best=  0.0% p=-0.0001 v=3.0629 e=0.584 n=3356 t=80s
+[  9/2000] SP= 20.0% best=  0.0% p=-0.0003 v=3.2008 e=0.602 n=3332 t=90s
+  -> New best eval WR 38% saved
+[ 10/2000] SP= 15.0% best= 38.0% p=-0.0003 v=2.4130 e=0.573 n=4041 eval_R= 38.0% t=100s
+[ 11/2000] SP=  5.0% best= 38.0% p=-0.0003 v=1.2338 e=0.597 n=3882 t=126s
+[ 12/2000] SP=  7.0% best= 38.0% p=-0.0001 v=1.4829 e=0.582 n=3855 t=136s
+[ 13/2000] SP=  5.0% best= 38.0% p=-0.0004 v=1.0779 e=0.568 n=3892 t=147s
+[ 14/2000] SP= 10.0% best= 38.0% p=-0.0007 v=1.9351 e=0.580 n=3681 t=158s
+[ 15/2000] SP=  6.0% best= 38.0% p=-0.0008 v=1.2395 e=0.564 n=4075 t=169s
+[ 16/2000] SP= 13.0% best= 38.0% p=-0.0002 v=2.1939 e=0.566 n=4259 t=180s
+[ 17/2000] SP= 10.0% best= 38.0% p=-0.0003 v=1.8369 e=0.528 n=4556 t=192s
+[ 18/2000] SP=  9.0% best= 38.0% p=0.0000 v=1.7634 e=0.562 n=4280 t=203s
+[ 19/2000] SP=  6.0% best= 38.0% p=-0.0003 v=1.1892 e=0.541 n=4078 t=215s
+  -> New best eval WR 41% saved
+[ 20/2000] SP=  8.0% best= 41.0% p=-0.0003 v=1.3971 e=0.533 n=4426 eval_R= 41.0% t=226s
+[ 21/2000] SP=  5.0% best= 41.0% p=-0.0000 v=1.0120 e=0.523 n=5055 t=254s
+[ 22/2000] SP=  5.0% best= 41.0% p=-0.0005 v=1.0448 e=0.514 n=4267 t=265s
+[ 23/2000] SP= 12.0% best= 41.0% p=-0.0002 v=2.1099 e=0.501 n=4868 t=277s
+[ 24/2000] SP=  7.0% best= 41.0% p=-0.0002 v=1.3993 e=0.509 n=4774 t=289s
+[ 25/2000] SP=  5.0% best= 41.0% p=-0.0000 v=1.1313 e=0.513 n=4892 t=301s
+[ 26/2000] SP=  9.0% best= 41.0% p=-0.0003 v=1.7448 e=0.521 n=4426 t=313s
+[ 27/2000] SP=  7.0% best= 41.0% p=-0.0002 v=1.2354 e=0.519 n=4939 t=325s
+[ 28/2000] SP=  8.0% best= 41.0% p=-0.0002 v=1.3547 e=0.510 n=5027 t=337s
+[ 29/2000] SP=  5.0% best= 41.0% p=-0.0007 v=0.9269 e=0.483 n=4842 t=349s
+[ 30/2000] SP= 11.0% best= 41.0% p=-0.0004 v=2.2841 e=0.482 n=5112 eval_R= 41.0% t=361s
+[ 31/2000] SP=  8.0% best= 41.0% p=-0.0004 v=1.3928 e=0.489 n=5435 t=390s
+[ 32/2000] SP=  9.0% best= 41.0% p=0.0001 v=1.6783 e=0.485 n=5215 t=403s
+[ 33/2000] SP=  8.0% best= 41.0% p=-0.0002 v=1.3558 e=0.483 n=5306 t=415s
+[ 34/2000] SP=  7.0% best= 41.0% p=-0.0008 v=1.3745 e=0.494 n=5317 t=428s
+[ 35/2000] SP= 11.0% best= 41.0% p=-0.0004 v=1.6357 e=0.478 n=5730 t=441s
+[ 36/2000] SP= 10.0% best= 41.0% p=-0.0003 v=1.3017 e=0.463 n=5884 t=455s
+[ 37/2000] SP= 19.0% best= 41.0% p=-0.0002 v=2.6898 e=0.461 n=5862 t=468s
+[ 38/2000] SP=  7.0% best= 41.0% p=-0.0001 v=1.2317 e=0.469 n=5705 t=481s
+[ 39/2000] SP= 12.0% best= 41.0% p=-0.0003 v=1.8782 e=0.455 n=5336 t=494s
+  -> New best eval WR 42% saved
+[ 40/2000] SP= 11.0% best= 42.0% p=-0.0004 v=1.9652 e=0.469 n=5559 eval_R= 42.0% t=507s
+[ 41/2000] SP= 10.0% best= 42.0% p=-0.0002 v=1.4184 e=0.464 n=6499 t=536s
+[ 42/2000] SP= 12.0% best= 42.0% p=-0.0004 v=1.8997 e=0.457 n=6045 t=549s
+[ 43/2000] SP=  7.0% best= 42.0% p=-0.0006 v=1.1438 e=0.452 n=5911 t=563s
+[ 44/2000] SP= 16.0% best= 42.0% p=-0.0005 v=2.2812 e=0.447 n=6083 t=576s
+[ 45/2000] SP=  8.0% best= 42.0% p=-0.0004 v=1.5159 e=0.438 n=6044 t=590s
+[ 46/2000] SP=  8.0% best= 42.0% p=-0.0004 v=1.4085 e=0.435 n=6577 t=604s
+[ 47/2000] SP= 10.0% best= 42.0% p=-0.0001 v=1.7405 e=0.434 n=6961 t=618s
+[ 48/2000] SP= 10.0% best= 42.0% p=0.0001 v=1.8080 e=0.429 n=6229 t=632s
+[ 49/2000] SP= 14.0% best= 42.0% p=0.0004 v=2.0988 e=0.441 n=5890 t=645s
+[ 50/2000] SP= 16.0% best= 42.0% p=-0.0002 v=2.2200 e=0.440 n=6762 eval_R= 42.0% t=660s
+[ 51/2000] SP=  8.0% best= 42.0% p=-0.0007 v=1.3414 e=0.439 n=6021 t=689s
+[ 52/2000] SP= 18.0% best= 42.0% p=-0.0004 v=2.4353 e=0.421 n=6015 t=702s
+[ 53/2000] SP= 14.0% best= 42.0% p=-0.0002 v=2.4790 e=0.424 n=6589 t=717s
+[ 54/2000] SP=  9.0% best= 42.0% p=-0.0001 v=1.5370 e=0.433 n=6706 t=731s
+[ 55/2000] SP= 16.0% best= 42.0% p=-0.0007 v=2.1832 e=0.436 n=5902 t=744s
+[ 56/2000] SP= 16.0% best= 42.0% p=-0.0004 v=2.3550 e=0.411 n=6904 t=759s
+[ 57/2000] SP= 13.0% best= 42.0% p=-0.0003 v=2.1242 e=0.420 n=6736 t=773s
+[ 58/2000] SP= 13.0% best= 42.0% p=-0.0007 v=1.7715 e=0.409 n=6112 t=786s
+[ 59/2000] SP= 25.0% best= 42.0% p=-0.0005 v=3.2639 e=0.393 n=6333 t=800s
+[ 60/2000] SP= 22.0% best= 42.0% p=-0.0001 v=2.8132 e=0.400 n=6392 eval_R= 30.0% t=814s
+[ 61/2000] SP= 26.0% best= 42.0% p=0.0006 v=3.2213 e=0.409 n=5737 t=842s
+[ 62/2000] SP= 21.0% best= 42.0% p=0.0001 v=2.8563 e=0.410 n=6190 t=855s
+[ 63/2000] SP= 10.0% best= 42.0% p=-0.0002 v=1.7383 e=0.409 n=6533 t=869s
+[ 64/2000] SP= 13.0% best= 42.0% p=-0.0008 v=2.0119 e=0.410 n=6060 t=883s
+[ 65/2000] SP= 11.0% best= 42.0% p=-0.0008 v=1.5893 e=0.398 n=6939 t=897s
+[ 66/2000] SP= 22.0% best= 42.0% p=0.0000 v=3.3675 e=0.389 n=6622 t=911s
+[ 67/2000] SP= 31.0% best= 42.0% p=0.0002 v=3.5462 e=0.395 n=6778 t=925s
+[ 68/2000] SP=  9.0% best= 42.0% p=0.0003 v=1.6676 e=0.395 n=7119 t=940s
+[ 69/2000] SP= 20.0% best= 42.0% p=0.0002 v=2.2152 e=0.387 n=7890 t=955s
+[ 70/2000] SP= 13.0% best= 42.0% p=-0.0000 v=1.6481 e=0.408 n=6800 eval_R= 36.0% t=970s
+[ 71/2000] SP= 21.0% best= 42.0% p=0.0001 v=2.9555 e=0.407 n=6239 t=999s
+[ 72/2000] SP= 17.0% best= 42.0% p=0.0002 v=2.3003 e=0.412 n=6539 t=1013s
+[ 73/2000] SP= 18.0% best= 42.0% p=-0.0001 v=2.3595 e=0.407 n=6279 t=1027s
+[ 74/2000] SP= 18.0% best= 42.0% p=-0.0002 v=2.6347 e=0.406 n=6389 t=1040s
+[ 75/2000] SP= 27.0% best= 42.0% p=0.0001 v=3.2309 e=0.404 n=6681 t=1054s
+[ 76/2000] SP= 24.0% best= 42.0% p=0.0002 v=2.9940 e=0.422 n=6500 t=1068s
+[ 77/2000] SP= 17.0% best= 42.0% p=-0.0000 v=2.5241 e=0.410 n=5780 t=1081s
+[ 78/2000] SP= 16.0% best= 42.0% p=-0.0007 v=2.2234 e=0.414 n=6300 t=1095s
+[ 79/2000] SP= 20.0% best= 42.0% p=-0.0009 v=2.6564 e=0.396 n=6645 t=1109s
+[ 80/2000] SP= 26.0% best= 42.0% p=0.0001 v=2.8430 e=0.396 n=7519 eval_R= 37.0% t=1124s
+[ 81/2000] SP= 27.0% best= 42.0% p=0.0005 v=3.0686 e=0.401 n=7156 t=1154s
+[ 82/2000] SP= 17.0% best= 42.0% p=0.0001 v=2.2108 e=0.394 n=7496 t=1169s
+[ 83/2000] SP= 16.0% best= 42.0% p=-0.0006 v=2.1665 e=0.399 n=7112 t=1184s
+[ 84/2000] SP= 16.0% best= 42.0% p=-0.0009 v=2.1263 e=0.386 n=6937 t=1198s
+[ 85/2000] SP= 27.0% best= 42.0% p=-0.0002 v=2.9937 e=0.373 n=6985 t=1212s
+[ 86/2000] SP= 21.0% best= 42.0% p=-0.0000 v=2.5548 e=0.383 n=6378 t=1226s
+[ 87/2000] SP= 25.0% best= 42.0% p=0.0004 v=3.1129 e=0.401 n=6478 t=1240s
+[ 88/2000] SP= 22.0% best= 42.0% p=0.0001 v=2.5495 e=0.400 n=7638 t=1255s
+[ 89/2000] SP= 20.0% best= 42.0% p=-0.0004 v=2.5628 e=0.399 n=7317 t=1269s
+[ 90/2000] SP= 16.0% best= 42.0% p=-0.0007 v=2.2907 e=0.373 n=7275 eval_R= 36.0% t=1283s
+[ 91/2000] SP= 22.0% best= 42.0% p=-0.0002 v=2.7220 e=0.377 n=6323 t=1311s
+[ 92/2000] SP= 27.0% best= 42.0% p=0.0002 v=2.7824 e=0.372 n=7746 t=1326s
+[ 93/2000] SP= 27.0% best= 42.0% p=0.0002 v=3.1152 e=0.391 n=6914 t=1340s
+[ 94/2000] SP= 22.0% best= 42.0% p=0.0004 v=2.6158 e=0.396 n=7379 t=1355s
+[ 95/2000] SP= 13.0% best= 42.0% p=-0.0002 v=2.2225 e=0.385 n=6698 t=1369s
+[ 96/2000] SP= 22.0% best= 42.0% p=-0.0004 v=2.6177 e=0.389 n=6109 t=1382s
+[ 97/2000] SP= 21.0% best= 42.0% p=-0.0007 v=2.4600 e=0.375 n=6920 t=1396s
+[ 98/2000] SP= 22.0% best= 42.0% p=0.0000 v=2.8519 e=0.376 n=7105 t=1411s
+[ 99/2000] SP= 19.0% best= 42.0% p=0.0001 v=1.9920 e=0.372 n=7273 t=1425s
+[100/2000] SP= 17.0% best= 42.0% p=-0.0001 v=2.2211 e=0.377 n=7703 eval_R= 41.0% t=1440s
+[101/2000] SP= 27.0% best= 42.0% p=0.0001 v=2.9853 e=0.371 n=6932 t=1470s
+[102/2000] SP= 19.0% best= 42.0% p=-0.0001 v=2.2403 e=0.391 n=8135 t=1485s
+[103/2000] SP= 15.0% best= 42.0% p=-0.0001 v=2.0230 e=0.389 n=7802 t=1500s
+[104/2000] SP= 19.0% best= 42.0% p=-0.0001 v=2.5565 e=0.371 n=7692 t=1515s
+[105/2000] SP= 25.0% best= 42.0% p=0.0004 v=3.0649 e=0.376 n=7700 t=1530s
+[106/2000] SP= 14.0% best= 42.0% p=-0.0001 v=1.9502 e=0.381 n=6734 t=1544s
+[107/2000] SP= 17.0% best= 42.0% p=-0.0004 v=2.2090 e=0.369 n=7339 t=1558s
+[108/2000] SP= 14.0% best= 42.0% p=-0.0002 v=1.9748 e=0.364 n=8223 t=1574s
+[109/2000] SP= 25.0% best= 42.0% p=-0.0001 v=2.7473 e=0.361 n=7268 t=1588s
+[110/2000] SP= 18.0% best= 42.0% p=-0.0001 v=1.9950 e=0.365 n=8955 eval_R= 42.0% t=1604s
+[111/2000] SP= 22.0% best= 42.0% p=0.0001 v=2.6786 e=0.366 n=7344 t=1634s
+[112/2000] SP= 15.0% best= 42.0% p=0.0001 v=2.0437 e=0.363 n=7835 t=1649s
+[113/2000] SP= 18.0% best= 42.0% p=-0.0002 v=2.0391 e=0.353 n=8629 t=1665s
+[114/2000] SP= 23.0% best= 42.0% p=-0.0001 v=2.9472 e=0.359 n=7187 t=1679s
+[115/2000] SP= 15.0% best= 42.0% p=-0.0002 v=1.8095 e=0.362 n=7718 t=1694s
+[116/2000] SP= 23.0% best= 42.0% p=-0.0000 v=2.7178 e=0.362 n=7797 t=1709s
+[117/2000] SP= 17.0% best= 42.0% p=-0.0001 v=2.2053 e=0.357 n=8046 t=1725s
+[118/2000] SP= 19.0% best= 42.0% p=-0.0001 v=2.1490 e=0.364 n=7675 t=1740s
+[119/2000] SP= 20.0% best= 42.0% p=-0.0001 v=2.1994 e=0.353 n=7606 t=1755s
+[120/2000] SP= 17.0% best= 42.0% p=-0.0000 v=2.1924 e=0.344 n=6925 eval_R= 42.0% t=1769s
+[121/2000] SP= 10.0% best= 42.0% p=-0.0000 v=1.4782 e=0.341 n=7318 t=1798s
+[122/2000] SP= 22.0% best= 42.0% p=-0.0000 v=2.3022 e=0.334 n=8071 t=1813s
+[123/2000] SP= 18.0% best= 42.0% p=0.0002 v=2.2068 e=0.360 n=7763 t=1828s
+[124/2000] SP= 24.0% best= 42.0% p=0.0001 v=2.7653 e=0.364 n=7908 t=1843s
+[125/2000] SP= 18.0% best= 42.0% p=0.0002 v=2.3290 e=0.373 n=7401 t=1858s
+[126/2000] SP= 13.0% best= 42.0% p=-0.0006 v=1.8340 e=0.365 n=7178 t=1872s
+[127/2000] SP= 19.0% best= 42.0% p=-0.0003 v=2.4375 e=0.347 n=6980 t=1886s
+[128/2000] SP= 16.0% best= 42.0% p=-0.0002 v=1.9691 e=0.353 n=7722 t=1901s
+[129/2000] SP= 20.0% best= 42.0% p=-0.0001 v=2.4914 e=0.360 n=8455 t=1917s
+[130/2000] SP= 17.0% best= 42.0% p=0.0001 v=2.0060 e=0.356 n=7427 eval_R= 42.0% t=1932s
+[131/2000] SP= 19.0% best= 42.0% p=-0.0001 v=2.2210 e=0.357 n=9173 t=1963s
+[132/2000] SP= 15.0% best= 42.0% p=0.0000 v=2.2706 e=0.354 n=7171 t=1978s
+[133/2000] SP= 20.0% best= 42.0% p=-0.0004 v=2.3869 e=0.367 n=8741 t=1994s
+[134/2000] SP= 16.0% best= 42.0% p=-0.0002 v=2.2410 e=0.364 n=8403 t=2010s
+[135/2000] SP= 17.0% best= 42.0% p=-0.0003 v=2.2960 e=0.365 n=8060 t=2025s
+[136/2000] SP= 23.0% best= 42.0% p=-0.0000 v=2.4979 e=0.354 n=7776 t=2040s
+[137/2000] SP= 14.0% best= 42.0% p=-0.0001 v=1.7889 e=0.367 n=7676 t=2055s
+[138/2000] SP= 24.0% best= 42.0% p=-0.0001 v=2.8826 e=0.371 n=7337 t=2070s
+[139/2000] SP= 23.0% best= 42.0% p=-0.0001 v=2.5037 e=0.370 n=7839 t=2085s
+[140/2000] SP= 19.0% best= 42.0% p=-0.0001 v=2.3900 e=0.379 n=7693 eval_R= 41.0% t=2100s
+[141/2000] SP= 23.0% best= 42.0% p=0.0000 v=2.7962 e=0.382 n=6889 t=2129s
+[142/2000] SP= 18.0% best= 42.0% p=-0.0004 v=2.5245 e=0.377 n=6873 t=2143s
+[143/2000] SP= 15.0% best= 42.0% p=-0.0005 v=2.2122 e=0.355 n=7262 t=2158s
+[144/2000] SP= 18.0% best= 42.0% p=-0.0003 v=2.5522 e=0.344 n=7742 t=2173s
+[145/2000] SP= 24.0% best= 42.0% p=0.0004 v=2.8127 e=0.364 n=8204 t=2189s
+[146/2000] SP= 22.0% best= 42.0% p=0.0001 v=2.5999 e=0.374 n=7616 t=2204s
+[147/2000] SP= 26.0% best= 42.0% p=-0.0000 v=2.8345 e=0.369 n=8571 t=2220s
+[148/2000] SP= 21.0% best= 42.0% p=-0.0002 v=2.4787 e=0.364 n=7998 t=2235s
+[149/2000] SP= 18.0% best= 42.0% p=-0.0007 v=2.1008 e=0.353 n=7547 t=2250s
+[150/2000] SP= 18.0% best= 42.0% p=-0.0003 v=2.0921 e=0.349 n=9084 eval_R= 42.0% t=2267s
+[151/2000] SP= 24.0% best= 42.0% p=0.0004 v=2.7199 e=0.353 n=7405 t=2297s
+[152/2000] SP= 25.0% best= 42.0% p=0.0003 v=2.4712 e=0.357 n=9045 t=2314s
+[153/2000] SP= 23.0% best= 42.0% p=0.0001 v=2.5779 e=0.363 n=8147 t=2329s
+[154/2000] SP= 18.0% best= 42.0% p=-0.0003 v=1.9895 e=0.364 n=7805 t=2345s
+[155/2000] SP= 20.0% best= 42.0% p=-0.0004 v=2.5251 e=0.361 n=7867 t=2360s
+[156/2000] SP= 21.0% best= 42.0% p=-0.0002 v=2.3182 e=0.361 n=8752 t=2376s
+[157/2000] SP= 20.0% best= 42.0% p=-0.0001 v=2.4225 e=0.353 n=9150 t=2392s
+[158/2000] SP= 15.0% best= 42.0% p=-0.0002 v=1.9175 e=0.350 n=7587 t=2407s
+[159/2000] SP= 14.0% best= 42.0% p=0.0000 v=1.8576 e=0.343 n=8541 t=2423s
+[160/2000] SP= 21.0% best= 42.0% p=0.0000 v=2.2883 e=0.334 n=9163 eval_R= 42.0% t=2440s
+[161/2000] SP= 32.0% best= 42.0% p=-0.0003 v=3.2793 e=0.346 n=8809 t=2471s
+[162/2000] SP= 25.0% best= 42.0% p=-0.0002 v=2.8425 e=0.362 n=8006 t=2486s
+[163/2000] SP= 21.0% best= 42.0% p=-0.0002 v=2.6032 e=0.364 n=6752 t=2501s
+[164/2000] SP= 24.0% best= 42.0% p=-0.0004 v=2.5805 e=0.377 n=7644 t=2516s
+[165/2000] SP= 33.0% best= 42.0% p=-0.0001 v=3.1596 e=0.359 n=8924 t=2532s
+[166/2000] SP= 21.0% best= 42.0% p=-0.0003 v=2.3087 e=0.358 n=8082 t=2547s
+[167/2000] SP= 14.0% best= 42.0% p=-0.0004 v=2.0310 e=0.351 n=7228 t=2562s
+[168/2000] SP= 20.0% best= 42.0% p=-0.0003 v=2.2768 e=0.337 n=8398 t=2578s
+[169/2000] SP= 21.0% best= 42.0% p=0.0002 v=2.4802 e=0.348 n=8613 t=2594s
+[170/2000] SP= 13.0% best= 42.0% p=-0.0000 v=1.8279 e=0.352 n=7771 eval_R= 42.0% t=2608s
+[171/2000] SP= 18.0% best= 42.0% p=-0.0003 v=2.3565 e=0.343 n=8035 t=2639s
+[172/2000] SP= 27.0% best= 42.0% p=0.0002 v=3.0343 e=0.339 n=8620 t=2655s
+[173/2000] SP= 19.0% best= 42.0% p=0.0001 v=2.4248 e=0.348 n=7711 t=2670s
+[174/2000] SP= 26.0% best= 42.0% p=-0.0000 v=2.6219 e=0.360 n=8714 t=2686s
+[175/2000] SP= 20.0% best= 42.0% p=-0.0004 v=2.3253 e=0.354 n=7547 t=2701s
+[176/2000] SP= 26.0% best= 42.0% p=-0.0001 v=2.7581 e=0.346 n=8412 t=2716s
+[177/2000] SP= 24.0% best= 42.0% p=-0.0001 v=2.5729 e=0.348 n=8595 t=2732s
+[178/2000] SP= 20.0% best= 42.0% p=-0.0004 v=2.3944 e=0.334 n=7208 t=2747s
+[179/2000] SP= 14.0% best= 42.0% p=-0.0009 v=1.8117 e=0.320 n=8292 t=2762s
+[180/2000] SP= 20.0% best= 42.0% p=-0.0000 v=2.3739 e=0.314 n=8727 eval_R= 42.0% t=2778s
+[181/2000] SP= 21.0% best= 42.0% p=-0.0005 v=2.2341 e=0.324 n=9561 t=2811s
+[182/2000] SP= 16.0% best= 42.0% p=0.0001 v=2.1760 e=0.341 n=7574 t=2827s
+[183/2000] SP= 26.0% best= 42.0% p=-0.0002 v=2.6999 e=0.355 n=9173 t=2844s
+[184/2000] SP= 21.0% best= 42.0% p=0.0002 v=2.5086 e=0.357 n=7784 t=2859s
+[185/2000] SP= 20.0% best= 42.0% p=-0.0003 v=2.4338 e=0.356 n=7376 t=2874s
+[186/2000] SP= 19.0% best= 42.0% p=-0.0002 v=2.2669 e=0.337 n=7781 t=2889s
+[187/2000] SP= 25.0% best= 42.0% p=-0.0002 v=2.6333 e=0.343 n=7979 t=2904s
+[188/2000] SP= 23.0% best= 42.0% p=0.0006 v=2.6036 e=0.367 n=8481 t=2920s
+[189/2000] SP= 23.0% best= 42.0% p=0.0002 v=2.3275 e=0.357 n=7706 t=2935s
+[190/2000] SP= 24.0% best= 42.0% p=-0.0002 v=2.5688 e=0.355 n=8417 eval_R= 40.0% t=2951s
+[191/2000] SP= 24.0% best= 42.0% p=-0.0002 v=2.7944 e=0.344 n=7239 t=2980s
+[192/2000] SP= 12.0% best= 42.0% p=-0.0005 v=1.6787 e=0.345 n=8482 t=2996s
+[193/2000] SP= 23.0% best= 42.0% p=0.0000 v=2.4473 e=0.335 n=8484 t=3012s
+[194/2000] SP= 28.0% best= 42.0% p=0.0003 v=2.9984 e=0.352 n=8467 t=3028s
+[195/2000] SP= 23.0% best= 42.0% p=0.0003 v=2.7630 e=0.360 n=7395 t=3042s
+[196/2000] SP= 24.0% best= 42.0% p=-0.0002 v=2.5725 e=0.354 n=9482 t=3059s
+[197/2000] SP= 17.0% best= 42.0% p=-0.0007 v=2.4212 e=0.346 n=7644 t=3074s
+[198/2000] SP= 27.0% best= 42.0% p=0.0001 v=2.6666 e=0.339 n=8488 t=3091s
+[199/2000] SP= 30.0% best= 42.0% p=0.0003 v=2.7717 e=0.357 n=7988 t=3106s
+[200/2000] SP= 15.0% best= 42.0% p=-0.0001 v=2.0589 e=0.357 n=8690 eval_R= 40.0% t=3123s
+[201/2000] SP= 23.0% best= 42.0% p=-0.0003 v=2.7600 e=0.352 n=7913 t=3154s
+[202/2000] SP= 14.0% best= 42.0% p=-0.0003 v=1.9307 e=0.355 n=8096 t=3170s
+[203/2000] SP= 26.0% best= 42.0% p=-0.0004 v=2.9317 e=0.346 n=7589 t=3185s
+[204/2000] SP= 22.0% best= 42.0% p=-0.0003 v=2.5115 e=0.355 n=7903 t=3201s
+[205/2000] SP= 28.0% best= 42.0% p=-0.0001 v=2.6947 e=0.349 n=8511 t=3217s
+[206/2000] SP= 31.0% best= 42.0% p=-0.0003 v=2.9321 e=0.352 n=8153 t=3233s
+[207/2000] SP= 20.0% best= 42.0% p=0.0001 v=2.3229 e=0.362 n=8385 t=3249s
+[208/2000] SP= 27.0% best= 42.0% p=-0.0002 v=2.7815 e=0.370 n=8434 t=3265s
+[209/2000] SP= 25.0% best= 42.0% p=0.0000 v=2.8797 e=0.350 n=7944 t=3280s
+[210/2000] SP= 13.0% best= 42.0% p=-0.0006 v=1.8749 e=0.332 n=8234 eval_R= 40.0% t=3296s
+[211/2000] SP= 27.0% best= 42.0% p=-0.0003 v=2.8129 e=0.340 n=8696 t=3327s
+[212/2000] SP= 26.0% best= 42.0% p=-0.0002 v=2.6898 e=0.337 n=8074 t=3343s
+[213/2000] SP= 22.0% best= 42.0% p=-0.0000 v=2.4778 e=0.336 n=8164 t=3358s
+[214/2000] SP= 22.0% best= 42.0% p=-0.0002 v=2.5500 e=0.342 n=8742 t=3375s
+[215/2000] SP= 27.0% best= 42.0% p=0.0001 v=2.7890 e=0.320 n=8562 t=3391s
+[216/2000] SP= 20.0% best= 42.0% p=-0.0004 v=2.2983 e=0.321 n=8997 t=3407s
+[217/2000] SP= 27.0% best= 42.0% p=-0.0002 v=2.7367 e=0.328 n=8371 t=3423s
+[218/2000] SP= 21.0% best= 42.0% p=-0.0003 v=2.2793 e=0.314 n=9140 t=3440s
+[219/2000] SP= 37.0% best= 42.0% p=-0.0001 v=2.9573 e=0.316 n=10436 t=3459s
+[220/2000] SP= 24.0% best= 42.0% p=-0.0000 v=2.5135 e=0.310 n=8710 eval_R= 40.0% t=3475s
+[221/2000] SP= 24.0% best= 42.0% p=-0.0004 v=2.5117 e=0.304 n=8069 t=3506s
+[222/2000] SP= 31.0% best= 42.0% p=0.0000 v=2.9186 e=0.310 n=10720 t=3524s
+[223/2000] SP= 30.0% best= 42.0% p=0.0006 v=2.9984 e=0.319 n=8580 t=3540s
+[224/2000] SP= 22.0% best= 42.0% p=-0.0001 v=2.4625 e=0.322 n=8550 t=3556s
+[225/2000] SP= 15.0% best= 42.0% p=-0.0001 v=2.0004 e=0.316 n=9098 t=3573s
+[226/2000] SP= 21.0% best= 42.0% p=-0.0003 v=2.5487 e=0.300 n=8294 t=3589s
+[227/2000] SP= 22.0% best= 42.0% p=-0.0001 v=2.4995 e=0.308 n=8241 t=3605s
+[228/2000] SP= 22.0% best= 42.0% p=-0.0000 v=2.3195 e=0.315 n=9463 t=3622s
+[229/2000] SP= 24.0% best= 42.0% p=0.0001 v=2.6935 e=0.312 n=8242 t=3638s
+[230/2000] SP= 30.0% best= 42.0% p=0.0004 v=2.6882 e=0.329 n=10185 eval_R= 40.0% t=3655s
+[231/2000] SP= 17.0% best= 42.0% p=-0.0000 v=2.3591 e=0.324 n=7491 t=3685s
+[232/2000] SP= 17.0% best= 42.0% p=0.0001 v=2.0439 e=0.324 n=8577 t=3701s
+[233/2000] SP= 30.0% best= 42.0% p=-0.0000 v=3.1071 e=0.324 n=8527 t=3717s
+[234/2000] SP= 19.0% best= 42.0% p=0.0000 v=2.3093 e=0.317 n=8919 t=3733s
+[235/2000] SP= 22.0% best= 42.0% p=-0.0001 v=2.5230 e=0.336 n=7732 t=3748s
+[236/2000] SP= 31.0% best= 42.0% p=0.0002 v=3.1280 e=0.335 n=8756 t=3764s
+[237/2000] SP= 25.0% best= 42.0% p=0.0002 v=2.6319 e=0.331 n=8225 t=3780s
+[238/2000] SP= 21.0% best= 42.0% p=-0.0008 v=2.3053 e=0.326 n=8252 t=3795s
+[239/2000] SP= 29.0% best= 42.0% p=-0.0006 v=2.9489 e=0.329 n=8424 t=3811s
+  -> New best eval WR 47% saved
+[240/2000] SP= 25.0% best= 47.0% p=-0.0001 v=2.9625 e=0.335 n=7845 eval_R= 47.0% t=3826s
+[241/2000] SP= 27.0% best= 47.0% p=0.0008 v=2.9307 e=0.341 n=9223 t=3858s
+[242/2000] SP= 25.0% best= 47.0% p=-0.0004 v=2.7659 e=0.326 n=8189 t=3873s
+[243/2000] SP= 25.0% best= 47.0% p=-0.0002 v=2.8042 e=0.317 n=8134 t=3889s
+[244/2000] SP= 27.0% best= 47.0% p=-0.0003 v=2.7157 e=0.325 n=8950 t=3905s
+[245/2000] SP= 29.0% best= 47.0% p=-0.0002 v=2.6141 e=0.325 n=8699 t=3921s
+[246/2000] SP= 22.0% best= 47.0% p=0.0000 v=2.5926 e=0.324 n=7829 t=3936s
+[247/2000] SP= 24.0% best= 47.0% p=0.0001 v=2.6086 e=0.323 n=8208 t=3952s
+[248/2000] SP= 22.0% best= 47.0% p=0.0000 v=2.1708 e=0.327 n=9384 t=3969s
+[249/2000] SP= 30.0% best= 47.0% p=-0.0001 v=2.9055 e=0.320 n=8898 t=3985s
+[250/2000] SP= 34.0% best= 47.0% p=0.0007 v=3.1979 e=0.339 n=9218 eval_R= 38.0% t=4001s
+[251/2000] SP= 26.0% best= 47.0% p=-0.0002 v=2.6980 e=0.355 n=8315 t=4032s
+[252/2000] SP= 22.0% best= 47.0% p=-0.0009 v=2.6559 e=0.341 n=8208 t=4048s
+[253/2000] SP= 24.0% best= 47.0% p=-0.0007 v=2.5771 e=0.322 n=8116 t=4064s
+[254/2000] SP= 18.0% best= 47.0% p=-0.0002 v=2.0913 e=0.307 n=9229 t=4081s
+[255/2000] SP= 21.0% best= 47.0% p=-0.0010 v=2.4358 e=0.301 n=8453 t=4097s
+[256/2000] SP= 16.0% best= 47.0% p=-0.0005 v=1.9389 e=0.285 n=9521 t=4114s
+[257/2000] SP= 33.0% best= 47.0% p=0.0000 v=3.2316 e=0.298 n=8904 t=4130s
+[258/2000] SP= 23.0% best= 47.0% p=0.0001 v=2.4772 e=0.308 n=9197 t=4147s
+[259/2000] SP= 29.0% best= 47.0% p=0.0003 v=2.6870 e=0.317 n=8812 t=4163s
+[260/2000] SP= 18.0% best= 47.0% p=-0.0001 v=2.1450 e=0.314 n=9531 eval_R= 44.0% t=4181s
+[261/2000] SP= 21.0% best= 47.0% p=-0.0002 v=2.3458 e=0.307 n=8460 t=4212s
+[262/2000] SP= 29.0% best= 47.0% p=-0.0004 v=2.6082 e=0.306 n=9427 t=4229s
+[263/2000] SP= 25.0% best= 47.0% p=-0.0001 v=2.4115 e=0.296 n=8280 t=4245s
+[264/2000] SP= 33.0% best= 47.0% p=0.0000 v=2.9848 e=0.292 n=9010 t=4261s
+[265/2000] SP= 30.0% best= 47.0% p=0.0002 v=2.7954 e=0.308 n=8757 t=4277s
+[266/2000] SP= 23.0% best= 47.0% p=-0.0005 v=2.4765 e=0.305 n=8966 t=4294s
+[267/2000] SP= 22.0% best= 47.0% p=-0.0000 v=2.3647 e=0.298 n=8614 t=4310s
+[268/2000] SP= 20.0% best= 47.0% p=0.0002 v=2.1838 e=0.295 n=9335 t=4327s
+[269/2000] SP= 30.0% best= 47.0% p=0.0002 v=3.0012 e=0.308 n=10056 t=4344s
+  -> New best eval WR 49% saved
+[270/2000] SP= 26.0% best= 49.0% p=0.0003 v=2.6998 e=0.322 n=9190 eval_R= 49.0% t=4360s
+[271/2000] SP= 31.0% best= 49.0% p=0.0005 v=3.0386 e=0.333 n=8981 t=4392s
+[272/2000] SP= 23.0% best= 49.0% p=0.0005 v=2.6882 e=0.331 n=7367 t=4408s
+[273/2000] SP= 29.0% best= 49.0% p=-0.0002 v=2.6965 e=0.330 n=9222 t=4425s
+[274/2000] SP= 25.0% best= 49.0% p=-0.0004 v=2.6389 e=0.328 n=8605 t=4441s
+[275/2000] SP= 19.0% best= 49.0% p=0.0003 v=2.3126 e=0.310 n=7733 t=4456s
+[276/2000] SP= 36.0% best= 49.0% p=0.0000 v=3.1741 e=0.308 n=8919 t=4472s
+[277/2000] SP= 23.0% best= 49.0% p=0.0001 v=2.7146 e=0.332 n=8686 t=4488s
+[278/2000] SP= 31.0% best= 49.0% p=0.0007 v=3.0944 e=0.343 n=8170 t=4504s
+[279/2000] SP= 31.0% best= 49.0% p=0.0001 v=2.9743 e=0.349 n=8262 t=4519s
+[280/2000] SP= 24.0% best= 49.0% p=-0.0007 v=2.7843 e=0.338 n=8202 eval_R= 43.0% t=4535s
+[281/2000] SP= 18.0% best= 49.0% p=-0.0010 v=2.3882 e=0.331 n=7905 t=4566s
+[282/2000] SP= 36.0% best= 49.0% p=-0.0002 v=3.3702 e=0.318 n=9048 t=4582s
+[283/2000] SP= 25.0% best= 49.0% p=0.0005 v=2.5646 e=0.332 n=8538 t=4598s
+[284/2000] SP= 39.0% best= 49.0% p=0.0002 v=3.4194 e=0.344 n=9766 t=4615s
+[285/2000] SP= 31.0% best= 49.0% p=0.0008 v=3.1575 e=0.359 n=8273 t=4630s
+[286/2000] SP= 21.0% best= 49.0% p=0.0001 v=2.5051 e=0.355 n=8262 t=4646s
+[287/2000] SP= 25.0% best= 49.0% p=-0.0008 v=2.8862 e=0.351 n=7722 t=4661s
+[288/2000] SP= 24.0% best= 49.0% p=-0.0002 v=2.5491 e=0.334 n=8169 t=4677s
+[289/2000] SP= 25.0% best= 49.0% p=-0.0007 v=2.5739 e=0.330 n=8589 t=4693s
+[290/2000] SP= 37.0% best= 49.0% p=-0.0005 v=2.9458 e=0.342 n=9203 eval_R= 40.0% t=4710s
+[291/2000] SP= 42.0% best= 49.0% p=0.0016 v=3.1997 e=0.348 n=8229 t=4742s
+[292/2000] SP= 40.0% best= 49.0% p=0.0012 v=3.4270 e=0.385 n=7981 t=4757s
+[293/2000] SP= 28.0% best= 49.0% p=-0.0005 v=3.2592 e=0.368 n=6542 t=4771s
+[294/2000] SP= 24.0% best= 49.0% p=-0.0009 v=2.7921 e=0.354 n=7543 t=4786s
+[295/2000] SP= 28.0% best= 49.0% p=0.0004 v=2.6959 e=0.357 n=8454 t=4802s
+[296/2000] SP= 30.0% best= 49.0% p=-0.0004 v=2.8412 e=0.339 n=9266 t=4819s
+[297/2000] SP= 28.0% best= 49.0% p=-0.0003 v=2.7903 e=0.333 n=8478 t=4836s
+[298/2000] SP= 29.0% best= 49.0% p=-0.0003 v=2.6893 e=0.333 n=8884 t=4853s
+[299/2000] SP= 33.0% best= 49.0% p=0.0000 v=3.0277 e=0.334 n=8659 t=4869s
+[300/2000] SP= 44.0% best= 49.0% p=-0.0008 v=3.4475 e=0.351 n=8678 eval_R= 34.0% t=4885s
+[301/2000] SP= 34.0% best= 49.0% p=-0.0002 v=3.0563 e=0.353 n=7271 t=4916s
+[302/2000] SP= 35.0% best= 49.0% p=-0.0007 v=3.2204 e=0.341 n=8142 t=4931s
+[303/2000] SP= 28.0% best= 49.0% p=-0.0002 v=2.9249 e=0.329 n=8034 t=4947s
+[304/2000] SP= 26.0% best= 49.0% p=0.0011 v=2.6650 e=0.323 n=8060 t=4963s
+[305/2000] SP= 38.0% best= 49.0% p=0.0001 v=2.9156 e=0.325 n=10055 t=4980s
+[306/2000] SP= 43.0% best= 49.0% p=0.0001 v=3.2016 e=0.320 n=9150 t=4997s
+[307/2000] SP= 38.0% best= 49.0% p=0.0016 v=3.2077 e=0.352 n=8513 t=5013s
+[308/2000] SP= 30.0% best= 49.0% p=-0.0000 v=2.8220 e=0.343 n=9082 t=5029s
+[309/2000] SP= 38.0% best= 49.0% p=-0.0003 v=3.0394 e=0.348 n=8168 t=5045s
+[310/2000] SP= 39.0% best= 49.0% p=-0.0005 v=3.2815 e=0.359 n=7907 eval_R= 34.0% t=5060s
+[311/2000] SP= 36.0% best= 49.0% p=-0.0007 v=3.1714 e=0.360 n=7713 t=5091s
+[312/2000] SP= 44.0% best= 49.0% p=-0.0002 v=3.3175 e=0.347 n=7703 t=5106s
+[313/2000] SP= 44.0% best= 49.0% p=-0.0004 v=3.4696 e=0.343 n=7785 t=5121s
+[314/2000] SP= 31.0% best= 49.0% p=-0.0002 v=3.0396 e=0.331 n=8016 t=5137s
+[315/2000] SP= 39.0% best= 49.0% p=-0.0015 v=3.2061 e=0.323 n=7904 t=5153s
+[316/2000] SP= 29.0% best= 49.0% p=-0.0003 v=3.0448 e=0.303 n=7874 t=5168s
+[317/2000] SP= 28.0% best= 49.0% p=0.0021 v=2.7868 e=0.285 n=8801 t=5185s
+[318/2000] SP= 38.0% best= 49.0% p=-0.0002 v=2.9923 e=0.284 n=9660 t=5202s
+[319/2000] SP= 32.0% best= 49.0% p=0.0001 v=2.8098 e=0.287 n=9239 t=5218s
+[320/2000] SP= 37.0% best= 49.0% p=-0.0000 v=2.9827 e=0.314 n=9771 eval_R= 38.0% t=5236s
+[321/2000] SP= 38.0% best= 49.0% p=0.0004 v=3.1442 e=0.315 n=9069 t=5269s
+[322/2000] SP= 39.0% best= 49.0% p=-0.0000 v=3.1923 e=0.305 n=7305 t=5283s
+[323/2000] SP= 32.0% best= 49.0% p=-0.0007 v=3.0628 e=0.312 n=8143 t=5299s
+[324/2000] SP= 35.0% best= 49.0% p=0.0002 v=2.9722 e=0.299 n=8801 t=5316s
+[325/2000] SP= 36.0% best= 49.0% p=-0.0002 v=2.8162 e=0.293 n=10530 t=5334s
+[326/2000] SP= 31.0% best= 49.0% p=-0.0004 v=2.8027 e=0.298 n=8926 t=5351s
+[327/2000] SP= 35.0% best= 49.0% p=-0.0000 v=3.0110 e=0.308 n=8619 t=5367s
+[328/2000] SP= 31.0% best= 49.0% p=-0.0002 v=2.6764 e=0.308 n=10037 t=5385s
+[329/2000] SP= 42.0% best= 49.0% p=0.0003 v=3.3322 e=0.327 n=8718 t=5401s
+[330/2000] SP= 43.0% best= 49.0% p=-0.0007 v=3.2411 e=0.324 n=8150 eval_R= 37.0% t=5416s
+[331/2000] SP= 38.0% best= 49.0% p=-0.0001 v=3.1385 e=0.325 n=8441 t=5448s
+[332/2000] SP= 32.0% best= 49.0% p=-0.0002 v=2.9636 e=0.330 n=8369 t=5464s
+[333/2000] SP= 36.0% best= 49.0% p=0.0004 v=2.9044 e=0.320 n=8775 t=5480s
+[334/2000] SP= 27.0% best= 49.0% p=0.0010 v=2.6335 e=0.318 n=9569 t=5498s
+[335/2000] SP= 36.0% best= 49.0% p=0.0002 v=3.1446 e=0.326 n=8693 t=5514s
+[336/2000] SP= 35.0% best= 49.0% p=0.0008 v=2.9324 e=0.340 n=10325 t=5532s
+[337/2000] SP= 40.0% best= 49.0% p=-0.0001 v=3.1258 e=0.356 n=8769 t=5548s
+[338/2000] SP= 37.0% best= 49.0% p=0.0007 v=3.2280 e=0.342 n=8100 t=5564s
+[339/2000] SP= 32.0% best= 49.0% p=-0.0007 v=2.8693 e=0.340 n=8565 t=5581s
+  -> New best eval WR 50% saved
+[340/2000] SP= 21.0% best= 50.0% p=-0.0008 v=2.6046 e=0.319 n=7621 eval_R= 50.0% t=5596s
+[341/2000] SP= 23.0% best= 50.0% p=0.0008 v=2.3043 e=0.302 n=9624 t=5630s
+[342/2000] SP= 32.0% best= 50.0% p=-0.0005 v=2.7623 e=0.310 n=10593 t=5648s
+[343/2000] SP= 35.0% best= 50.0% p=0.0000 v=2.8684 e=0.324 n=11284 t=5667s
+[344/2000] SP= 26.0% best= 50.0% p=0.0005 v=2.5928 e=0.327 n=9364 t=5684s
+[345/2000] SP= 39.0% best= 50.0% p=0.0006 v=3.0069 e=0.343 n=10045 t=5702s
+[346/2000] SP= 34.0% best= 50.0% p=0.0002 v=3.0782 e=0.340 n=7976 t=5718s
+[347/2000] SP= 32.0% best= 50.0% p=-0.0004 v=2.7876 e=0.342 n=8634 t=5734s
+[348/2000] SP= 37.0% best= 50.0% p=-0.0003 v=3.0940 e=0.341 n=8704 t=5751s
+[349/2000] SP= 32.0% best= 50.0% p=-0.0003 v=2.6555 e=0.336 n=10027 t=5768s
+[350/2000] SP= 33.0% best= 50.0% p=-0.0007 v=2.6402 e=0.323 n=8849 eval_R= 41.0% t=5785s
+[351/2000] SP= 40.0% best= 50.0% p=-0.0002 v=3.0926 e=0.311 n=10295 t=5818s
+[352/2000] SP= 37.0% best= 50.0% p=0.0003 v=2.9716 e=0.328 n=9052 t=5835s
+[353/2000] SP= 45.0% best= 50.0% p=0.0005 v=3.2964 e=0.334 n=8613 t=5851s
+[354/2000] SP= 41.0% best= 50.0% p=0.0001 v=3.1778 e=0.314 n=8397 t=5867s
+[355/2000] SP= 41.0% best= 50.0% p=-0.0004 v=2.9655 e=0.323 n=9643 t=5884s
+[356/2000] SP= 44.0% best= 50.0% p=-0.0002 v=3.2185 e=0.321 n=7243 t=5899s
+[357/2000] SP= 29.0% best= 50.0% p=-0.0007 v=2.7642 e=0.309 n=7960 t=5915s
+[358/2000] SP= 38.0% best= 50.0% p=-0.0003 v=2.9283 e=0.311 n=8505 t=5931s
+[359/2000] SP= 42.0% best= 50.0% p=0.0001 v=2.8329 e=0.319 n=10451 t=5949s
+[360/2000] SP= 31.0% best= 50.0% p=-0.0003 v=2.8119 e=0.318 n=8755 eval_R= 41.0% t=5966s
+[361/2000] SP= 30.0% best= 50.0% p=-0.0007 v=2.7598 e=0.308 n=8997 t=5998s
+[362/2000] SP= 26.0% best= 50.0% p=-0.0003 v=2.5916 e=0.292 n=9431 t=6015s
+[363/2000] SP= 33.0% best= 50.0% p=-0.0002 v=2.8155 e=0.287 n=9795 t=6032s
+[364/2000] SP= 36.0% best= 50.0% p=-0.0002 v=2.9289 e=0.311 n=9731 t=6050s
+[365/2000] SP= 34.0% best= 50.0% p=0.0003 v=2.9232 e=0.308 n=8620 t=6066s
+[366/2000] SP= 30.0% best= 50.0% p=-0.0001 v=2.6552 e=0.317 n=9816 t=6083s
+[367/2000] SP= 36.0% best= 50.0% p=-0.0001 v=2.9938 e=0.312 n=8775 t=6099s
+[368/2000] SP= 32.0% best= 50.0% p=-0.0002 v=2.9361 e=0.311 n=7984 t=6115s
+[369/2000] SP= 34.0% best= 50.0% p=-0.0003 v=2.8642 e=0.311 n=9249 t=6132s
+[370/2000] SP= 33.0% best= 50.0% p=-0.0001 v=2.7026 e=0.297 n=9657 eval_R= 42.0% t=6149s
+[371/2000] SP= 45.0% best= 50.0% p=-0.0003 v=3.1363 e=0.300 n=9467 t=6183s
+[372/2000] SP= 34.0% best= 50.0% p=0.0001 v=2.8683 e=0.309 n=9428 t=6200s
+[373/2000] SP= 44.0% best= 50.0% p=-0.0001 v=2.9832 e=0.299 n=9682 t=6217s
+[374/2000] SP= 34.0% best= 50.0% p=-0.0001 v=2.8488 e=0.303 n=10089 t=6234s
+[375/2000] SP= 40.0% best= 50.0% p=-0.0003 v=3.0474 e=0.304 n=8947 t=6251s
+[376/2000] SP= 34.0% best= 50.0% p=-0.0001 v=2.7956 e=0.306 n=9942 t=6268s
+[377/2000] SP= 46.0% best= 50.0% p=0.0001 v=3.1341 e=0.296 n=9518 t=6286s
+[378/2000] SP= 29.0% best= 50.0% p=-0.0001 v=2.8142 e=0.298 n=9333 t=6303s
+[379/2000] SP= 30.0% best= 50.0% p=-0.0010 v=2.6863 e=0.292 n=8992 t=6319s
+[380/2000] SP= 26.0% best= 50.0% p=0.0005 v=2.5481 e=0.286 n=9071 eval_R= 44.0% t=6336s
+[381/2000] SP= 36.0% best= 50.0% p=-0.0007 v=2.9233 e=0.285 n=9777 t=6370s
+[382/2000] SP= 37.0% best= 50.0% p=0.0003 v=2.9730 e=0.295 n=9169 t=6387s
+[383/2000] SP= 37.0% best= 50.0% p=0.0007 v=2.9652 e=0.316 n=9310 t=6403s
+[384/2000] SP= 40.0% best= 50.0% p=0.0008 v=3.2213 e=0.324 n=7816 t=6418s
+[385/2000] SP= 40.0% best= 50.0% p=-0.0020 v=3.1130 e=0.317 n=8525 t=6434s
+[386/2000] SP= 37.0% best= 50.0% p=-0.0005 v=2.9446 e=0.322 n=9734 t=6452s
+[387/2000] SP= 33.0% best= 50.0% p=-0.0001 v=2.9288 e=0.293 n=9261 t=6469s
+[388/2000] SP= 35.0% best= 50.0% p=-0.0001 v=3.0199 e=0.297 n=9039 t=6486s
+[389/2000] SP= 26.0% best= 50.0% p=0.0003 v=2.5903 e=0.308 n=10184 t=6504s
+[390/2000] SP= 26.0% best= 50.0% p=0.0002 v=2.6532 e=0.309 n=8940 eval_R= 45.0% t=6521s
+[391/2000] SP= 32.0% best= 50.0% p=-0.0000 v=2.8318 e=0.330 n=9941 t=6555s
+[392/2000] SP= 37.0% best= 50.0% p=0.0008 v=2.9250 e=0.350 n=10266 t=6573s
+[393/2000] SP= 29.0% best= 50.0% p=0.0003 v=2.7683 e=0.356 n=8589 t=6589s
+[394/2000] SP= 28.0% best= 50.0% p=-0.0005 v=2.8129 e=0.340 n=8597 t=6605s
+[395/2000] SP= 34.0% best= 50.0% p=-0.0006 v=2.7657 e=0.334 n=10113 t=6623s
+[396/2000] SP= 31.0% best= 50.0% p=-0.0001 v=2.7301 e=0.329 n=10084 t=6641s
+[397/2000] SP= 37.0% best= 50.0% p=-0.0003 v=2.9087 e=0.320 n=10840 t=6659s
+[398/2000] SP= 36.0% best= 50.0% p=-0.0001 v=2.9876 e=0.319 n=9559 t=6677s
+[399/2000] SP= 31.0% best= 50.0% p=-0.0004 v=2.7593 e=0.321 n=8903 t=6694s
+[400/2000] SP= 36.0% best= 50.0% p=-0.0004 v=2.9997 e=0.324 n=8860 eval_R= 39.0% t=6710s
+[401/2000] SP= 35.0% best= 50.0% p=-0.0004 v=2.7947 e=0.314 n=10194 t=6743s
+[402/2000] SP= 40.0% best= 50.0% p=-0.0002 v=2.8398 e=0.313 n=10201 t=6761s
+[403/2000] SP= 30.0% best= 50.0% p=-0.0003 v=2.6885 e=0.301 n=9693 t=6778s
+[404/2000] SP= 37.0% best= 50.0% p=-0.0008 v=2.8727 e=0.300 n=9621 t=6796s
+[405/2000] SP= 43.0% best= 50.0% p=-0.0002 v=3.1826 e=0.297 n=9791 t=6813s
+[406/2000] SP= 37.0% best= 50.0% p=0.0004 v=2.8883 e=0.304 n=9117 t=6829s
+[407/2000] SP= 44.0% best= 50.0% p=-0.0004 v=3.1306 e=0.305 n=9124 t=6846s
+[408/2000] SP= 41.0% best= 50.0% p=-0.0007 v=3.1733 e=0.288 n=8245 t=6862s
+[409/2000] SP= 40.0% best= 50.0% p=-0.0002 v=3.0227 e=0.275 n=8779 t=6879s
+[410/2000] SP= 41.0% best= 50.0% p=-0.0004 v=3.0349 e=0.276 n=9347 eval_R= 46.0% t=6896s
+[411/2000] SP= 44.0% best= 50.0% p=0.0002 v=3.0076 e=0.292 n=10366 t=6930s
+[412/2000] SP= 33.0% best= 50.0% p=-0.0007 v=2.5911 e=0.288 n=10642 t=6948s
+[413/2000] SP= 38.0% best= 50.0% p=-0.0002 v=2.8231 e=0.293 n=10915 t=6967s
+[414/2000] SP= 25.0% best= 50.0% p=-0.0008 v=2.4886 e=0.276 n=9513 t=6984s
+[415/2000] SP= 38.0% best= 50.0% p=-0.0001 v=2.7463 e=0.273 n=9762 t=7002s
+[416/2000] SP= 32.0% best= 50.0% p=0.0000 v=2.5497 e=0.290 n=10977 t=7021s
+[417/2000] SP= 28.0% best= 50.0% p=-0.0000 v=2.4640 e=0.291 n=12820 t=7041s
+[418/2000] SP= 20.0% best= 50.0% p=0.0001 v=1.9126 e=0.282 n=12596 t=7061s
+[419/2000] SP= 20.0% best= 50.0% p=0.0010 v=2.0521 e=0.265 n=10771 t=7080s
+  -> New best eval WR 70% saved
+[420/2000] SP= 18.0% best= 70.0% p=0.0002 v=1.7962 e=0.248 n=11805 eval_R= 70.0% t=7100s
+[421/2000] SP= 19.0% best= 70.0% p=0.0001 v=1.8935 e=0.253 n=14327 t=7141s
+[422/2000] SP= 24.0% best= 70.0% p=0.0007 v=2.0070 e=0.273 n=12910 t=7162s
+[423/2000] SP= 26.0% best= 70.0% p=0.0003 v=2.2169 e=0.301 n=11812 t=7181s
+[424/2000] SP= 27.0% best= 70.0% p=-0.0002 v=2.1952 e=0.302 n=11363 t=7200s
+[425/2000] SP= 25.0% best= 70.0% p=-0.0002 v=2.2993 e=0.300 n=10360 t=7218s
+[426/2000] SP= 17.0% best= 70.0% p=-0.0004 v=1.6721 e=0.284 n=10409 t=7236s
+[427/2000] SP= 19.0% best= 70.0% p=-0.0001 v=1.9253 e=0.273 n=13511 t=7257s
+[428/2000] SP= 23.0% best= 70.0% p=-0.0001 v=1.9525 e=0.274 n=12943 t=7278s
+[429/2000] SP= 20.0% best= 70.0% p=-0.0001 v=1.9248 e=0.284 n=11786 t=7297s
+[430/2000] SP= 24.0% best= 70.0% p=0.0001 v=2.2788 e=0.288 n=11972 eval_R= 70.0% t=7317s
+[431/2000] SP= 15.0% best= 70.0% p=-0.0000 v=1.5467 e=0.290 n=11350 t=7354s
+[432/2000] SP= 22.0% best= 70.0% p=-0.0000 v=2.1424 e=0.303 n=11471 t=7373s
+[433/2000] SP= 17.0% best= 70.0% p=-0.0001 v=1.7472 e=0.290 n=12142 t=7393s
+[434/2000] SP= 16.0% best= 70.0% p=0.0004 v=1.7021 e=0.277 n=12089 t=7413s
+[435/2000] SP= 25.0% best= 70.0% p=-0.0000 v=2.3961 e=0.291 n=12805 t=7433s
+[436/2000] SP= 21.0% best= 70.0% p=0.0008 v=2.0950 e=0.311 n=13126 t=7454s
+[437/2000] SP= 19.0% best= 70.0% p=-0.0000 v=1.8798 e=0.323 n=11728 t=7474s
+[438/2000] SP= 21.0% best= 70.0% p=0.0000 v=2.0758 e=0.321 n=11398 t=7494s
+[439/2000] SP= 12.0% best= 70.0% p=-0.0002 v=1.3623 e=0.317 n=11148 t=7513s
+  -> New best eval WR 71% saved
+[440/2000] SP= 22.0% best= 71.0% p=-0.0004 v=1.9363 e=0.299 n=11026 eval_R= 71.0% t=7531s
+[441/2000] SP= 18.0% best= 71.0% p=-0.0002 v=1.7742 e=0.301 n=12276 t=7570s
+[442/2000] SP= 23.0% best= 71.0% p=-0.0002 v=2.0429 e=0.295 n=10161 t=7588s
+[443/2000] SP= 30.0% best= 71.0% p=0.0007 v=2.3365 e=0.322 n=11811 t=7607s
+[444/2000] SP= 38.0% best= 71.0% p=0.0011 v=2.9601 e=0.341 n=9556 t=7624s
+[445/2000] SP= 38.0% best= 71.0% p=0.0010 v=2.9761 e=0.360 n=10186 t=7642s
+[446/2000] SP= 36.0% best= 71.0% p=-0.0006 v=2.7359 e=0.366 n=9701 t=7659s
+[447/2000] SP= 27.0% best= 71.0% p=-0.0004 v=2.4972 e=0.359 n=9165 t=7676s
+[448/2000] SP= 23.0% best= 71.0% p=-0.0003 v=2.2386 e=0.346 n=9563 t=7694s
+[449/2000] SP= 17.0% best= 71.0% p=0.0004 v=1.7249 e=0.326 n=11807 t=7714s
+[450/2000] SP= 16.0% best= 71.0% p=0.0002 v=1.6826 e=0.296 n=13029 eval_R= 69.0% t=7736s
+[451/2000] SP= 31.0% best= 71.0% p=-0.0002 v=2.6262 e=0.288 n=12245 t=7776s
+[452/2000] SP= 17.0% best= 71.0% p=-0.0002 v=1.9519 e=0.318 n=11936 t=7796s
+[453/2000] SP= 16.0% best= 71.0% p=-0.0002 v=1.6900 e=0.317 n=13395 t=7818s
+[454/2000] SP= 22.0% best= 71.0% p=0.0001 v=1.9219 e=0.329 n=12262 t=7838s
+[455/2000] SP= 16.0% best= 71.0% p=-0.0001 v=1.8087 e=0.326 n=10411 t=7856s
+[456/2000] SP= 22.0% best= 71.0% p=-0.0001 v=2.2017 e=0.331 n=11498 t=7876s
+[457/2000] SP= 21.0% best= 71.0% p=-0.0006 v=2.0831 e=0.345 n=10238 t=7894s
+[458/2000] SP= 18.0% best= 71.0% p=-0.0004 v=1.8424 e=0.341 n=11047 t=7913s
+[459/2000] SP=  9.0% best= 71.0% p=0.0002 v=1.3395 e=0.328 n=11625 t=7933s
+  -> New best eval WR 75% saved
+[460/2000] SP= 20.0% best= 75.0% p=-0.0002 v=2.1212 e=0.310 n=11216 eval_R= 75.0% t=7952s
+[461/2000] SP= 14.0% best= 75.0% p=-0.0001 v=1.7433 e=0.336 n=12550 t=7991s
+[462/2000] SP= 17.0% best= 75.0% p=0.0001 v=1.7307 e=0.327 n=11231 t=8011s
+[463/2000] SP= 14.0% best= 75.0% p=-0.0006 v=1.6873 e=0.318 n=10543 t=8029s
+[464/2000] SP= 17.0% best= 75.0% p=-0.0002 v=1.9951 e=0.319 n=9535 t=8047s
+[465/2000] SP= 15.0% best= 75.0% p=-0.0002 v=1.5178 e=0.325 n=12672 t=8067s
+[466/2000] SP= 17.0% best= 75.0% p=-0.0008 v=1.6451 e=0.308 n=11758 t=8087s
+[467/2000] SP= 19.0% best= 75.0% p=-0.0000 v=1.8207 e=0.298 n=12942 t=8108s
+[468/2000] SP= 25.0% best= 75.0% p=0.0006 v=2.2625 e=0.323 n=11755 t=8128s
+[469/2000] SP= 23.0% best= 75.0% p=0.0005 v=1.9754 e=0.331 n=11750 t=8148s
+[470/2000] SP= 18.0% best= 75.0% p=-0.0002 v=1.6674 e=0.319 n=11454 eval_R= 72.0% t=8167s
+[471/2000] SP= 28.0% best= 75.0% p=-0.0006 v=2.3809 e=0.311 n=14253 t=8208s
+[472/2000] SP= 23.0% best= 75.0% p=-0.0003 v=2.0486 e=0.316 n=14219 t=8230s
+[473/2000] SP= 18.0% best= 75.0% p=-0.0002 v=1.7378 e=0.310 n=10565 t=8249s
+[474/2000] SP= 16.0% best= 75.0% p=0.0001 v=1.7167 e=0.296 n=13696 t=8271s
+[475/2000] SP= 13.0% best= 75.0% p=-0.0004 v=1.4691 e=0.301 n=11212 t=8290s
+[476/2000] SP= 16.0% best= 75.0% p=0.0003 v=1.6179 e=0.278 n=11072 t=8309s
+[477/2000] SP= 21.0% best= 75.0% p=0.0001 v=2.1305 e=0.279 n=11651 t=8329s
+[478/2000] SP= 25.0% best= 75.0% p=0.0009 v=2.2862 e=0.308 n=12615 t=8349s
+[479/2000] SP= 15.0% best= 75.0% p=-0.0001 v=1.5094 e=0.324 n=11774 t=8369s
+[480/2000] SP= 19.0% best= 75.0% p=-0.0004 v=1.8773 e=0.336 n=11636 eval_R= 70.0% t=8388s
+[481/2000] SP= 17.0% best= 75.0% p=-0.0003 v=1.8342 e=0.319 n=10434 t=8425s
+[482/2000] SP= 16.0% best= 75.0% p=-0.0001 v=1.6926 e=0.296 n=12494 t=8446s
+[483/2000] SP= 18.0% best= 75.0% p=-0.0008 v=1.8891 e=0.315 n=12853 t=8467s
+[484/2000] SP= 13.0% best= 75.0% p=-0.0001 v=1.3794 e=0.319 n=11935 t=8488s
+[485/2000] SP= 17.0% best= 75.0% p=0.0002 v=1.7063 e=0.316 n=11587 t=8508s
+[486/2000] SP= 16.0% best= 75.0% p=-0.0002 v=1.5858 e=0.317 n=11821 t=8527s
+[487/2000] SP= 20.0% best= 75.0% p=-0.0001 v=1.9531 e=0.317 n=12612 t=8548s
+[488/2000] SP= 21.0% best= 75.0% p=0.0008 v=1.9265 e=0.346 n=11190 t=8567s
+[489/2000] SP= 18.0% best= 75.0% p=-0.0001 v=1.6163 e=0.340 n=10424 t=8586s
+[490/2000] SP= 27.0% best= 75.0% p=-0.0002 v=2.3746 e=0.349 n=12204 eval_R= 62.0% t=8606s
+[491/2000] SP= 25.0% best= 75.0% p=0.0001 v=2.2296 e=0.359 n=10721 t=8643s
+[492/2000] SP= 21.0% best= 75.0% p=-0.0002 v=1.8725 e=0.355 n=9846 t=8661s
+[493/2000] SP= 15.0% best= 75.0% p=-0.0003 v=1.5822 e=0.349 n=10425 t=8680s
+[494/2000] SP= 14.0% best= 75.0% p=0.0002 v=1.5856 e=0.312 n=12590 t=8701s
+[495/2000] SP= 15.0% best= 75.0% p=-0.0001 v=1.5889 e=0.312 n=12563 t=8722s
+[496/2000] SP= 19.0% best= 75.0% p=0.0005 v=1.9789 e=0.322 n=11479 t=8741s
+[497/2000] SP= 16.0% best= 75.0% p=-0.0002 v=1.7230 e=0.340 n=10681 t=8760s
+[498/2000] SP= 18.0% best= 75.0% p=-0.0003 v=1.6895 e=0.330 n=12004 t=8781s
+[499/2000] SP= 20.0% best= 75.0% p=-0.0002 v=1.7947 e=0.327 n=10924 t=8800s
+[500/2000] SP= 21.0% best= 75.0% p=-0.0003 v=2.0094 e=0.326 n=11145 eval_R= 61.0% t=8819s
+[501/2000] SP= 20.0% best= 75.0% p=-0.0010 v=1.8681 e=0.334 n=11967 t=8858s
+[502/2000] SP= 12.0% best= 75.0% p=-0.0001 v=1.3128 e=0.348 n=11820 t=8878s
+[503/2000] SP= 24.0% best= 75.0% p=-0.0003 v=2.0909 e=0.329 n=11156 t=8897s
+[504/2000] SP= 22.0% best= 75.0% p=-0.0002 v=1.9706 e=0.326 n=11301 t=8917s
+[505/2000] SP= 18.0% best= 75.0% p=-0.0001 v=1.7913 e=0.332 n=12444 t=8938s
+[506/2000] SP= 26.0% best= 75.0% p=-0.0004 v=2.2558 e=0.337 n=12684 t=8959s
+[507/2000] SP= 20.0% best= 75.0% p=0.0001 v=1.9411 e=0.344 n=10855 t=8979s
+[508/2000] SP= 17.0% best= 75.0% p=-0.0001 v=1.7228 e=0.340 n=10205 t=8997s
+[509/2000] SP= 17.0% best= 75.0% p=-0.0006 v=1.8835 e=0.337 n=9599 t=9015s
+[510/2000] SP= 21.0% best= 75.0% p=-0.0000 v=2.1557 e=0.329 n=11178 eval_R= 68.0% t=9035s
+[511/2000] SP= 17.0% best= 75.0% p=-0.0002 v=1.5648 e=0.322 n=11316 t=9073s
+[512/2000] SP= 21.0% best= 75.0% p=-0.0002 v=2.1999 e=0.322 n=12873 t=9094s
+[513/2000] SP= 18.0% best= 75.0% p=-0.0003 v=1.7900 e=0.320 n=11549 t=9114s
+[514/2000] SP= 17.0% best= 75.0% p=-0.0005 v=1.7463 e=0.323 n=11571 t=9135s
+[515/2000] SP= 13.0% best= 75.0% p=-0.0000 v=1.5609 e=0.306 n=12103 t=9155s
+[516/2000] SP= 19.0% best= 75.0% p=-0.0001 v=1.6375 e=0.304 n=12772 t=9177s
+[517/2000] SP= 18.0% best= 75.0% p=0.0002 v=1.9230 e=0.325 n=10571 t=9195s
+[518/2000] SP= 14.0% best= 75.0% p=0.0000 v=1.5365 e=0.317 n=10792 t=9214s
+[519/2000] SP= 22.0% best= 75.0% p=-0.0004 v=2.0013 e=0.321 n=11835 t=9233s
+[520/2000] SP= 23.0% best= 75.0% p=0.0007 v=2.0852 e=0.335 n=11225 eval_R= 64.0% t=9253s
+[521/2000] SP= 25.0% best= 75.0% p=0.0002 v=1.9992 e=0.343 n=11712 t=9291s
+[522/2000] SP= 31.0% best= 75.0% p=-0.0003 v=2.8781 e=0.332 n=11183 t=9310s
+[523/2000] SP= 24.0% best= 75.0% p=-0.0003 v=2.3515 e=0.320 n=11069 t=9330s
+[524/2000] SP= 31.0% best= 75.0% p=-0.0001 v=2.6367 e=0.329 n=10888 t=9349s
+[525/2000] SP= 26.0% best= 75.0% p=-0.0006 v=2.5920 e=0.324 n=10598 t=9368s
+[526/2000] SP= 22.0% best= 75.0% p=-0.0006 v=2.3893 e=0.310 n=10483 t=9387s
+[527/2000] SP= 28.0% best= 75.0% p=-0.0004 v=2.6253 e=0.297 n=10933 t=9406s
+[528/2000] SP= 27.0% best= 75.0% p=0.0001 v=2.5980 e=0.295 n=11101 t=9426s
+[529/2000] SP= 26.0% best= 75.0% p=-0.0004 v=2.6251 e=0.306 n=9584 t=9445s
+[530/2000] SP= 31.0% best= 75.0% p=-0.0008 v=2.7610 e=0.291 n=11164 eval_R= 66.0% t=9465s
+[531/2000] SP= 23.0% best= 75.0% p=0.0001 v=2.3014 e=0.289 n=11520 t=9504s
+[532/2000] SP= 26.0% best= 75.0% p=0.0011 v=2.2874 e=0.279 n=11533 t=9524s
+[533/2000] SP= 19.0% best= 75.0% p=0.0014 v=1.8783 e=0.272 n=13559 t=9547s
+[534/2000] SP= 20.0% best= 75.0% p=0.0007 v=1.8900 e=0.257 n=12408 t=9567s
+[535/2000] SP= 26.0% best= 75.0% p=0.0005 v=1.9881 e=0.275 n=13785 t=9590s
+[536/2000] SP= 28.0% best= 75.0% p=-0.0002 v=2.2883 e=0.283 n=11926 t=9610s
+[537/2000] SP= 38.0% best= 75.0% p=0.0016 v=2.6535 e=0.298 n=10598 t=9628s
+[538/2000] SP= 43.0% best= 75.0% p=0.0012 v=3.0796 e=0.315 n=9683 t=9645s
+[539/2000] SP= 47.0% best= 75.0% p=0.0006 v=3.3105 e=0.305 n=8873 t=9662s
+[540/2000] SP= 53.0% best= 75.0% p=-0.0002 v=3.3574 e=0.308 n=9286 eval_R= 35.0% t=9679s
+[541/2000] SP= 43.0% best= 75.0% p=0.0003 v=3.1810 e=0.319 n=8364 t=9711s
+[542/2000] SP= 41.0% best= 75.0% p=0.0035 v=2.8525 e=0.293 n=9406 t=9729s
+[543/2000] SP= 27.0% best= 75.0% p=0.0009 v=2.4870 e=0.291 n=11607 t=9749s
+[544/2000] SP= 14.0% best= 75.0% p=0.0010 v=1.9167 e=0.269 n=13631 t=9772s
+[545/2000] SP= 43.0% best= 75.0% p=-0.0000 v=3.1501 e=0.264 n=13669 t=9794s
+[546/2000] SP= 30.0% best= 75.0% p=0.0001 v=2.6012 e=0.265 n=10449 t=9813s
+[547/2000] SP= 21.0% best= 75.0% p=0.0003 v=2.1461 e=0.273 n=11093 t=9833s
+[548/2000] SP= 24.0% best= 75.0% p=0.0001 v=2.3038 e=0.277 n=12728 t=9855s
+[549/2000] SP= 20.0% best= 75.0% p=-0.0001 v=2.1964 e=0.282 n=10640 t=9875s
+[550/2000] SP= 20.0% best= 75.0% p=0.0001 v=1.9249 e=0.277 n=12489 eval_R= 69.0% t=9896s
+[551/2000] SP= 30.0% best= 75.0% p=0.0001 v=2.9127 e=0.280 n=11464 t=9934s
+[552/2000] SP= 17.0% best= 75.0% p=0.0000 v=1.7848 e=0.306 n=12495 t=9955s
+[553/2000] SP= 17.0% best= 75.0% p=0.0006 v=1.7188 e=0.292 n=10796 t=9975s
+[554/2000] SP= 24.0% best= 75.0% p=-0.0003 v=2.0431 e=0.279 n=12530 t=9995s
+[555/2000] SP= 19.0% best= 75.0% p=-0.0000 v=1.6443 e=0.294 n=13637 t=10017s
+[556/2000] SP= 24.0% best= 75.0% p=0.0000 v=2.1827 e=0.299 n=11464 t=10036s
+[557/2000] SP= 27.0% best= 75.0% p=-0.0006 v=2.0893 e=0.315 n=14061 t=10058s
+[558/2000] SP= 21.0% best= 75.0% p=-0.0000 v=2.0120 e=0.329 n=11302 t=10078s
+[559/2000] SP= 20.0% best= 75.0% p=-0.0010 v=1.9730 e=0.320 n=12773 t=10099s
+[560/2000] SP= 14.0% best= 75.0% p=-0.0000 v=1.4941 e=0.306 n=11814 eval_R= 73.0% t=10120s
+[561/2000] SP= 18.0% best= 75.0% p=0.0005 v=1.7301 e=0.285 n=12939 t=10160s
+[562/2000] SP= 24.0% best= 75.0% p=0.0002 v=2.3048 e=0.294 n=11889 t=10180s
+[563/2000] SP= 16.0% best= 75.0% p=-0.0001 v=1.4858 e=0.317 n=14253 t=10204s
+[564/2000] SP= 18.0% best= 75.0% p=-0.0000 v=1.7478 e=0.315 n=12907 t=10225s
+[565/2000] SP= 26.0% best= 75.0% p=-0.0002 v=2.3614 e=0.322 n=11529 t=10245s
+[566/2000] SP= 19.0% best= 75.0% p=-0.0002 v=1.9236 e=0.335 n=12111 t=10265s
+[567/2000] SP= 21.0% best= 75.0% p=-0.0001 v=1.8195 e=0.330 n=13254 t=10287s
+[568/2000] SP= 16.0% best= 75.0% p=-0.0003 v=1.6724 e=0.314 n=11231 t=10307s
+[569/2000] SP= 15.0% best= 75.0% p=-0.0001 v=1.7193 e=0.304 n=13881 t=10329s
+[570/2000] SP= 25.0% best= 75.0% p=0.0001 v=2.1038 e=0.320 n=12764 eval_R= 73.0% t=10350s
+[571/2000] SP= 18.0% best= 75.0% p=-0.0000 v=1.8455 e=0.317 n=11320 t=10388s
+[572/2000] SP= 15.0% best= 75.0% p=-0.0004 v=1.5808 e=0.329 n=12640 t=10410s
+[573/2000] SP= 21.0% best= 75.0% p=-0.0004 v=2.0178 e=0.310 n=11933 t=10430s
+[574/2000] SP= 17.0% best= 75.0% p=-0.0005 v=1.6050 e=0.297 n=12334 t=10451s
+[575/2000] SP= 24.0% best= 75.0% p=-0.0001 v=1.9335 e=0.294 n=11481 t=10470s
+[576/2000] SP= 24.0% best= 75.0% p=-0.0000 v=2.1495 e=0.300 n=12513 t=10491s
+[577/2000] SP= 23.0% best= 75.0% p=-0.0002 v=2.0601 e=0.317 n=12237 t=10512s
+[578/2000] SP= 31.0% best= 75.0% p=0.0004 v=2.4216 e=0.312 n=12461 t=10533s
+[579/2000] SP= 14.0% best= 75.0% p=-0.0001 v=1.5633 e=0.327 n=11806 t=10554s
+[580/2000] SP= 28.0% best= 75.0% p=-0.0002 v=2.2951 e=0.328 n=12469 eval_R= 64.0% t=10575s
+[581/2000] SP= 25.0% best= 75.0% p=-0.0002 v=2.1747 e=0.324 n=11875 t=10614s
+[582/2000] SP= 30.0% best= 75.0% p=-0.0003 v=2.4570 e=0.314 n=10990 t=10633s
+[583/2000] SP= 25.0% best= 75.0% p=-0.0004 v=2.2764 e=0.320 n=11292 t=10654s
+[584/2000] SP= 25.0% best= 75.0% p=-0.0005 v=2.3285 e=0.320 n=11190 t=10674s
+[585/2000] SP= 23.0% best= 75.0% p=-0.0004 v=2.3114 e=0.312 n=11035 t=10693s
+[586/2000] SP= 18.0% best= 75.0% p=-0.0003 v=2.0189 e=0.310 n=11345 t=10714s
+[587/2000] SP= 28.0% best= 75.0% p=-0.0001 v=2.4243 e=0.309 n=12159 t=10735s
+[588/2000] SP= 18.0% best= 75.0% p=-0.0001 v=1.8773 e=0.323 n=10878 t=10755s
+[589/2000] SP= 37.0% best= 75.0% p=0.0001 v=3.0536 e=0.329 n=13646 t=10777s
+[590/2000] SP= 27.0% best= 75.0% p=0.0003 v=2.3888 e=0.330 n=13119 eval_R= 63.0% t=10800s
+[591/2000] SP= 20.0% best= 75.0% p=-0.0001 v=2.0529 e=0.335 n=10892 t=10838s
+[592/2000] SP= 17.0% best= 75.0% p=-0.0006 v=1.8252 e=0.325 n=11106 t=10858s
+[593/2000] SP= 31.0% best= 75.0% p=0.0002 v=2.8864 e=0.320 n=11481 t=10877s
+[594/2000] SP= 24.0% best= 75.0% p=-0.0002 v=2.1338 e=0.326 n=12262 t=10899s
+[595/2000] SP= 27.0% best= 75.0% p=-0.0001 v=2.2578 e=0.321 n=13503 t=10921s
+[596/2000] SP= 27.0% best= 75.0% p=-0.0002 v=2.3246 e=0.342 n=11514 t=10941s
+[597/2000] SP= 33.0% best= 75.0% p=0.0002 v=2.8169 e=0.335 n=10690 t=10961s
+[598/2000] SP= 24.0% best= 75.0% p=-0.0002 v=2.4631 e=0.341 n=10887 t=10981s
+[599/2000] SP= 26.0% best= 75.0% p=-0.0005 v=2.3438 e=0.319 n=12400 t=11002s
+[600/2000] SP= 20.0% best= 75.0% p=-0.0007 v=2.0864 e=0.305 n=10471 eval_R= 67.0% t=11021s
+[601/2000] SP= 28.0% best= 75.0% p=0.0005 v=2.3462 e=0.309 n=12244 t=11060s
+[602/2000] SP= 23.0% best= 75.0% p=0.0002 v=2.2418 e=0.316 n=13007 t=11082s
+[603/2000] SP= 26.0% best= 75.0% p=0.0000 v=2.4272 e=0.324 n=11890 t=11103s
+[604/2000] SP= 26.0% best= 75.0% p=0.0001 v=2.5288 e=0.339 n=11656 t=11124s
+[605/2000] SP= 24.0% best= 75.0% p=-0.0001 v=2.3787 e=0.331 n=11286 t=11143s
+[606/2000] SP= 25.0% best= 75.0% p=-0.0003 v=2.4290 e=0.332 n=10367 t=11163s
+[607/2000] SP= 21.0% best= 75.0% p=-0.0003 v=2.0553 e=0.310 n=11979 t=11184s
+[608/2000] SP= 31.0% best= 75.0% p=-0.0001 v=2.4782 e=0.307 n=12665 t=11206s
+[609/2000] SP= 21.0% best= 75.0% p=-0.0003 v=2.1062 e=0.315 n=11857 t=11227s
+[610/2000] SP= 31.0% best= 75.0% p=-0.0002 v=2.4109 e=0.308 n=12858 eval_R= 64.0% t=11249s
+[611/2000] SP= 32.0% best= 75.0% p=-0.0001 v=2.6747 e=0.310 n=13023 t=11289s
+[612/2000] SP= 36.0% best= 75.0% p=0.0005 v=2.7609 e=0.318 n=11666 t=11309s
+[613/2000] SP= 29.0% best= 75.0% p=-0.0002 v=2.3962 e=0.333 n=11754 t=11330s
+[614/2000] SP= 26.0% best= 75.0% p=-0.0003 v=2.2604 e=0.318 n=11897 t=11351s
+[615/2000] SP= 25.0% best= 75.0% p=-0.0001 v=2.2229 e=0.313 n=11369 t=11371s
+[616/2000] SP= 23.0% best= 75.0% p=0.0003 v=1.9969 e=0.297 n=13070 t=11393s
+[617/2000] SP= 25.0% best= 75.0% p=0.0004 v=2.1959 e=0.298 n=13585 t=11416s
+[618/2000] SP= 29.0% best= 75.0% p=0.0003 v=2.3319 e=0.312 n=13989 t=11439s
+[619/2000] SP= 29.0% best= 75.0% p=-0.0002 v=2.1789 e=0.329 n=13054 t=11461s
+[620/2000] SP= 21.0% best= 75.0% p=0.0001 v=1.9851 e=0.318 n=11815 eval_R= 68.0% t=11481s
+[621/2000] SP= 28.0% best= 75.0% p=-0.0002 v=2.2543 e=0.306 n=13329 t=11522s
+[622/2000] SP= 27.0% best= 75.0% p=0.0001 v=2.2012 e=0.308 n=13603 t=11545s
+[623/2000] SP= 25.0% best= 75.0% p=-0.0001 v=2.2512 e=0.309 n=11934 t=11565s
+[624/2000] SP= 26.0% best= 75.0% p=-0.0005 v=2.1579 e=0.309 n=12491 t=11587s
+[625/2000] SP= 28.0% best= 75.0% p=-0.0004 v=2.4546 e=0.296 n=11637 t=11607s
+[626/2000] SP= 21.0% best= 75.0% p=-0.0000 v=1.9627 e=0.306 n=12630 t=11629s
+[627/2000] SP= 36.0% best= 75.0% p=0.0000 v=2.6579 e=0.305 n=12385 t=11650s
+[628/2000] SP= 25.0% best= 75.0% p=-0.0001 v=2.2205 e=0.302 n=12885 t=11672s
+[629/2000] SP= 24.0% best= 75.0% p=0.0001 v=2.0489 e=0.310 n=12386 t=11694s
+[630/2000] SP= 29.0% best= 75.0% p=-0.0004 v=2.2345 e=0.306 n=11774 eval_R= 72.0% t=11714s
+[631/2000] SP= 34.0% best= 75.0% p=0.0008 v=2.4375 e=0.298 n=14139 t=11756s
+[632/2000] SP= 30.0% best= 75.0% p=-0.0003 v=2.3054 e=0.296 n=14295 t=11780s
+[633/2000] SP= 21.0% best= 75.0% p=0.0001 v=1.8624 e=0.293 n=12604 t=11801s
+[634/2000] SP= 28.0% best= 75.0% p=-0.0003 v=2.1632 e=0.276 n=13626 t=11824s
+[635/2000] SP= 34.0% best= 75.0% p=0.0001 v=2.5755 e=0.279 n=14313 t=11847s
+[636/2000] SP= 36.0% best= 75.0% p=0.0003 v=2.2617 e=0.277 n=15519 t=11872s
+[637/2000] SP= 36.0% best= 75.0% p=0.0001 v=2.5194 e=0.274 n=13814 t=11894s
+[638/2000] SP= 29.0% best= 75.0% p=-0.0003 v=2.2701 e=0.280 n=14183 t=11918s
+[639/2000] SP= 21.0% best= 75.0% p=0.0003 v=1.9330 e=0.277 n=14090 t=11941s
+  -> New best eval WR 78% saved
+[640/2000] SP= 37.0% best= 78.0% p=-0.0000 v=2.7646 e=0.274 n=13767 eval_R= 78.0% t=11963s
+[641/2000] SP= 23.0% best= 78.0% p=-0.0002 v=2.0937 e=0.277 n=13201 t=12004s
+[642/2000] SP= 28.0% best= 78.0% p=-0.0001 v=2.4000 e=0.281 n=12802 t=12026s
+[643/2000] SP= 30.0% best= 78.0% p=0.0009 v=2.3744 e=0.284 n=13710 t=12049s
+[644/2000] SP= 38.0% best= 78.0% p=0.0001 v=2.7153 e=0.283 n=13724 t=12072s
+[645/2000] SP= 27.0% best= 78.0% p=-0.0003 v=2.2335 e=0.296 n=12103 t=12093s
+[646/2000] SP= 28.0% best= 78.0% p=0.0007 v=2.2385 e=0.281 n=13469 t=12116s
+[647/2000] SP= 32.0% best= 78.0% p=-0.0003 v=2.4126 e=0.282 n=14256 t=12139s
+[648/2000] SP= 26.0% best= 78.0% p=-0.0002 v=2.2525 e=0.286 n=12291 t=12160s
+[649/2000] SP= 32.0% best= 78.0% p=-0.0001 v=2.5786 e=0.276 n=12540 t=12182s
+[650/2000] SP= 32.0% best= 78.0% p=-0.0002 v=2.4929 e=0.271 n=12914 eval_R= 74.0% t=12203s
+[651/2000] SP= 25.0% best= 78.0% p=0.0001 v=2.1378 e=0.264 n=14597 t=12246s
+[652/2000] SP= 25.0% best= 78.0% p=-0.0004 v=2.0123 e=0.257 n=13679 t=12269s
+[653/2000] SP= 39.0% best= 78.0% p=0.0001 v=2.7441 e=0.254 n=13103 t=12292s
+[654/2000] SP= 28.0% best= 78.0% p=0.0004 v=2.2859 e=0.261 n=13058 t=12313s
+[655/2000] SP= 32.0% best= 78.0% p=-0.0001 v=2.3860 e=0.263 n=13876 t=12336s
+[656/2000] SP= 29.0% best= 78.0% p=-0.0003 v=2.2601 e=0.261 n=14679 t=12361s
+[657/2000] SP= 29.0% best= 78.0% p=-0.0003 v=1.9946 e=0.258 n=14021 t=12384s
+[658/2000] SP= 39.0% best= 78.0% p=0.0004 v=2.7385 e=0.256 n=15613 t=12409s
+[659/2000] SP= 33.0% best= 78.0% p=0.0000 v=2.3969 e=0.262 n=14923 t=12433s
+[660/2000] SP= 33.0% best= 78.0% p=-0.0009 v=2.1989 e=0.270 n=13645 eval_R= 70.0% t=12456s
+[661/2000] SP= 33.0% best= 78.0% p=-0.0003 v=2.4127 e=0.258 n=15614 t=12500s
+[662/2000] SP= 24.0% best= 78.0% p=-0.0001 v=2.0016 e=0.255 n=15163 t=12526s
+[663/2000] SP= 34.0% best= 78.0% p=-0.0004 v=2.5480 e=0.250 n=14711 t=12550s
+[664/2000] SP= 24.0% best= 78.0% p=0.0002 v=2.0601 e=0.259 n=14529 t=12575s
+[665/2000] SP= 29.0% best= 78.0% p=-0.0003 v=2.2857 e=0.254 n=14286 t=12598s
+[666/2000] SP= 22.0% best= 78.0% p=0.0002 v=1.9884 e=0.253 n=14711 t=12622s
+[667/2000] SP= 24.0% best= 78.0% p=-0.0005 v=2.1116 e=0.248 n=13339 t=12645s
+[668/2000] SP= 30.0% best= 78.0% p=0.0002 v=2.2649 e=0.258 n=13772 t=12667s
+[669/2000] SP= 29.0% best= 78.0% p=-0.0002 v=2.2307 e=0.268 n=13468 t=12690s
+[670/2000] SP= 34.0% best= 78.0% p=-0.0004 v=2.4433 e=0.270 n=14262 eval_R= 75.0% t=12713s
+[671/2000] SP= 30.0% best= 78.0% p=0.0000 v=2.1812 e=0.262 n=16040 t=12758s
+[672/2000] SP= 24.0% best= 78.0% p=-0.0003 v=1.8278 e=0.267 n=15254 t=12782s
+[673/2000] SP= 20.0% best= 78.0% p=0.0004 v=1.8366 e=0.252 n=16355 t=12808s
+[674/2000] SP= 31.0% best= 78.0% p=-0.0005 v=2.4254 e=0.257 n=14656 t=12832s
+[675/2000] SP= 33.0% best= 78.0% p=0.0015 v=2.3869 e=0.266 n=14104 t=12855s
+[676/2000] SP= 31.0% best= 78.0% p=0.0002 v=2.2673 e=0.279 n=14710 t=12879s
+[677/2000] SP= 30.0% best= 78.0% p=0.0006 v=2.1770 e=0.266 n=14120 t=12901s
+[678/2000] SP= 26.0% best= 78.0% p=0.0001 v=2.0783 e=0.266 n=14781 t=12925s
+[679/2000] SP= 29.0% best= 78.0% p=-0.0003 v=2.1196 e=0.255 n=16043 t=12951s
+  -> New best eval WR 80% saved
+[680/2000] SP= 31.0% best= 80.0% p=-0.0001 v=2.2478 e=0.241 n=15555 eval_R= 80.0% t=12976s
+[681/2000] SP= 22.0% best= 80.0% p=-0.0001 v=1.7627 e=0.251 n=15643 t=13020s
+[682/2000] SP= 25.0% best= 80.0% p=0.0000 v=2.0265 e=0.247 n=17389 t=13047s
+[683/2000] SP= 28.0% best= 80.0% p=-0.0001 v=2.0148 e=0.251 n=14115 t=13071s
+[684/2000] SP= 29.0% best= 80.0% p=-0.0006 v=2.3033 e=0.271 n=13198 t=13094s
+[685/2000] SP= 33.0% best= 80.0% p=0.0004 v=2.4132 e=0.272 n=14009 t=13117s
+[686/2000] SP= 31.0% best= 80.0% p=-0.0002 v=2.0518 e=0.260 n=14310 t=13141s
+[687/2000] SP= 30.0% best= 80.0% p=-0.0001 v=2.2491 e=0.261 n=14339 t=13164s
+[688/2000] SP= 27.0% best= 80.0% p=-0.0001 v=2.0089 e=0.265 n=15003 t=13189s
+[689/2000] SP= 27.0% best= 80.0% p=-0.0004 v=2.0605 e=0.257 n=14375 t=13213s
+[690/2000] SP= 30.0% best= 80.0% p=0.0001 v=2.1071 e=0.265 n=15783 eval_R= 71.0% t=13238s
+[691/2000] SP= 18.0% best= 80.0% p=-0.0000 v=1.5007 e=0.258 n=15321 t=13282s
+[692/2000] SP= 41.0% best= 80.0% p=-0.0002 v=2.7951 e=0.265 n=15102 t=13306s
+[693/2000] SP= 29.0% best= 80.0% p=0.0001 v=2.1429 e=0.267 n=15255 t=13331s
+[694/2000] SP= 32.0% best= 80.0% p=-0.0002 v=2.1580 e=0.265 n=15268 t=13356s
+[695/2000] SP= 20.0% best= 80.0% p=0.0000 v=1.7815 e=0.267 n=16699 t=13382s
+[696/2000] SP= 24.0% best= 80.0% p=0.0005 v=1.9273 e=0.254 n=13967 t=13406s
+[697/2000] SP= 24.0% best= 80.0% p=-0.0001 v=2.0858 e=0.267 n=15582 t=13431s
+[698/2000] SP= 21.0% best= 80.0% p=-0.0002 v=1.8512 e=0.275 n=13936 t=13454s
+[699/2000] SP= 26.0% best= 80.0% p=-0.0003 v=2.2307 e=0.264 n=13393 t=13477s
+[700/2000] SP= 24.0% best= 80.0% p=-0.0002 v=1.7753 e=0.260 n=15988 eval_R= 80.0% t=13502s
+[701/2000] SP= 32.0% best= 80.0% p=-0.0003 v=2.3241 e=0.253 n=14009 t=13545s
+[702/2000] SP= 33.0% best= 80.0% p=0.0003 v=2.3465 e=0.261 n=14997 t=13570s
+[703/2000] SP= 36.0% best= 80.0% p=-0.0003 v=2.2987 e=0.255 n=14868 t=13595s
+[704/2000] SP= 36.0% best= 80.0% p=-0.0005 v=2.5344 e=0.243 n=14002 t=13618s
+[705/2000] SP= 26.0% best= 80.0% p=0.0003 v=2.0931 e=0.249 n=14096 t=13641s
+[706/2000] SP= 37.0% best= 80.0% p=-0.0002 v=2.4276 e=0.238 n=15291 t=13666s
+[707/2000] SP= 25.0% best= 80.0% p=-0.0004 v=2.0736 e=0.236 n=15171 t=13691s
+[708/2000] SP= 34.0% best= 80.0% p=-0.0002 v=2.3946 e=0.231 n=15994 t=13717s
+[709/2000] SP= 24.0% best= 80.0% p=-0.0002 v=1.9733 e=0.235 n=16364 t=13744s
+  -> New best eval WR 81% saved
+[710/2000] SP= 35.0% best= 81.0% p=-0.0002 v=2.4947 e=0.234 n=16048 eval_R= 81.0% t=13769s
+[711/2000] SP= 35.0% best= 81.0% p=-0.0000 v=2.3338 e=0.234 n=16685 t=13816s
+[712/2000] SP= 30.0% best= 81.0% p=-0.0003 v=2.2500 e=0.234 n=14292 t=13839s
+[713/2000] SP= 37.0% best= 81.0% p=-0.0003 v=2.5192 e=0.233 n=14477 t=13864s
+[714/2000] SP= 41.0% best= 81.0% p=-0.0001 v=2.4848 e=0.225 n=15781 t=13890s
+[715/2000] SP= 48.0% best= 81.0% p=0.0002 v=2.6365 e=0.232 n=14014 t=13913s
+[716/2000] SP= 47.0% best= 81.0% p=0.0003 v=2.7832 e=0.216 n=13422 t=13936s
+[717/2000] SP= 55.0% best= 81.0% p=-0.0001 v=2.6718 e=0.211 n=12578 t=13958s
+[718/2000] SP= 54.0% best= 81.0% p=-0.0002 v=2.7248 e=0.200 n=13682 t=13981s
+[719/2000] SP= 53.0% best= 81.0% p=-0.0003 v=2.6069 e=0.190 n=13276 t=14003s
+[720/2000] SP= 45.0% best= 81.0% p=-0.0001 v=2.4492 e=0.190 n=15680 eval_R= 68.0% t=14029s
+[721/2000] SP= 43.0% best= 81.0% p=-0.0001 v=2.4741 e=0.185 n=15849 t=14073s
+[722/2000] SP= 30.0% best= 81.0% p=0.0002 v=2.2149 e=0.197 n=15115 t=14098s
+[723/2000] SP= 44.0% best= 81.0% p=0.0003 v=2.5467 e=0.200 n=16010 t=14124s
+[724/2000] SP= 35.0% best= 81.0% p=0.0001 v=2.2185 e=0.206 n=16442 t=14150s
+[725/2000] SP= 34.0% best= 81.0% p=0.0001 v=2.2438 e=0.211 n=17630 t=14179s
+[726/2000] SP= 32.0% best= 81.0% p=-0.0001 v=2.0201 e=0.207 n=16735 t=14206s
+[727/2000] SP= 28.0% best= 81.0% p=-0.0002 v=2.0250 e=0.218 n=15940 t=14232s
+[728/2000] SP= 32.0% best= 81.0% p=0.0001 v=2.0985 e=0.218 n=15826 t=14258s
+[729/2000] SP= 43.0% best= 81.0% p=0.0009 v=2.4226 e=0.223 n=15406 t=14283s
+[730/2000] SP= 45.0% best= 81.0% p=-0.0000 v=2.4723 e=0.224 n=14987 eval_R= 51.0% t=14307s
+[731/2000] SP= 57.0% best= 81.0% p=0.0001 v=2.8328 e=0.214 n=12543 t=14345s
+[732/2000] SP= 60.0% best= 81.0% p=0.0010 v=2.8140 e=0.214 n=12702 t=14366s
+[733/2000] SP= 60.0% best= 81.0% p=0.0002 v=2.8557 e=0.204 n=10857 t=14386s
+[734/2000] SP= 67.0% best= 81.0% p=-0.0008 v=2.7474 e=0.196 n=11671 t=14406s
+[735/2000] SP= 52.0% best= 81.0% p=0.0022 v=2.6867 e=0.186 n=13290 t=14428s
+[736/2000] SP= 55.0% best= 81.0% p=0.0019 v=2.4755 e=0.174 n=16062 t=14455s
+[737/2000] SP= 27.0% best= 81.0% p=0.0010 v=2.3147 e=0.171 n=17271 t=14482s
+[738/2000] SP= 33.0% best= 81.0% p=0.0017 v=2.2298 e=0.164 n=18871 t=14512s
+[739/2000] SP= 32.0% best= 81.0% p=0.0006 v=2.5447 e=0.169 n=15978 t=14538s
+  -> New best eval WR 84% saved
+[740/2000] SP= 21.0% best= 84.0% p=0.0000 v=2.0256 e=0.174 n=14888 eval_R= 84.0% t=14562s
+[741/2000] SP= 29.0% best= 84.0% p=-0.0004 v=2.4111 e=0.176 n=15380 t=14606s
+[742/2000] SP= 33.0% best= 84.0% p=0.0004 v=2.4378 e=0.191 n=16656 t=14632s
+[743/2000] SP= 30.0% best= 84.0% p=0.0002 v=2.2258 e=0.193 n=15687 t=14658s
+[744/2000] SP= 33.0% best= 84.0% p=-0.0002 v=2.4239 e=0.209 n=14816 t=14683s
+[745/2000] SP= 25.0% best= 84.0% p=-0.0004 v=2.0646 e=0.215 n=16186 t=14709s
+[746/2000] SP= 28.0% best= 84.0% p=-0.0001 v=2.0450 e=0.209 n=14899 t=14734s
+[747/2000] SP= 23.0% best= 84.0% p=-0.0000 v=1.8070 e=0.208 n=14694 t=14759s
+[748/2000] SP= 38.0% best= 84.0% p=-0.0000 v=2.4501 e=0.206 n=17050 t=14786s
+[749/2000] SP= 32.0% best= 84.0% p=0.0006 v=2.0280 e=0.215 n=16605 t=14813s
+[750/2000] SP= 41.0% best= 84.0% p=0.0003 v=2.3015 e=0.213 n=16382 eval_R= 53.0% t=14839s
+[751/2000] SP= 45.0% best= 84.0% p=0.0012 v=2.5930 e=0.230 n=13130 t=14878s
+[752/2000] SP= 65.0% best= 84.0% p=0.0005 v=3.2596 e=0.216 n=11562 t=14898s
+[753/2000] SP= 61.0% best= 84.0% p=0.0004 v=2.8673 e=0.216 n=11017 t=14918s
+[754/2000] SP= 64.0% best= 84.0% p=-0.0009 v=2.7906 e=0.220 n=10599 t=14937s
+[755/2000] SP= 73.0% best= 84.0% p=-0.0005 v=2.5338 e=0.197 n=11545 t=14957s
+[756/2000] SP= 55.0% best= 84.0% p=0.0001 v=2.8317 e=0.203 n=13540 t=14980s
+[757/2000] SP= 53.0% best= 84.0% p=0.0000 v=2.7248 e=0.185 n=12269 t=15001s
+[758/2000] SP= 42.0% best= 84.0% p=0.0009 v=2.5405 e=0.177 n=13920 t=15025s
+[759/2000] SP= 26.0% best= 84.0% p=0.0020 v=2.2227 e=0.173 n=17193 t=15052s
+[760/2000] SP= 30.0% best= 84.0% p=0.0030 v=2.4333 e=0.182 n=16403 eval_R= 83.0% t=15079s
+[761/2000] SP= 27.0% best= 84.0% p=0.0007 v=2.2832 e=0.185 n=14414 t=15122s
+[762/2000] SP= 27.0% best= 84.0% p=-0.0000 v=2.6096 e=0.193 n=13666 t=15144s
+[763/2000] SP= 31.0% best= 84.0% p=-0.0000 v=2.4789 e=0.206 n=14763 t=15168s
+[764/2000] SP= 23.0% best= 84.0% p=0.0006 v=2.0942 e=0.207 n=15730 t=15194s
+[765/2000] SP= 22.0% best= 84.0% p=0.0006 v=1.9605 e=0.207 n=15189 t=15218s
+[766/2000] SP= 26.0% best= 84.0% p=-0.0007 v=2.2723 e=0.214 n=14681 t=15243s
+[767/2000] SP= 24.0% best= 84.0% p=-0.0007 v=1.8891 e=0.217 n=16604 t=15270s
+[768/2000] SP= 28.0% best= 84.0% p=-0.0000 v=2.1643 e=0.217 n=16090 t=15296s
+[769/2000] SP= 25.0% best= 84.0% p=-0.0005 v=1.8408 e=0.212 n=16828 t=15323s
+[770/2000] SP= 32.0% best= 84.0% p=-0.0002 v=2.1136 e=0.219 n=17588 eval_R= 73.0% t=15351s
+[771/2000] SP= 38.0% best= 84.0% p=0.0003 v=2.2200 e=0.216 n=17488 t=15398s
+[772/2000] SP= 49.0% best= 84.0% p=0.0009 v=2.6850 e=0.224 n=13786 t=15421s
+[773/2000] SP= 49.0% best= 84.0% p=0.0011 v=2.7289 e=0.226 n=11911 t=15443s
+[774/2000] SP= 63.0% best= 84.0% p=-0.0001 v=2.9766 e=0.215 n=11049 t=15462s
+[775/2000] SP= 72.0% best= 84.0% p=0.0003 v=2.9151 e=0.210 n=10476 t=15481s
+[776/2000] SP= 68.0% best= 84.0% p=0.0005 v=2.9066 e=0.205 n=9794 t=15498s
+[777/2000] SP= 74.0% best= 84.0% p=-0.0010 v=2.6022 e=0.192 n=8744 t=15515s
+[778/2000] SP= 75.0% best= 84.0% p=-0.0008 v=2.3215 e=0.196 n=10045 t=15533s
+[779/2000] SP= 66.0% best= 84.0% p=-0.0001 v=2.7233 e=0.180 n=10183 t=15552s
+[780/2000] SP= 55.0% best= 84.0% p=0.0016 v=3.0221 e=0.166 n=12430 eval_R= 74.0% t=15573s
+[781/2000] SP= 35.0% best= 84.0% p=0.0013 v=3.0537 e=0.165 n=14434 t=15616s
+[782/2000] SP= 33.0% best= 84.0% p=0.0012 v=2.6807 e=0.158 n=15557 t=15641s
+[783/2000] SP= 30.0% best= 84.0% p=0.0019 v=2.4550 e=0.163 n=17046 t=15669s
+[784/2000] SP= 22.0% best= 84.0% p=0.0024 v=2.3313 e=0.167 n=13800 t=15692s
+[785/2000] SP= 29.0% best= 84.0% p=0.0005 v=2.6752 e=0.163 n=13746 t=15715s
+[786/2000] SP= 34.0% best= 84.0% p=-0.0006 v=3.0299 e=0.176 n=11380 t=15735s
+[787/2000] SP= 26.0% best= 84.0% p=-0.0001 v=2.3807 e=0.178 n=13317 t=15757s
+[788/2000] SP= 36.0% best= 84.0% p=-0.0004 v=2.9329 e=0.180 n=13076 t=15778s
+[789/2000] SP= 23.0% best= 84.0% p=-0.0001 v=2.0173 e=0.191 n=15846 t=15803s
+[790/2000] SP= 35.0% best= 84.0% p=-0.0009 v=2.5028 e=0.191 n=14498 eval_R= 82.0% t=15826s
+[791/2000] SP= 36.0% best= 84.0% p=0.0003 v=2.5810 e=0.192 n=14177 t=15868s
+[792/2000] SP= 32.0% best= 84.0% p=-0.0002 v=2.2493 e=0.199 n=16527 t=15894s
+[793/2000] SP= 34.0% best= 84.0% p=-0.0002 v=2.4340 e=0.208 n=15874 t=15920s
+[794/2000] SP= 28.0% best= 84.0% p=-0.0003 v=2.0488 e=0.198 n=16052 t=15946s
+[795/2000] SP= 35.0% best= 84.0% p=-0.0001 v=2.4407 e=0.195 n=14632 t=15970s
+[796/2000] SP= 39.0% best= 84.0% p=0.0001 v=2.5113 e=0.209 n=15141 t=15995s
+[797/2000] SP= 37.0% best= 84.0% p=0.0001 v=2.4046 e=0.208 n=16576 t=16022s
+[798/2000] SP= 30.0% best= 84.0% p=-0.0004 v=2.1231 e=0.202 n=16037 t=16048s
+[799/2000] SP= 31.0% best= 84.0% p=0.0003 v=2.1600 e=0.210 n=17395 t=16075s
+[800/2000] SP= 41.0% best= 84.0% p=-0.0000 v=2.5018 e=0.202 n=16960 eval_R= 80.0% t=16103s
+[801/2000] SP= 26.0% best= 84.0% p=-0.0002 v=2.0293 e=0.200 n=16325 t=16148s
+[802/2000] SP= 28.0% best= 84.0% p=-0.0002 v=2.1917 e=0.205 n=15782 t=16175s
+[803/2000] SP= 35.0% best= 84.0% p=-0.0002 v=2.3605 e=0.206 n=15710 t=16201s
+[804/2000] SP= 29.0% best= 84.0% p=0.0000 v=2.1527 e=0.200 n=16051 t=16227s
+[805/2000] SP= 34.0% best= 84.0% p=-0.0002 v=2.3571 e=0.201 n=15577 t=16253s
+[806/2000] SP= 35.0% best= 84.0% p=-0.0002 v=2.3355 e=0.205 n=16396 t=16280s
+[807/2000] SP= 36.0% best= 84.0% p=0.0001 v=2.3875 e=0.206 n=15394 t=16305s
+[808/2000] SP= 38.0% best= 84.0% p=0.0000 v=2.4322 e=0.195 n=15664 t=16331s
+[809/2000] SP= 28.0% best= 84.0% p=-0.0003 v=2.0244 e=0.196 n=16168 t=16358s
+[810/2000] SP= 45.0% best= 84.0% p=-0.0003 v=2.4418 e=0.188 n=15642 eval_R= 65.0% t=16384s
+[811/2000] SP= 43.0% best= 84.0% p=0.0002 v=2.4376 e=0.187 n=15457 t=16428s
+[812/2000] SP= 58.0% best= 84.0% p=0.0005 v=2.8414 e=0.191 n=13727 t=16451s
+[813/2000] SP= 53.0% best= 84.0% p=0.0004 v=2.7278 e=0.190 n=12357 t=16472s
+[814/2000] SP= 66.0% best= 84.0% p=0.0003 v=2.8843 e=0.183 n=11042 t=16492s
+[815/2000] SP= 67.0% best= 84.0% p=0.0004 v=2.6692 e=0.184 n=12101 t=16512s
+[816/2000] SP= 65.0% best= 84.0% p=0.0003 v=2.4606 e=0.181 n=11036 t=16532s
+[817/2000] SP= 69.0% best= 84.0% p=-0.0005 v=2.4680 e=0.177 n=10470 t=16551s
+[818/2000] SP= 53.0% best= 84.0% p=0.0017 v=2.7688 e=0.174 n=11126 t=16571s
+[819/2000] SP= 50.0% best= 84.0% p=0.0020 v=2.6935 e=0.165 n=13453 t=16594s
+[820/2000] SP= 31.0% best= 84.0% p=0.0013 v=2.4266 e=0.156 n=16450 eval_R= 82.0% t=16621s
+[821/2000] SP= 32.0% best= 84.0% p=0.0016 v=2.4172 e=0.159 n=16043 t=16667s
+[822/2000] SP= 44.0% best= 84.0% p=0.0000 v=2.6897 e=0.162 n=16770 t=16694s
+[823/2000] SP= 33.0% best= 84.0% p=-0.0005 v=2.3960 e=0.164 n=15008 t=16719s
+[824/2000] SP= 29.0% best= 84.0% p=0.0008 v=2.2581 e=0.165 n=16448 t=16745s
+[825/2000] SP= 34.0% best= 84.0% p=-0.0002 v=2.4196 e=0.174 n=17007 t=16772s
+[826/2000] SP= 40.0% best= 84.0% p=-0.0001 v=2.5896 e=0.181 n=16378 t=16799s
+[827/2000] SP= 47.0% best= 84.0% p=0.0005 v=2.4729 e=0.192 n=16656 t=16825s
+[828/2000] SP= 32.0% best= 84.0% p=-0.0000 v=2.1879 e=0.199 n=16742 t=16852s
+[829/2000] SP= 29.0% best= 84.0% p=0.0001 v=2.0483 e=0.190 n=17113 t=16880s
+[830/2000] SP= 37.0% best= 84.0% p=0.0000 v=2.4799 e=0.191 n=14546 eval_R= 82.0% t=16904s
+[831/2000] SP= 33.0% best= 84.0% p=-0.0001 v=2.2357 e=0.189 n=16488 t=16950s
+[832/2000] SP= 35.0% best= 84.0% p=-0.0003 v=2.4743 e=0.197 n=15217 t=16975s
+[833/2000] SP= 41.0% best= 84.0% p=0.0001 v=2.5258 e=0.191 n=15315 t=17000s
+[834/2000] SP= 40.0% best= 84.0% p=-0.0004 v=2.3141 e=0.203 n=18203 t=17030s
+[835/2000] SP= 31.0% best= 84.0% p=-0.0001 v=2.1464 e=0.199 n=16172 t=17057s
+[836/2000] SP= 42.0% best= 84.0% p=-0.0002 v=2.4740 e=0.193 n=15838 t=17083s
+[837/2000] SP= 33.0% best= 84.0% p=-0.0001 v=2.0759 e=0.203 n=17458 t=17112s
+[838/2000] SP= 32.0% best= 84.0% p=-0.0006 v=2.0759 e=0.201 n=17612 t=17140s
+[839/2000] SP= 35.0% best= 84.0% p=0.0002 v=2.1766 e=0.191 n=17662 t=17169s
+[840/2000] SP= 44.0% best= 84.0% p=-0.0000 v=2.3774 e=0.196 n=15534 eval_R= 74.0% t=17194s
+[841/2000] SP= 52.0% best= 84.0% p=0.0006 v=2.6582 e=0.200 n=14547 t=17236s
+[842/2000] SP= 49.0% best= 84.0% p=0.0004 v=2.4096 e=0.204 n=16126 t=17261s
+[843/2000] SP= 65.0% best= 84.0% p=0.0001 v=2.8653 e=0.208 n=12547 t=17282s
+[844/2000] SP= 53.0% best= 84.0% p=-0.0003 v=2.7559 e=0.203 n=12054 t=17303s
+[845/2000] SP= 63.0% best= 84.0% p=0.0000 v=2.7831 e=0.202 n=10395 t=17322s
+[846/2000] SP= 62.0% best= 84.0% p=-0.0006 v=2.6799 e=0.202 n=10830 t=17342s
+[847/2000] SP= 65.0% best= 84.0% p=0.0000 v=2.7738 e=0.192 n=10960 t=17361s
+[848/2000] SP= 60.0% best= 84.0% p=0.0004 v=2.4973 e=0.178 n=14252 t=17385s
+[849/2000] SP= 47.0% best= 84.0% p=-0.0003 v=2.3898 e=0.166 n=16936 t=17413s
+[850/2000] SP= 37.0% best= 84.0% p=0.0013 v=2.2585 e=0.167 n=18946 eval_R= 82.0% t=17443s
+[851/2000] SP= 36.0% best= 84.0% p=0.0012 v=2.4486 e=0.169 n=16955 t=17489s
+[852/2000] SP= 28.0% best= 84.0% p=0.0005 v=2.1631 e=0.170 n=19043 t=17519s
+[853/2000] SP= 36.0% best= 84.0% p=-0.0001 v=2.4594 e=0.174 n=16595 t=17546s
+[854/2000] SP= 38.0% best= 84.0% p=0.0002 v=2.4685 e=0.179 n=17175 t=17573s
+[855/2000] SP= 36.0% best= 84.0% p=-0.0002 v=2.4069 e=0.195 n=16098 t=17598s
+[856/2000] SP= 36.0% best= 84.0% p=0.0002 v=2.2588 e=0.192 n=17481 t=17625s
+[857/2000] SP= 32.0% best= 84.0% p=-0.0002 v=2.1414 e=0.196 n=17383 t=17652s
+[858/2000] SP= 27.0% best= 84.0% p=-0.0006 v=2.0141 e=0.201 n=17884 t=17680s
+[859/2000] SP= 37.0% best= 84.0% p=0.0001 v=2.3615 e=0.191 n=16698 t=17706s
+[860/2000] SP= 45.0% best= 84.0% p=0.0010 v=2.7223 e=0.191 n=17025 eval_R= 79.0% t=17733s
+[861/2000] SP= 42.0% best= 84.0% p=0.0001 v=2.3374 e=0.199 n=16579 t=17778s
+[862/2000] SP= 37.0% best= 84.0% p=-0.0002 v=2.2389 e=0.192 n=15722 t=17803s
+[863/2000] SP= 45.0% best= 84.0% p=-0.0002 v=2.3502 e=0.197 n=17296 t=17831s
+[864/2000] SP= 47.0% best= 84.0% p=-0.0003 v=2.4017 e=0.193 n=16461 t=17857s
+[865/2000] SP= 54.0% best= 84.0% p=-0.0003 v=2.5246 e=0.189 n=14486 t=17882s
+[866/2000] SP= 62.0% best= 84.0% p=0.0008 v=2.6240 e=0.187 n=13719 t=17905s
+[867/2000] SP= 58.0% best= 84.0% p=-0.0000 v=2.5831 e=0.185 n=13737 t=17928s
+[868/2000] SP= 67.0% best= 84.0% p=-0.0006 v=2.7580 e=0.191 n=11010 t=17948s
+[869/2000] SP= 69.0% best= 84.0% p=-0.0006 v=2.6997 e=0.182 n=10925 t=17968s
+[870/2000] SP= 65.0% best= 84.0% p=0.0002 v=2.5490 e=0.176 n=12951 eval_R= 51.0% t=17990s
+[871/2000] SP= 61.0% best= 84.0% p=-0.0001 v=2.5322 e=0.164 n=13050 t=18028s
+[872/2000] SP= 39.0% best= 84.0% p=0.0009 v=2.4862 e=0.165 n=16257 t=18054s
+[873/2000] SP= 30.0% best= 84.0% p=0.0017 v=2.2175 e=0.159 n=17518 t=18082s
+[874/2000] SP= 28.0% best= 84.0% p=0.0020 v=2.1634 e=0.162 n=18479 t=18110s
+[875/2000] SP= 34.0% best= 84.0% p=0.0007 v=2.4066 e=0.170 n=17942 t=18139s
+[876/2000] SP= 30.0% best= 84.0% p=0.0002 v=2.3127 e=0.180 n=17170 t=18166s
+[877/2000] SP= 36.0% best= 84.0% p=0.0000 v=2.6322 e=0.185 n=16570 t=18192s
+[878/2000] SP= 30.0% best= 84.0% p=-0.0002 v=2.1270 e=0.194 n=16939 t=18218s
+[879/2000] SP= 28.0% best= 84.0% p=0.0002 v=2.2019 e=0.196 n=16430 t=18245s
+  -> New best eval WR 85% saved
+[880/2000] SP= 29.0% best= 85.0% p=0.0003 v=2.0956 e=0.200 n=16106 eval_R= 85.0% t=18271s
+[881/2000] SP= 31.0% best= 85.0% p=-0.0001 v=2.2550 e=0.205 n=16474 t=18315s
+[882/2000] SP= 41.0% best= 85.0% p=0.0008 v=2.5051 e=0.202 n=16714 t=18341s
+[883/2000] SP= 26.0% best= 85.0% p=0.0001 v=1.9506 e=0.204 n=17537 t=18369s
+[884/2000] SP= 33.0% best= 85.0% p=-0.0004 v=2.1253 e=0.208 n=17756 t=18397s
+[885/2000] SP= 20.0% best= 85.0% p=-0.0001 v=1.7171 e=0.212 n=17271 t=18424s
+[886/2000] SP= 25.0% best= 85.0% p=0.0003 v=1.9578 e=0.207 n=17194 t=18452s
+[887/2000] SP= 34.0% best= 85.0% p=-0.0002 v=2.4499 e=0.208 n=16354 t=18478s
+[888/2000] SP= 33.0% best= 85.0% p=-0.0000 v=2.1949 e=0.204 n=17116 t=18506s
+[889/2000] SP= 26.0% best= 85.0% p=-0.0002 v=1.8806 e=0.204 n=19022 t=18536s
+[890/2000] SP= 26.0% best= 85.0% p=0.0005 v=1.9663 e=0.208 n=18235 eval_R= 80.0% t=18565s
+[891/2000] SP= 37.0% best= 85.0% p=-0.0001 v=2.3769 e=0.205 n=17262 t=18610s
+[892/2000] SP= 29.0% best= 85.0% p=-0.0006 v=2.1038 e=0.209 n=17736 t=18638s
+[893/2000] SP= 29.0% best= 85.0% p=-0.0001 v=2.0356 e=0.206 n=17280 t=18665s
+[894/2000] SP= 27.0% best= 85.0% p=0.0003 v=1.9545 e=0.214 n=17876 t=18693s
+[895/2000] SP= 22.0% best= 85.0% p=-0.0004 v=1.6980 e=0.207 n=17284 t=18722s
+[896/2000] SP= 27.0% best= 85.0% p=-0.0002 v=2.1012 e=0.203 n=16319 t=18749s
+[897/2000] SP= 30.0% best= 85.0% p=-0.0001 v=2.1152 e=0.211 n=17301 t=18777s
+[898/2000] SP= 32.0% best= 85.0% p=-0.0001 v=2.1695 e=0.211 n=16068 t=18804s
+[899/2000] SP= 39.0% best= 85.0% p=-0.0002 v=2.3535 e=0.207 n=16410 t=18832s
+[900/2000] SP= 57.0% best= 85.0% p=0.0001 v=2.7085 e=0.199 n=13839 eval_R= 60.0% t=18855s
+[901/2000] SP= 50.0% best= 85.0% p=0.0005 v=2.4869 e=0.194 n=14821 t=18897s
+[902/2000] SP= 53.0% best= 85.0% p=-0.0001 v=2.5764 e=0.191 n=13730 t=18920s
+[903/2000] SP= 60.0% best= 85.0% p=-0.0003 v=2.6573 e=0.183 n=13015 t=18942s
+[904/2000] SP= 60.0% best= 85.0% p=-0.0002 v=2.4656 e=0.178 n=14941 t=18968s
+[905/2000] SP= 57.0% best= 85.0% p=-0.0004 v=2.6073 e=0.173 n=12739 t=18990s
+[906/2000] SP= 59.0% best= 85.0% p=0.0002 v=2.6012 e=0.157 n=13766 t=19013s
+[907/2000] SP= 54.0% best= 85.0% p=-0.0002 v=2.5188 e=0.161 n=15579 t=19038s
+[908/2000] SP= 47.0% best= 85.0% p=0.0005 v=2.3906 e=0.162 n=16291 t=19065s
+[909/2000] SP= 45.0% best= 85.0% p=-0.0003 v=2.4094 e=0.166 n=17521 t=19093s
+[910/2000] SP= 30.0% best= 85.0% p=0.0001 v=2.1123 e=0.169 n=17013 eval_R= 81.0% t=19121s
+[911/2000] SP= 42.0% best= 85.0% p=0.0001 v=2.4101 e=0.170 n=16872 t=19167s
+[912/2000] SP= 37.0% best= 85.0% p=-0.0002 v=2.2395 e=0.174 n=16950 t=19195s
+[913/2000] SP= 42.0% best= 85.0% p=-0.0002 v=2.4040 e=0.180 n=16905 t=19222s
+[914/2000] SP= 39.0% best= 85.0% p=-0.0001 v=2.2252 e=0.186 n=18065 t=19251s
+[915/2000] SP= 45.0% best= 85.0% p=-0.0005 v=2.4076 e=0.189 n=15203 t=19276s
+[916/2000] SP= 38.0% best= 85.0% p=-0.0002 v=2.2147 e=0.191 n=16533 t=19304s
+[917/2000] SP= 50.0% best= 85.0% p=-0.0002 v=2.5932 e=0.185 n=15857 t=19330s
+[918/2000] SP= 42.0% best= 85.0% p=-0.0003 v=2.2722 e=0.185 n=17199 t=19357s
+[919/2000] SP= 57.0% best= 85.0% p=-0.0002 v=2.5445 e=0.184 n=15675 t=19383s
+[920/2000] SP= 63.0% best= 85.0% p=0.0009 v=2.5211 e=0.183 n=14473 eval_R= 53.0% t=19407s
+[921/2000] SP= 62.0% best= 85.0% p=0.0011 v=2.5355 e=0.184 n=13487 t=19447s
+[922/2000] SP= 68.0% best= 85.0% p=0.0001 v=2.7441 e=0.176 n=11232 t=19466s
+[923/2000] SP= 54.0% best= 85.0% p=0.0002 v=2.5058 e=0.176 n=13572 t=19490s
+[924/2000] SP= 55.0% best= 85.0% p=0.0001 v=2.5426 e=0.167 n=14677 t=19514s
+[925/2000] SP= 46.0% best= 85.0% p=0.0004 v=2.4346 e=0.170 n=16022 t=19540s
+[926/2000] SP= 32.0% best= 85.0% p=0.0004 v=2.1580 e=0.176 n=18431 t=19569s
+[927/2000] SP= 35.0% best= 85.0% p=0.0009 v=2.1726 e=0.163 n=16865 t=19597s
+[928/2000] SP= 29.0% best= 85.0% p=0.0005 v=2.1691 e=0.181 n=17177 t=19624s
+[929/2000] SP= 25.0% best= 85.0% p=0.0002 v=1.9567 e=0.184 n=17709 t=19652s
+[930/2000] SP= 39.0% best= 85.0% p=-0.0003 v=2.5587 e=0.199 n=17994 eval_R= 83.0% t=19680s
+[931/2000] SP= 40.0% best= 85.0% p=0.0006 v=2.2692 e=0.198 n=18924 t=19729s
+[932/2000] SP= 46.0% best= 85.0% p=-0.0003 v=2.4507 e=0.204 n=17595 t=19757s
+[933/2000] SP= 38.0% best= 85.0% p=-0.0003 v=2.2355 e=0.209 n=16179 t=19784s
+[934/2000] SP= 42.0% best= 85.0% p=-0.0004 v=2.2934 e=0.200 n=17692 t=19812s
+[935/2000] SP= 39.0% best= 85.0% p=-0.0002 v=2.2314 e=0.200 n=16225 t=19839s
+[936/2000] SP= 50.0% best= 85.0% p=-0.0004 v=2.5594 e=0.194 n=14779 t=19863s
+[937/2000] SP= 48.0% best= 85.0% p=-0.0006 v=2.4053 e=0.187 n=15494 t=19889s
+[938/2000] SP= 51.0% best= 85.0% p=-0.0000 v=2.4519 e=0.180 n=12958 t=19911s
+[939/2000] SP= 64.0% best= 85.0% p=0.0001 v=2.6233 e=0.171 n=14684 t=19935s
+[940/2000] SP= 54.0% best= 85.0% p=-0.0002 v=2.6000 e=0.173 n=14549 eval_R= 54.0% t=19959s
+[941/2000] SP= 55.0% best= 85.0% p=-0.0001 v=2.4996 e=0.169 n=14779 t=20000s
+[942/2000] SP= 47.0% best= 85.0% p=-0.0001 v=2.2986 e=0.164 n=15569 t=20026s
+[943/2000] SP= 49.0% best= 85.0% p=0.0000 v=2.3467 e=0.166 n=17283 t=20053s
+[944/2000] SP= 52.0% best= 85.0% p=0.0004 v=2.3468 e=0.172 n=18585 t=20083s
+[945/2000] SP= 56.0% best= 85.0% p=0.0002 v=2.5699 e=0.172 n=14770 t=20108s
+[946/2000] SP= 61.0% best= 85.0% p=0.0003 v=2.6561 e=0.167 n=12136 t=20129s
+[947/2000] SP= 55.0% best= 85.0% p=-0.0002 v=2.4201 e=0.172 n=14816 t=20153s
+[948/2000] SP= 58.0% best= 85.0% p=-0.0005 v=2.4232 e=0.171 n=14969 t=20178s
+[949/2000] SP= 50.0% best= 85.0% p=0.0000 v=2.3620 e=0.179 n=15635 t=20203s
+[950/2000] SP= 47.0% best= 85.0% p=-0.0000 v=2.3179 e=0.163 n=16799 eval_R= 77.0% t=20231s
+[951/2000] SP= 42.0% best= 85.0% p=0.0002 v=2.1924 e=0.173 n=18663 t=20279s
+[952/2000] SP= 36.0% best= 85.0% p=0.0001 v=2.1048 e=0.173 n=16996 t=20306s
+[953/2000] SP= 44.0% best= 85.0% p=0.0001 v=2.4187 e=0.183 n=18668 t=20336s
+[954/2000] SP= 36.0% best= 85.0% p=-0.0002 v=2.2650 e=0.179 n=17228 t=20364s
+[955/2000] SP= 28.0% best= 85.0% p=-0.0001 v=2.0016 e=0.184 n=16633 t=20391s
+[956/2000] SP= 27.0% best= 85.0% p=-0.0001 v=1.9114 e=0.188 n=18243 t=20420s
+[957/2000] SP= 37.0% best= 85.0% p=0.0001 v=2.1645 e=0.193 n=18898 t=20450s
+[958/2000] SP= 39.0% best= 85.0% p=0.0003 v=2.1965 e=0.189 n=18586 t=20479s
+[959/2000] SP= 42.0% best= 85.0% p=0.0000 v=2.2595 e=0.192 n=17200 t=20507s
+[960/2000] SP= 38.0% best= 85.0% p=-0.0001 v=2.3485 e=0.197 n=15612 eval_R= 83.0% t=20532s
+[961/2000] SP= 28.0% best= 85.0% p=-0.0000 v=1.8747 e=0.186 n=16125 t=20577s
+[962/2000] SP= 28.0% best= 85.0% p=0.0005 v=1.9642 e=0.187 n=18270 t=20607s
+[963/2000] SP= 32.0% best= 85.0% p=-0.0002 v=2.1711 e=0.195 n=17776 t=20635s
+[964/2000] SP= 34.0% best= 85.0% p=0.0001 v=2.1130 e=0.190 n=18242 t=20664s
+[965/2000] SP= 40.0% best= 85.0% p=0.0002 v=2.3118 e=0.192 n=17620 t=20693s
+[966/2000] SP= 43.0% best= 85.0% p=0.0003 v=2.3939 e=0.193 n=16175 t=20719s
+[967/2000] SP= 50.0% best= 85.0% p=0.0001 v=2.4516 e=0.194 n=16378 t=20746s
+[968/2000] SP= 48.0% best= 85.0% p=-0.0002 v=2.3772 e=0.183 n=16570 t=20773s
+[969/2000] SP= 59.0% best= 85.0% p=-0.0002 v=2.5375 e=0.181 n=15056 t=20798s
+[970/2000] SP= 55.0% best= 85.0% p=-0.0001 v=2.3973 e=0.175 n=14350 eval_R= 65.0% t=20822s
+[971/2000] SP= 56.0% best= 85.0% p=-0.0004 v=2.3548 e=0.170 n=16341 t=20867s
+[972/2000] SP= 49.0% best= 85.0% p=-0.0004 v=2.3061 e=0.166 n=15786 t=20894s

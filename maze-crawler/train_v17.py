@@ -1,10 +1,10 @@
-"""PPO training — game energy reward + gap/unit signals.
+"""PPO training — gap-driven reward + unit/shaping signals.
 
 Factory, scout, worker, miner all use the same network.
 13-action space with type-specific masking.
-Step reward: delta_energy/1000 + delta_gap + delta_units*W.
-Terminal: +1 / -1 / 0 (win / loss / draw).
-No survival bonus, no per-unit shaping.
+Step reward: delta_gap*0.5 + delta_units*0.1 + survival*0.01 + per-unit shaping.
+Terminal: +5 / -1 / 0 (win / loss / draw).
+No delta_e (energy changes are noise with negative bias).
 """
 import sys, os, random, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -43,11 +43,16 @@ GAMMA = 0.99
 GAE_LAMBDA = 0.95
 PPO_CLIP = 0.2
 PPO_EPOCHS = 4
-ENTROPY_COEF = 0.02    # slightly higher — sparse reward needs more exploration
+ENTROPY_COEF = 0.02
 VALUE_COEF = 0.5
 MAX_GRAD_NORM = 0.5
-REWARD_SCALE = 1000.0  # normalize energy delta
-DELTA_UNITS = 0.1      # weight for unit count changes
+DELTA_GAP_W = 0.5      # gap signal weight (was 0.1, v10 used 1.0)
+DELTA_UNITS_W = 0.1    # unit count change weight
+UNIT_SURVIVAL = 0.01   # non-factory unit survival bonus per step
+SHAPING_REMOVE = 0.1   # REMOVE shaping
+SHAPING_TRANSFORM = 0.5 # TRANSFORM shaping (investment behavior)
+EVAL_EVERY = 10         # Evaluate vs random every N iterations
+EVAL_GAMES = 100        # Games per evaluation
 
 
 # ─── Feature Extraction ──────────────────────────────────────────────
@@ -251,106 +256,136 @@ class ActorCritic(nn.Module):
 
 # ─── PPO Game Runner ─────────────────────────────────────────────────
 
-def _reset_state():
-    STATE.update({"turn": 0, "nodes": set(), "last_factory_pos": None,
-                  "factory_stuck": 0, "walls": {}})
-
-
-def _total_energy(obs, player):
-    total = 0
-    for d in obs.robots.values():
-        if d[4] == player:
-            total += d[3]
-    return total
-
-
 def _unit_count(robots, player):
     return sum(1 for d in robots.values() if d[4] == player and d[0] != TYPE_FACTORY)
 
 
-def run_ppo_game(model, seed, explore=True):
-    _reset_state()
+_INITIAL_STATE = {"turn": 0, "nodes": set(), "last_factory_pos": None,
+                  "factory_stuck": 0, "walls": {}}
+
+
+def _swap_state(player_states, player_id):
+    saved = (STATE["turn"], STATE["nodes"], STATE["last_factory_pos"],
+             STATE["factory_stuck"], STATE["walls"])
+    ps = player_states[player_id]
+    STATE["turn"] = ps["turn"]
+    STATE["nodes"] = ps["nodes"]
+    STATE["last_factory_pos"] = ps["last_factory_pos"]
+    STATE["factory_stuck"] = ps["factory_stuck"]
+    STATE["walls"] = ps["walls"]
+    return saved
+
+
+def _restore_state(player_states, player_id, saved):
+    ps = player_states[player_id]
+    ps["turn"] = STATE["turn"]
+    ps["nodes"] = STATE["nodes"]
+    ps["last_factory_pos"] = STATE["last_factory_pos"]
+    ps["factory_stuck"] = STATE["factory_stuck"]
+    ps["walls"] = STATE["walls"]
+    STATE["turn"], STATE["nodes"], STATE["last_factory_pos"], \
+        STATE["factory_stuck"], STATE["walls"] = saved
+
+
+def run_ppo_game(model, seed, opponent="self", explore=True):
+    player_states = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
+    player_states[0]["nodes"] = set()
+    player_states[1]["nodes"] = set()
+
     env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-    unit_trajs = {}  # uid -> [(feat, ai, mask, log_p, val, step_r)]
-    prev_energy = [None]
+    unit_trajs = {}
     prev_units = [None]
     prev_gap = [None]
     first_turn = [True]
 
-    def ppo_agent(obs, config):
+    def ppo_player(obs, config):
         my_player = obs.player
-        update_state(obs, config, my_player)
+        saved = _swap_state(player_states, my_player)
+        try:
+            update_state(obs, config, my_player)
 
-        cur_energy = _total_energy(obs, my_player)
-        cur_units = _unit_count(obs.robots, my_player)
-        cur_gap = 0
-        for uid2, d2 in obs.robots.items():
-            if d2[4] == my_player and d2[0] == TYPE_FACTORY:
-                cur_gap = d2[2] - obs.southBound
-                break
-
-        if first_turn[0]:
-            prev_energy[0] = cur_energy
-            prev_units[0] = cur_units
-            prev_gap[0] = cur_gap
-            first_turn[0] = False
+            # Compute reward for player 0 only
             team_r = 0.0
-        else:
-            delta_e = (cur_energy - prev_energy[0]) / REWARD_SCALE
-            delta_units = (cur_units - prev_units[0]) * DELTA_UNITS
-            delta_gap = (cur_gap - prev_gap[0]) * 0.1
-            team_r = delta_e + delta_units + delta_gap
-            prev_energy[0] = cur_energy
-            prev_units[0] = cur_units
-            prev_gap[0] = cur_gap
+            if my_player == 0:
+                cur_units = _unit_count(obs.robots, my_player)
+                cur_gap = 0
+                for uid2, d2 in obs.robots.items():
+                    if d2[4] == my_player and d2[0] == TYPE_FACTORY:
+                        cur_gap = d2[2] - obs.southBound
+                        break
 
-        actions = {}
-        reserved = set()
-        occupied = {}
-        for uid2, d2 in obs.robots.items():
-            occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
+                if first_turn[0]:
+                    prev_units[0] = cur_units
+                    prev_gap[0] = cur_gap
+                    first_turn[0] = False
+                    team_r = 0.0
+                else:
+                    delta_units = (cur_units - prev_units[0]) * DELTA_UNITS_W
+                    delta_gap = (cur_gap - prev_gap[0]) * DELTA_GAP_W
+                    team_r = delta_gap + delta_units
+                    prev_units[0] = cur_units
+                    prev_gap[0] = cur_gap
 
-        # Process units in order: scouts -> workers -> miners -> factory
-        for unit_type in [TYPE_SCOUT, TYPE_WORKER, TYPE_MINER, TYPE_FACTORY]:
+            actions = {}
+            reserved = set()
+            occupied = {}
             for uid2, d2 in obs.robots.items():
-                if uid2 in actions:
-                    continue
-                if d2[4] != my_player or d2[0] != unit_type:
-                    continue
+                occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
 
-                feat, msk = extract_unit(obs, config, my_player, occupied,
-                                          reserved, actions, uid2, d2)
-                if feat is None:
-                    continue
+            for unit_type in [TYPE_SCOUT, TYPE_WORKER, TYPE_MINER, TYPE_FACTORY]:
+                for uid2, d2 in obs.robots.items():
+                    if uid2 in actions:
+                        continue
+                    if d2[4] != my_player or d2[0] != unit_type:
+                        continue
 
-                s = torch.FloatTensor(feat).unsqueeze(0)
-                m = torch.FloatTensor(msk).unsqueeze(0)
-                with torch.no_grad():
-                    if explore:
-                        ai, log_p, val = model.get_action(s, m)
-                        ai_item = ai.item()
-                        log_p_item = log_p.item()
-                        val_item = val.item()
-                    else:
-                        probs, val = model(s, m)
-                        ai_item = torch.argmax(probs).item()
-                        log_p_item = 0.0
-                        val_item = val.item()
+                    feat, msk = extract_unit(obs, config, my_player, occupied,
+                                              reserved, actions, uid2, d2)
+                    if feat is None:
+                        continue
 
-                # Shaping: offset energy cost of REMOVE and TRANSFORM
-                shaping = 0.2 if (5 <= ai_item <= 7 or ai_item == 11) else 0.0
-                step_r = team_r + shaping
+                    s = torch.FloatTensor(feat).unsqueeze(0)
+                    m = torch.FloatTensor(msk).unsqueeze(0)
+                    with torch.no_grad():
+                        if my_player == 0 and explore:
+                            ai, log_p, val = model.get_action(s, m)
+                            ai_item = ai.item()
+                            log_p_item = log_p.item()
+                            val_item = val.item()
+                        else:
+                            probs, val = model(s, m)
+                            ai_item = torch.argmax(probs).item()
+                            log_p_item = 0.0
+                            val_item = val.item()
 
-                if uid2 not in unit_trajs:
-                    unit_trajs[uid2] = []
-                unit_trajs[uid2].append(
-                    (feat.copy(), ai_item, msk.copy(), log_p_item, val_item, step_r))
+                    # Collect trajectories for player 0 only
+                    if my_player == 0:
+                        if 5 <= ai_item <= 7:
+                            shaping = SHAPING_REMOVE
+                        elif ai_item == 11:
+                            shaping = SHAPING_TRANSFORM
+                        else:
+                            shaping = 0.0
+                        if d2[0] != TYPE_FACTORY:
+                            shaping += UNIT_SURVIVAL
+                        step_r = team_r + shaping
 
-                execute_action(uid2, d2, ai_item, actions, reserved)
+                        if uid2 not in unit_trajs:
+                            unit_trajs[uid2] = []
+                        unit_trajs[uid2].append(
+                            (feat.copy(), ai_item, msk.copy(), log_p_item, val_item, step_r))
 
-        return actions
+                    execute_action(uid2, d2, ai_item, actions, reserved)
 
-    env.run([ppo_agent, "random"])
+            return actions
+        finally:
+            _restore_state(player_states, my_player, saved)
+
+    if opponent == "self":
+        env.run([ppo_player, ppo_player])
+    else:
+        env.run([ppo_player, "random"])
+
     final = env.steps[-1]
     r0, r1 = final[0].reward, final[1].reward
     return unit_trajs, r0, r1
@@ -432,9 +467,10 @@ def train(num_iter=200, batch=50, lr=0.0003, version=None, terminal_win=5.0):
     if version is None:
         version = _next_version()
     save_path = f"nn_weights_v{version}.pt"
-    print(f"  Step reward: delta_energy/{REWARD_SCALE:.0f} + delta_gap*0.1 + delta_units*{DELTA_UNITS}")
-    print(f"  Terminal: +{TERMINAL_WIN} / -1 / +0.5 (draw)")
-    print(f"  Shaping: REMOVE +0.2, TRANSFORM +0.2")
+    print(f"  Step reward: delta_gap*{DELTA_GAP_W} + delta_units*{DELTA_UNITS_W}")
+    print(f"  Terminal: +{TERMINAL_WIN} / -1 / 0 (draw)")
+    print(f"  Shaping: REMOVE +{SHAPING_REMOVE}, TRANSFORM +{SHAPING_TRANSFORM}, non-factory survival +{UNIT_SURVIVAL}")
+    print(f"  Training: 100% self-play | Mixed eval every {EVAL_EVERY} iters ({EVAL_GAMES} games: 50% self-best, 25% v6, 25% random)")
     print(f"  Entropy: {ENTROPY_COEF}")
     print(f"  Iterations: {num_iter} | Batch: {batch}")
     print(f"  Weights -> {save_path}")
@@ -442,21 +478,34 @@ def train(num_iter=200, batch=50, lr=0.0003, version=None, terminal_win=5.0):
     model = ActorCritic()
     optimizer = optim.Adam(model.parameters(), lr=lr)
     best_wr = 0
+    best_model = None  # keeps a copy of best weights for self-eval
     t0 = time.time()
+
+    # Load v6 as fixed eval opponent
+    import importlib.util as _ilu
+    _v6_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "agent_submit_v6.py")
+    _v6_mod = None
+    if os.path.exists(_v6_path):
+        _spec = _ilu.spec_from_file_location("agent_submit_v6", _v6_path)
+        _v6_mod = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_v6_mod)
+        print(f"  Loaded v6 eval opponent from {_v6_path}")
+    else:
+        print(f"  WARNING: {_v6_path} not found, v6 eval disabled")
 
     for it in range(num_iter):
         all_feat, all_act, all_mask, all_old_lp = [], [], [], []
         all_adv, all_ret = [], []
-        wins = 0
+        sp_wins = 0
 
         for _ in range(batch):
             seed = random.randint(0, 999999)
-            unit_trajs, r0, r1 = run_ppo_game(model, seed, explore=True)
 
-            if r0 > r1:
-                wins += 1
+            unit_trajs, r0, r1 = run_ppo_game(model, seed, opponent="self", explore=True)
 
-            terminal_r = TERMINAL_WIN if r0 > r1 else (-1.0 if r0 < r1 else 0.5)
+            if r0 > r1: sp_wins += 1
+
+            terminal_r = TERMINAL_WIN if r0 > r1 else (-1.0 if r0 < r1 else 0.0)
             for uid, traj in unit_trajs.items():
                 advs, rets = compute_gae(traj, terminal_r)
                 for i, (feat, ai, msk, lp, val, sr) in enumerate(traj):
@@ -474,15 +523,127 @@ def train(num_iter=200, batch=50, lr=0.0003, version=None, terminal_win=5.0):
             pl, vl, el = ppo_update(model, optimizer, all_feat, all_act,
                                      all_mask, all_old_lp, all_adv, all_ret)
 
-        wr = wins / batch * 100
+        sp_wr = sp_wins / batch * 100
         elapsed = time.time() - t0
-        print(f"[{it+1:3d}/{num_iter}] WR={wr:5.1f}% p_loss={pl:.4f} "
-              f"v_loss={vl:.4f} ent={el:.3f} n={len(all_feat)} t={elapsed:.0f}s")
 
-        if wr > best_wr:
-            best_wr = wr
-            torch.save(model.state_dict(), save_path)
-            print(f"  -> New best {best_wr:.0f}% saved")
+        # Periodic mixed eval: 50% self-best, 25% v6, 25% random
+        eval_str = ""
+        if (it + 1) % EVAL_EVERY == 0:
+            n_self = EVAL_GAMES // 2
+            n_v6 = EVAL_GAMES // 4
+            n_rand = EVAL_GAMES - n_self - n_v6
+            ev_wins = 0
+            ei = 0
+
+            def _make_greedy_agent(eval_model):
+                def _agent(obs, config):
+                    my_player = obs.player
+                    update_state(obs, config, my_player)
+                    actions = {}
+                    reserved = set()
+                    occupied = {}
+                    for uid2, d2 in obs.robots.items():
+                        occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
+                    for uid2, d2 in obs.robots.items():
+                        if d2[4] != my_player or uid2 in actions:
+                            continue
+                        feat, msk = extract_unit(obs, config, my_player, occupied,
+                                                  reserved, actions, uid2, d2)
+                        if feat is None:
+                            continue
+                        s = torch.FloatTensor(feat).unsqueeze(0)
+                        m = torch.FloatTensor(msk).unsqueeze(0)
+                        with torch.no_grad():
+                            probs, _ = eval_model(s, m)
+                            ai = torch.argmax(probs).item()
+                        execute_action(uid2, d2, ai, actions, reserved)
+                    return actions
+                return _agent
+
+            # 50% vs self-best (current model vs best_model greedy)
+            if best_model is not None:
+                opponent_model = best_model
+            else:
+                opponent_model = model
+            for _ in range(n_self):
+                seed = ei * 137 + 42
+                # Save and reset STATE for both sides
+                _pstates = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
+                _pstates[0]["nodes"] = set()
+                _pstates[1]["nodes"] = set()
+                env = make("crawl", configuration={"randomSeed": seed}, debug=True)
+
+                def _make_sp_eval(m0, m1, ps):
+                    def _agent(obs, config):
+                        mp = obs.player
+                        saved = _swap_state(ps, mp)
+                        try:
+                            update_state(obs, config, mp)
+                            actions = {}
+                            reserved = set()
+                            occupied = {}
+                            for uid2, d2 in obs.robots.items():
+                                occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
+                            for uid2, d2 in obs.robots.items():
+                                if d2[4] != mp or uid2 in actions:
+                                    continue
+                                feat, msk = extract_unit(obs, config, mp, occupied,
+                                                          reserved, actions, uid2, d2)
+                                if feat is None:
+                                    continue
+                                s = torch.FloatTensor(feat).unsqueeze(0)
+                                m = torch.FloatTensor(msk).unsqueeze(0)
+                                with torch.no_grad():
+                                    probs, _ = (m0 if mp == 0 else m1)(s, m)
+                                    ai = torch.argmax(probs).item()
+                                execute_action(uid2, d2, ai, actions, reserved)
+                            return actions
+                        finally:
+                            _restore_state(ps, mp, saved)
+                    return _agent
+
+                env.run([_make_sp_eval(model, opponent_model, _pstates),
+                         _make_sp_eval(model, opponent_model, _pstates)])
+                final = env.steps[-1]
+                er0, er1 = final[0].reward, final[1].reward
+                if er0 > er1: ev_wins += 1
+                ei += 1
+
+            # 25% vs v6
+            if _v6_mod is not None:
+                for _ in range(n_v6):
+                    seed = ei * 137 + 42
+                    STATE.update({"turn": 0, "nodes": set(), "last_factory_pos": None,
+                                  "factory_stuck": 0, "walls": {}})
+                    if hasattr(_v6_mod, 'STATE'):
+                        _v6_mod.STATE.update({"turn": 0, "nodes": set(), "last_factory_pos": None,
+                                               "factory_stuck": 0, "walls": {}})
+
+                    env = make("crawl", configuration={"randomSeed": seed}, debug=True)
+                    env.run([_make_greedy_agent(model), _v6_mod.agent])
+                    final = env.steps[-1]
+                    er0, er1 = final[0].reward, final[1].reward
+                    if er0 > er1: ev_wins += 1
+                    ei += 1
+
+            # 25% vs random
+            for _ in range(n_rand):
+                _, er0, er1 = run_ppo_game(model, ei * 137 + 42, opponent="random", explore=False)
+                if er0 > er1: ev_wins += 1
+                ei += 1
+
+            ev_wr = ev_wins / EVAL_GAMES * 100
+            eval_str = f" eval_M={ev_wr:5.1f}%"
+            if ev_wr > best_wr:
+                best_wr = ev_wr
+                best_model = ActorCritic()
+                best_model.load_state_dict(model.state_dict())
+                best_model.eval()
+                torch.save(model.state_dict(), save_path)
+                print(f"  -> New best mixed eval WR {best_wr:.0f}% saved")
+
+        print(f"[{it+1:3d}/{num_iter}] SP={sp_wr:5.1f}% best={best_wr:5.1f}% "
+              f"p={pl:.4f} v={vl:.4f} e={el:.3f} n={len(all_feat)}{eval_str} t={elapsed:.0f}s")
 
     final_path = f"nn_weights_v{version}_final.pt"
     torch.save(model.state_dict(), final_path)
@@ -496,7 +657,7 @@ def evaluate_vs_random(model, num_games=500):
     wins, losses, draws = 0, 0, 0
     for i in range(num_games):
         seed = i * 137 + 42
-        _, r0, r1 = run_ppo_game(model, seed, explore=False)
+        _, r0, r1 = run_ppo_game(model, seed, opponent="random", explore=False)
         if r0 > r1: wins += 1
         elif r0 < r1: losses += 1
         else: draws += 1

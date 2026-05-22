@@ -1,4 +1,4 @@
-"""Simulate reward function on actual games to verify reward dynamics."""
+"""Batch reward function statistics over many games."""
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -8,115 +8,82 @@ from agent_v1 import (
     STATE, TYPE_FACTORY, TYPE_SCOUT, TYPE_WORKER, TYPE_MINER, update_state, agent as agent_v1,
 )
 
-DELTA_UNITS = 0.1
-DELTA_GAP = 0.1
-REWARD_SCALE = 1000.0
-SHAPING_REMOVE = 0.2
-SHAPING_TRANSFORM = 0.2
-
-
-def _total_energy(robots, player):
-    return sum(d[3] for d in robots.values() if d[4] == player)
+DELTA_GAP_W = 0.5
+DELTA_UNITS_W = 0.1
+SHAPING_REMOVE = 0.1
+SHAPING_TRANSFORM = 0.5
+UNIT_SURVIVAL = 0.01
+TERMINAL_WIN = 5.0
+TERMINAL_LOSS = -1.0
 
 
 def _unit_count(robots, player):
     return sum(1 for d in robots.values() if d[4] == player and d[0] != TYPE_FACTORY)
 
 
-def _get_factory_info(robots, player):
-    for uid, d in robots.items():
+def _factory_gap(robots, player, southBound):
+    for d in robots.values():
         if d[4] == player and d[0] == TYPE_FACTORY:
-            return uid, d[1], d[2]
-    return None, None, None
+            return d[2] - southBound
+    return 0
 
 
-def _get_action_type(uid, robots, player):
-    """Guess action from state changes — simplified heuristic."""
-    return "unknown"
-
-
-def analyze_game(seed):
+def run_game(seed):
     STATE.update({"turn": 0, "nodes": set(), "last_factory_pos": None,
                   "factory_stuck": 0, "walls": {}})
 
     env = make("crawl", configuration={"randomSeed": seed}, debug=True)
 
-    history = []  # list of per-step dicts
-    prev = {"energy": None, "units": None, "gap": None}
+    step_rewards = []  # per-step team_r values
+    factory_step_r = []
+    scout_step_r = []
+    worker_step_r = []
+    miner_step_r = []
 
-    # Track per-unit positions to detect actions
-    prev_positions = {}
+    prev_units = None
+    prev_gap = None
+    first_turn = True
 
     def tracker(obs, config):
+        nonlocal prev_units, prev_gap, first_turn
+
         my_player = obs.player
         update_state(obs, config, my_player)
 
-        cur_energy = _total_energy(obs.robots, my_player)
         cur_units = _unit_count(obs.robots, my_player)
-        _, _, factory_row = _get_factory_info(obs.robots, my_player)
-        cur_gap = (factory_row - obs.southBound) if factory_row is not None else 0
+        cur_gap = _factory_gap(obs.robots, my_player, obs.southBound)
 
-        step_info = {"turn": STATE["turn"], "energy": cur_energy,
-                     "units": cur_units, "gap": cur_gap, "southBound": obs.southBound}
+        if first_turn:
+            prev_units = cur_units
+            prev_gap = cur_gap
+            first_turn = False
+            team_r = 0.0
+        else:
+            delta_gap = (cur_gap - prev_gap) * DELTA_GAP_W
+            delta_units = (cur_units - prev_units) * DELTA_UNITS_W
+            team_r = delta_gap + delta_units
+            prev_units = cur_units
+            prev_gap = cur_gap
 
-        if prev["energy"] is not None and "actions" not in step_info:
-            delta_e = (cur_energy - prev["energy"]) / REWARD_SCALE
-            delta_units = (cur_units - prev["units"]) * DELTA_UNITS
-            delta_gap = (cur_gap - prev["gap"]) * DELTA_GAP
+        step_rewards.append(team_r)
 
-            # Detect specific actions from position changes
-            actions_taken = []
-            for uid, d in obs.robots.items():
-                if d[4] != my_player:
-                    continue
-                prev_pos = prev_positions.get(uid)
-                cur_pos = (d[1], d[2])
-                if prev_pos is None:
-                    utype_name = ["Factory", "Scout", "Worker", "Miner"][d[0]]
-                    actions_taken.append(f"NEW {utype_name} at {cur_pos}")
-                elif prev_pos != cur_pos:
-                    utype_name = ["Factory", "Scout", "Worker", "Miner"][d[0]]
-                    dc = cur_pos[0] - prev_pos[0]
-                    dr = cur_pos[1] - prev_pos[1]
-                    direction = ""
-                    if dr > 0: direction = "N"
-                    elif dr < 0: direction = "S"
-                    if dc > 0: direction += "E"
-                    elif dc < 0: direction += "W"
-                    if abs(dr) == 2 and dc == 0:
-                        direction = "JUMP_N"
-                    actions_taken.append(f"{utype_name} {prev_pos}->{cur_pos} ({direction})")
-
-            # Detect disappeared units
-            current_uids = {uid for uid, d in obs.robots.items() if d[4] == my_player}
-            for uid in prev_positions:
-                if uid not in current_uids and not uid.startswith("factory"):
-                    actions_taken.append(f"UNIT LOST: {uid} was at {prev_positions[uid]}")
-
-            # Count REMOVE and TRANSFORM heuristically:
-            # REMOVE: worker stayed in place, energy dropped by ~100
-            # TRANSFORM: miner disappeared, was on mining node
-            remove_count = 0
-            transform_count = 0
-
-            step_info["delta_e"] = delta_e
-            step_info["delta_units"] = delta_units
-            step_info["delta_gap"] = delta_gap
-            step_info["base_reward"] = delta_e + delta_units + delta_gap
-            step_info["actions"] = actions_taken
-
-        history.append(step_info)
-
-        # Update tracking
-        prev["energy"] = cur_energy
-        prev["units"] = cur_units
-        prev["gap"] = cur_gap
-        prev_positions.clear()
+        # Per-unit step rewards
         for uid, d in obs.robots.items():
-            if d[4] == my_player:
-                prev_positions[uid] = (d[1], d[2])
+            if d[4] != my_player:
+                continue
+            utype = d[0]
+            unit_r = team_r
+            if utype != TYPE_FACTORY:
+                unit_r += UNIT_SURVIVAL
+            if utype == TYPE_FACTORY:
+                factory_step_r.append(unit_r)
+            elif utype == TYPE_SCOUT:
+                scout_step_r.append(unit_r)
+            elif utype == TYPE_WORKER:
+                worker_step_r.append(unit_r)
+            elif utype == TYPE_MINER:
+                miner_step_r.append(unit_r)
 
-        # Use agent_v1 for realistic behavior
         actions = agent_v1(obs, config)
         return actions
 
@@ -124,55 +91,94 @@ def analyze_game(seed):
     final = env.steps[-1]
     r0, r1 = final[0].reward, final[1].reward
     outcome = "WIN" if r0 > r1 else ("LOSS" if r0 < r1 else "DRAW")
-    return history, outcome, r0, r1
+    terminal_r = TERMINAL_WIN if outcome == "WIN" else (TERMINAL_LOSS if outcome == "LOSS" else 0.0)
 
+    cum_step = sum(step_rewards)
+    total = cum_step + terminal_r
 
-def print_analysis(history, outcome, r0, r1, seed):
-    print(f"\n{'='*70}")
-    print(f"Game seed={seed} | Outcome: {outcome} (r0={r0:.1f}, r1={r1:.1f})")
-    print(f"{'='*70}")
-
-    cum_e = cum_units = cum_gap = cum_base = 0.0
-    print(f"\n{'Turn':>4} {'dE/1k':>7} {'dUnits':>7} {'dGap':>7} {'Base':>7} "
-          f"{'CumBase':>7} {'Energy':>7} {'Units':>5} {'Gap':>5} {'Actions'}")
-    print("-" * 100)
-
-    for i, step in enumerate(history):
-        if "delta_e" not in step:
-            print(f"{step['turn']:>4} {'---':>7} {'---':>7} {'---':>7} {'---':>7} "
-                  f"{'---':>7} {step['energy']:>7.0f} {step['units']:>5} {step['gap']:>5} "
-                  f"(first turn)")
-            continue
-
-        cum_e += step["delta_e"]
-        cum_units += step["delta_units"]
-        cum_gap += step["delta_gap"]
-        cum_base += step["base_reward"]
-
-        actions_str = ", ".join(step["actions"][:4]) if step["actions"] else ""
-        if len(step["actions"]) > 4:
-            actions_str += f" +{len(step['actions'])-4} more"
-
-        print(f"{step['turn']:>4} {step['delta_e']:>+7.3f} {step['delta_units']:>+7.3f} "
-              f"{step['delta_gap']:>+7.3f} {step['base_reward']:>+7.3f} "
-              f"{cum_base:>+7.3f} {step['energy']:>7.0f} {step['units']:>5} {step['gap']:>5} "
-              f"{actions_str}")
-
-    # Terminal
-    terminal_r = 1.0 if outcome == "WIN" else (-1.0 if outcome == "LOSS" else 0.5)
-    print(f"\n{'TERM':>4} {'':>7} {'':>7} {'':>7} {terminal_r:>+7.1f} "
-          f"{cum_base + terminal_r:>+7.3f} {'':>7} {'':>5} {'':>5} {outcome}")
-    print(f"\nCumulative breakdown:")
-    print(f"  delta_energy: {cum_e:>+.3f}")
-    print(f"  delta_units:  {cum_units:>+.3f}")
-    print(f"  delta_gap:    {cum_gap:>+.3f}")
-    print(f"  step total:   {cum_base:>+.3f}")
-    print(f"  terminal:     {terminal_r:>+.3f}")
-    print(f"  TOTAL:        {cum_base + terminal_r:>+.3f}")
+    return {
+        "outcome": outcome,
+        "cum_step": cum_step,
+        "terminal": terminal_r,
+        "total": total,
+        "num_steps": len(step_rewards),
+        "step_mean": np.mean(step_rewards) if step_rewards else 0,
+        "step_std": np.std(step_rewards) if step_rewards else 0,
+        "factory_mean": np.mean(factory_step_r) if factory_step_r else 0,
+        "scout_mean": np.mean(scout_step_r) if scout_step_r else 0,
+        "worker_mean": np.mean(worker_step_r) if worker_step_r else 0,
+        "miner_mean": np.mean(miner_step_r) if miner_step_r else 0,
+        "scout_steps": len(scout_step_r),
+        "worker_steps": len(worker_step_r),
+        "miner_steps": len(miner_step_r),
+        "factory_steps": len(factory_step_r),
+    }
 
 
 if __name__ == "__main__":
-    seeds = [42, 137, 256, 999, 1234]
-    for seed in seeds:
-        history, outcome, r0, r1 = analyze_game(seed)
-        print_analysis(history, outcome, r0, r1, seed)
+    num_games = int(sys.argv[1]) if len(sys.argv) > 1 else 50
+
+    print(f"Running {num_games} games with reward function:")
+    print(f"  team_r = delta_gap*{DELTA_GAP_W} + delta_units*{DELTA_UNITS_W}")
+    print(f"  non-factory survival = +{UNIT_SURVIVAL}/step")
+    print(f"  shaping: REMOVE +{SHAPING_REMOVE}, TRANSFORM +{SHAPING_TRANSFORM}")
+    print(f"  terminal: +{TERMINAL_WIN} / {TERMINAL_LOSS} / 0")
+    print()
+
+    results = []
+    for i in range(num_games):
+        seed = i * 137 + 42
+        r = run_game(seed)
+        results.append(r)
+        if (i + 1) % 10 == 0:
+            print(f"  {i+1}/{num_games} done...")
+
+    # Aggregate
+    wins = [r for r in results if r["outcome"] == "WIN"]
+    losses = [r for r in results if r["outcome"] == "LOSS"]
+    draws = [r for r in results if r["outcome"] == "DRAW"]
+
+    print(f"\n{'='*60}")
+    print(f"RESULTS: {len(wins)}W-{len(losses)}L-{len(draws)}D "
+          f"({len(wins)/num_games*100:.1f}%) over {num_games} games")
+    print(f"{'='*60}")
+
+    for label, group in [("WIN", wins), ("LOSS", losses), ("DRAW", draws), ("ALL", results)]:
+        if not group:
+            continue
+        n = len(group)
+        cum_steps = [r["cum_step"] for r in group]
+        totals = [r["total"] for r in group]
+        print(f"\n--- {label} ({n} games) ---")
+        print(f"  cum_step:  mean={np.mean(cum_steps):+.3f}  "
+              f"std={np.std(cum_steps):.3f}  "
+              f"min={min(cum_steps):+.3f}  max={max(cum_steps):+.3f}")
+        print(f"  total:     mean={np.mean(totals):+.3f}  "
+              f"std={np.std(totals):.3f}  "
+              f"min={min(totals):+.3f}  max={max(totals):+.3f}")
+        print(f"  steps:     mean={np.mean([r['num_steps'] for r in group]):.0f}")
+
+        for utype in ["factory", "scout", "worker", "miner"]:
+            means = [r[f"{utype}_mean"] for r in group]
+            steps = [r[f"{utype}_steps"] for r in group]
+            avg_steps = np.mean(steps)
+            if avg_steps > 0:
+                print(f"  {utype:>8}: mean_step_r={np.mean(means):+.4f}  "
+                      f"avg_steps={avg_steps:.1f}")
+
+    # Distribution check: does step_total separate WIN from LOSS?
+    print(f"\n--- Separation Check ---")
+    if wins and losses:
+        win_totals = [r["cum_step"] for r in wins]
+        loss_totals = [r["cum_step"] for r in losses]
+        overlap = sum(1 for w in win_totals if w < max(loss_totals)) + \
+                  sum(1 for l in loss_totals if l > min(win_totals))
+        print(f"  WIN step_total range: [{min(win_totals):+.2f}, {max(win_totals):+.2f}]")
+        print(f"  LOSS step_total range: [{min(loss_totals):+.2f}, {max(loss_totals):+.2f}]")
+        print(f"  Overlap count: {overlap}/{len(wins)+len(losses)} "
+              f"({overlap/(len(wins)+len(losses))*100:.0f}%)")
+
+        win_all = [r["total"] for r in wins]
+        loss_all = [r["total"] for r in losses]
+        print(f"  WIN total range: [{min(win_all):+.2f}, {max(win_all):+.2f}]")
+        print(f"  LOSS total range: [{min(loss_all):+.2f}, {max(loss_all):+.2f}]")
