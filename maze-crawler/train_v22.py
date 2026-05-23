@@ -4,7 +4,7 @@ Changes from v21:
 - Reward redesign: gap weight lowered, build/scout-ahead/REMOVE/TRANSFORM raised
 - PPO_CLIP 0.1 -> 0.2 for bolder policy updates
 - ENTROPY_COEF passed as command-line arg (arg 4)
-- Eval: 25% self-best + 50% v50 + 25% v49 (removed agent_v1)
+- Eval: 25% self-best + 25% v49 + 50% v50 (removed agent_v1)
 """
 import sys, os, random, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -483,7 +483,7 @@ def _next_version():
     return v
 
 
-def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, entropy_coef=ENTROPY_COEF):
+def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, entropy_coef=ENTROPY_COEF, resume_path=None):
     global ENTROPY_COEF
     ENTROPY_COEF = entropy_coef
     if version is None:
@@ -524,6 +524,9 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
     print(f"  Loaded v50 eval opponent from {v50_path}")
 
     model = ActorCritic()
+    if resume_path and os.path.exists(resume_path):
+        model.load_state_dict(torch.load(resume_path, map_location="cpu"))
+        print(f"  Resumed from {resume_path}")
     optimizer = optim.Adam(model.parameters(), lr=lr)
     best_wr = 0.0
     best_model = None
@@ -810,10 +813,11 @@ VERSION_OVERRIDE = int(sys.argv[1]) if len(sys.argv) > 1 else None
 NUM_ITER = int(sys.argv[2]) if len(sys.argv) > 2 else 2000
 TERMINAL_WIN_ARG = float(sys.argv[3]) if len(sys.argv) > 3 else 5.0
 ENTROPY_ARG = float(sys.argv[4]) if len(sys.argv) > 4 else ENTROPY_COEF
+RESUME_ARG = sys.argv[5] if len(sys.argv) > 5 else None
 
 if __name__ == "__main__":
     model, ver, best = train(num_iter=NUM_ITER, batch=100, lr=0.0003,
                              version=VERSION_OVERRIDE, terminal_win=TERMINAL_WIN_ARG,
-                             entropy_coef=ENTROPY_ARG)
+                             entropy_coef=ENTROPY_ARG, resume_path=RESUME_ARG)
     final_evaluate(model, ver)
     export_weights(model, ver)
