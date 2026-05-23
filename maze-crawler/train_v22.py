@@ -109,6 +109,11 @@ def _load_eval_opponents(eval_entries, base_dir):
             m.eval()
             print(f"  Loaded eval opponent '{label}' from {full_path}")
             loaded.append((label, weight, m, False))
+    # Re-normalize weights after skipping missing files
+    total = sum(w for _, w, _, _ in loaded)
+    if total > 0 and abs(total - 1.0) > 1e-6:
+        loaded = [(l, w / total, m, s) for l, w, m, s in loaded]
+        print(f"  NOTE: weights re-normalized after skipping missing files")
     return loaded
 
 
@@ -317,10 +322,6 @@ def _unit_count(robots, player):
     return sum(1 for d in robots.values() if d[4] == player and d[0] != TYPE_FACTORY)
 
 
-_INITIAL_STATE = {"turn": 0, "nodes": set(), "last_factory_pos": None,
-                  "factory_stuck": 0, "walls": {}}
-
-
 def _fresh_state():
     """Create a fresh player state with independent mutable containers."""
     return {"turn": 0, "nodes": set(), "last_factory_pos": None,
@@ -348,6 +349,38 @@ def _restore_state(player_states, player_id, saved):
     ps["walls"] = STATE["walls"]
     STATE["turn"], STATE["nodes"], STATE["last_factory_pos"], \
         STATE["factory_stuck"], STATE["walls"] = saved
+
+
+def _make_nn_agent(p0_model, p1_model, player_states):
+    """Greedy NN agent: player 0 uses p0_model, player 1 uses p1_model."""
+    def _agent(obs, config):
+        mp = obs.player
+        saved = _swap_state(player_states, mp)
+        try:
+            update_state(obs, config, mp)
+            actions = {}
+            reserved = set()
+            occupied = {}
+            for uid2, d2 in obs.robots.items():
+                occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
+            for uid2, d2 in obs.robots.items():
+                if d2[4] != mp or uid2 in actions:
+                    continue
+                feat, msk = extract_unit(obs, config, mp, occupied,
+                                          reserved, actions, uid2, d2)
+                if feat is None:
+                    continue
+                s = torch.FloatTensor(feat).unsqueeze(0)
+                m = torch.FloatTensor(msk).unsqueeze(0)
+                with torch.no_grad():
+                    mdl = p0_model if mp == 0 else p1_model
+                    probs, _ = mdl(s, m)
+                    ai = torch.argmax(probs).item()
+                execute_action(uid2, d2, ai, actions, reserved)
+            return actions
+        finally:
+            _restore_state(player_states, mp, saved)
+    return _agent
 
 
 def run_ppo_game(model, seed, opponent="self", explore=True):
@@ -561,7 +594,7 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
     print(f"  Log -> {log_path}")
 
     model = ActorCritic()
-    best_wr = 0.0
+    best_wr = -1.0  # first eval always triggers a save
     best_model = None
     if resume_path and os.path.exists(resume_path):
         model.load_state_dict(torch.load(resume_path, map_location="cpu"))
@@ -613,36 +646,6 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
                 ev_wins = 0
                 ei = 0
 
-                def _make_eval_agent(m0, m1, ps):
-                    """Generic eval agent: player 0 uses m0, player 1 uses m1."""
-                    def _agent(obs, config):
-                        mp = obs.player
-                        saved = _swap_state(ps, mp)
-                        try:
-                            update_state(obs, config, mp)
-                            actions = {}
-                            reserved = set()
-                            occupied = {}
-                            for uid2, d2 in obs.robots.items():
-                                occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
-                            for uid2, d2 in obs.robots.items():
-                                if d2[4] != mp or uid2 in actions:
-                                    continue
-                                feat, msk = extract_unit(obs, config, mp, occupied,
-                                                          reserved, actions, uid2, d2)
-                                if feat is None:
-                                    continue
-                                s = torch.FloatTensor(feat).unsqueeze(0)
-                                m = torch.FloatTensor(msk).unsqueeze(0)
-                                with torch.no_grad():
-                                    probs, _ = (m0 if mp == 0 else m1)(s, m)
-                                    ai = torch.argmax(probs).item()
-                                execute_action(uid2, d2, ai, actions, reserved)
-                            return actions
-                        finally:
-                            _restore_state(ps, mp, saved)
-                    return _agent
-
                 for label, weight, opp_model, is_self in eval_opponents:
                     n_games = max(1, round(weight * EVAL_GAMES))
                     opp = (best_model if best_model is not None else model) if is_self else opp_model
@@ -650,8 +653,8 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
                         seed = ei * 137 + 42
                         _pstates = {0: _fresh_state(), 1: _fresh_state()}
                         env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-                        env.run([_make_eval_agent(model, opp, _pstates),
-                                 _make_eval_agent(model, opp, _pstates)])
+                        agent_fn = _make_nn_agent(model, opp, _pstates)
+                        env.run([agent_fn, agent_fn])
                         final = env.steps[-1]
                         if final[0].reward > final[1].reward: ev_wins += 1
                         ei += 1
@@ -705,37 +708,7 @@ def _run_eval(model, opponent_str, num_games, label):
         seed = i * 137 + 42
         _pstates = {0: _fresh_state(), 1: _fresh_state()}
         env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-
-        def _make_nn_agent_isolated(mdl, ps):
-            def _agent(obs, config):
-                mp = obs.player
-                saved = _swap_state(ps, mp)
-                try:
-                    update_state(obs, config, mp)
-                    actions = {}
-                    reserved = set()
-                    occupied = {}
-                    for uid2, d2 in obs.robots.items():
-                        occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
-                    for uid2, d2 in obs.robots.items():
-                        if d2[4] != mp or uid2 in actions:
-                            continue
-                        feat, msk = extract_unit(obs, config, mp, occupied,
-                                                  reserved, actions, uid2, d2)
-                        if feat is None:
-                            continue
-                        s = torch.FloatTensor(feat).unsqueeze(0)
-                        m = torch.FloatTensor(msk).unsqueeze(0)
-                        with torch.no_grad():
-                            probs, _ = mdl(s, m)
-                            ai = torch.argmax(probs).item()
-                        execute_action(uid2, d2, ai, actions, reserved)
-                    return actions
-                finally:
-                    _restore_state(ps, mp, saved)
-            return _agent
-
-        nn_agent = _make_nn_agent_isolated(model, _pstates)
+        nn_agent = _make_nn_agent(model, model, _pstates)
         env.run([nn_agent, opponent_str])
         final = env.steps[-1]
         r0, r1 = final[0].reward, final[1].reward
@@ -753,38 +726,8 @@ def _run_eval_nn(model, opponent_model, num_games, label):
         seed = i * 137 + 42
         _pstates = {0: _fresh_state(), 1: _fresh_state()}
         env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-
-        def _make_p_agent(m0, m1, ps):
-            def _agent(obs, config):
-                mp = obs.player
-                saved = _swap_state(ps, mp)
-                try:
-                    update_state(obs, config, mp)
-                    actions = {}
-                    reserved = set()
-                    occupied = {}
-                    for uid2, d2 in obs.robots.items():
-                        occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
-                    for uid2, d2 in obs.robots.items():
-                        if d2[4] != mp or uid2 in actions:
-                            continue
-                        feat, msk = extract_unit(obs, config, mp, occupied,
-                                                  reserved, actions, uid2, d2)
-                        if feat is None:
-                            continue
-                        s = torch.FloatTensor(feat).unsqueeze(0)
-                        m = torch.FloatTensor(msk).unsqueeze(0)
-                        with torch.no_grad():
-                            probs, _ = (m0 if mp == 0 else m1)(s, m)
-                            ai = torch.argmax(probs).item()
-                        execute_action(uid2, d2, ai, actions, reserved)
-                    return actions
-                finally:
-                    _restore_state(ps, mp, saved)
-            return _agent
-
-        env.run([_make_p_agent(model, opponent_model, _pstates),
-                 _make_p_agent(model, opponent_model, _pstates)])
+        agent_fn = _make_nn_agent(model, opponent_model, _pstates)
+        env.run([agent_fn, agent_fn])
         final = env.steps[-1]
         r0, r1 = final[0].reward, final[1].reward
         if r0 > r1: wins += 1
