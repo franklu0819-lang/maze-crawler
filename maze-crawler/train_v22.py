@@ -4,7 +4,9 @@ Changes from v21:
 - Reward redesign: gap weight lowered, build/scout-ahead/REMOVE/TRANSFORM raised
 - PPO_CLIP 0.1 -> 0.2 for bolder policy updates
 - ENTROPY_COEF passed as command-line arg (arg 4)
-- Eval: 25% self-best + 25% v49 + 50% v50 (removed agent_v1)
+- Eval opponents parameterized via CLI arg 6 (spec string with "self" token)
+- Resume-from-checkpoint support via CLI arg 5
+- Final evaluate runs 500 games vs random + all fixed eval opponents
 """
 import sys, os, random, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -60,8 +62,54 @@ EVAL_GAMES = 200        # Games per evaluation
 
 # ─── Eval Opponents ─────────────────────────────────────────────────
 
-V49_WEIGHTS = "nn_weights_v49.pt"
-V50_WEIGHTS = "nn_weights_v50.pt"
+# Default eval spec: "self:P opponent_path:P ..."
+# "self" means dynamic best_model, paths are fixed weight files.
+# Percentages are relative weights, auto-normalized.
+DEFAULT_EVAL_SPEC = "self:0.25 nn_weights_v50.pt:0.50 nn_weights_v49.pt:0.25"
+
+
+def _parse_eval_spec(spec_str):
+    """Parse eval spec string into list of (label, weight, path_or_None, is_self)."""
+    if not spec_str or not spec_str.strip():
+        raise ValueError("Empty eval spec — provide at least one opponent, e.g. 'self:1.0'")
+    entries = []
+    for token in spec_str.strip().split():
+        if ":" not in token:
+            raise ValueError(f"Malformed eval token '{token}' — expected 'name:weight'")
+        name, weight_str = token.rsplit(":", 1)
+        try:
+            weight = float(weight_str)
+        except ValueError:
+            raise ValueError(f"Invalid weight '{weight_str}' in token '{token}'")
+        if weight <= 0:
+            raise ValueError(f"Weight must be positive in token '{token}'")
+        is_self = (name.lower() == "self")
+        path = None if is_self else name
+        label = "self-best" if is_self else os.path.basename(name).replace("nn_weights_", "").replace(".pt", "")
+        entries.append((label, weight, path, is_self))
+    if not entries:
+        raise ValueError("No valid entries in eval spec")
+    total = sum(e[1] for e in entries)
+    return [(l, w / total, p, s) for l, w, p, s in entries]
+
+
+def _load_eval_opponents(eval_entries, base_dir):
+    """Load fixed eval opponents from weight files. Returns list of (label, weight, model_or_None, is_self)."""
+    loaded = []
+    for label, weight, path, is_self in eval_entries:
+        if is_self:
+            loaded.append((label, weight, None, True))
+        else:
+            full_path = os.path.join(base_dir, path)
+            if not os.path.exists(full_path):
+                print(f"  WARNING: {full_path} not found, skipping {label}")
+                continue
+            m = ActorCritic()
+            m.load_state_dict(torch.load(full_path, map_location="cpu"))
+            m.eval()
+            print(f"  Loaded eval opponent '{label}' from {full_path}")
+            loaded.append((label, weight, m, False))
+    return loaded
 
 
 # ─── Feature Extraction ──────────────────────────────────────────────
@@ -273,6 +321,12 @@ _INITIAL_STATE = {"turn": 0, "nodes": set(), "last_factory_pos": None,
                   "factory_stuck": 0, "walls": {}}
 
 
+def _fresh_state():
+    """Create a fresh player state with independent mutable containers."""
+    return {"turn": 0, "nodes": set(), "last_factory_pos": None,
+            "factory_stuck": 0, "walls": {}}
+
+
 def _swap_state(player_states, player_id):
     saved = (STATE["turn"], STATE["nodes"], STATE["last_factory_pos"],
              STATE["factory_stuck"], STATE["walls"])
@@ -297,9 +351,7 @@ def _restore_state(player_states, player_id, saved):
 
 
 def run_ppo_game(model, seed, opponent="self", explore=True):
-    player_states = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
-    player_states[0]["nodes"] = set()
-    player_states[1]["nodes"] = set()
+    player_states = {0: _fresh_state(), 1: _fresh_state()}
 
     env = make("crawl", configuration={"randomSeed": seed}, debug=True)
     unit_trajs = {}
@@ -483,15 +535,20 @@ def _next_version():
     return v
 
 
-def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, entropy_coef=ENTROPY_COEF, resume_path=None):
+def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, entropy_coef=ENTROPY_COEF, resume_path=None, eval_spec=DEFAULT_EVAL_SPEC):
     global ENTROPY_COEF
     ENTROPY_COEF = entropy_coef
     if version is None:
         version = _next_version()
     save_path = f"nn_weights_v{version}.pt"
     log_path = f"train_v22_v{version}.log"
+    _base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    print(f"  train_v22.py — mixed eval: 25% self-best + 50% v50 + 25% v49")
+    eval_entries = _parse_eval_spec(eval_spec)
+    eval_opponents = _load_eval_opponents(eval_entries, _base_dir)
+    eval_desc = " + ".join(f"{l}:{w:.0%}" for l, w, _, _ in eval_opponents)
+
+    print(f"  train_v22.py — mixed eval: {eval_desc}")
     print(f"  Step reward: delta_gap*{DELTA_GAP_W} + delta_units*{DELTA_UNITS_W}")
     print(f"  Terminal: +{terminal_win} / -1 / 0 (draw)")
     print(f"  Shaping: REMOVE +{SHAPING_REMOVE}, TRANSFORM +{SHAPING_TRANSFORM}")
@@ -503,37 +560,21 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
     print(f"  Weights -> {save_path}")
     print(f"  Log -> {log_path}")
 
-    # Load v49 best as fixed eval opponent
-    v49_model = ActorCritic()
-    v49_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), V49_WEIGHTS)
-    if not os.path.exists(v49_path):
-        print(f"  ERROR: {v49_path} not found!")
-        sys.exit(1)
-    v49_model.load_state_dict(torch.load(v49_path, map_location="cpu"))
-    v49_model.eval()
-    print(f"  Loaded v49 eval opponent from {v49_path}")
-
-    # Load v50 best as fixed eval opponent (replaces v6)
-    v50_model = ActorCritic()
-    v50_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), V50_WEIGHTS)
-    if not os.path.exists(v50_path):
-        print(f"  ERROR: {v50_path} not found!")
-        sys.exit(1)
-    v50_model.load_state_dict(torch.load(v50_path, map_location="cpu"))
-    v50_model.eval()
-    print(f"  Loaded v50 eval opponent from {v50_path}")
-
     model = ActorCritic()
-    if resume_path and os.path.exists(resume_path):
-        model.load_state_dict(torch.load(resume_path, map_location="cpu"))
-        print(f"  Resumed from {resume_path}")
-    optimizer = optim.Adam(model.parameters(), lr=lr)
     best_wr = 0.0
     best_model = None
+    if resume_path and os.path.exists(resume_path):
+        model.load_state_dict(torch.load(resume_path, map_location="cpu"))
+        # Seed best_model from resumed weights so self-best eval works immediately
+        best_model = ActorCritic()
+        best_model.load_state_dict(model.state_dict())
+        best_model.eval()
+        print(f"  Resumed from {resume_path} (best_model seeded from resume weights)")
+    optimizer = optim.Adam(model.parameters(), lr=lr)
     t0 = time.time()
 
     with open(log_path, "w") as log_f:
-        log_f.write(f"train_v22.py | eval=25%self+50%v50+25%v49 | iters={num_iter} | batch={batch} | entropy={entropy_coef}\n\n")
+        log_f.write(f"train_v22.py | eval={eval_desc} | iters={num_iter} | batch={batch} | entropy={entropy_coef}\n\n")
 
         for it in range(num_iter):
             all_feat, all_act, all_mask, all_old_lp = [], [], [], []
@@ -566,12 +607,9 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
             sp_wr = sp_wins / batch * 100
             elapsed = time.time() - t0
 
-            # ── Periodic mixed eval: 25% self-best + 50% v50 + 25% v49 ──
+            # ── Periodic mixed eval ──
             eval_str = ""
             if (it + 1) % EVAL_EVERY == 0:
-                n_self = EVAL_GAMES // 4
-                n_v50 = EVAL_GAMES // 2
-                n_v49 = EVAL_GAMES - n_self - n_v50
                 ev_wins = 0
                 ei = 0
 
@@ -605,47 +643,20 @@ def train(num_iter=2000, batch=100, lr=0.0003, version=None, terminal_win=5.0, e
                             _restore_state(ps, mp, saved)
                     return _agent
 
-                # 25% vs self-best
-                opponent_model = best_model if best_model is not None else model
-                for _ in range(n_self):
-                    seed = ei * 137 + 42
-                    _pstates = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
-                    _pstates[0]["nodes"] = set()
-                    _pstates[1]["nodes"] = set()
-                    env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-                    env.run([_make_eval_agent(model, opponent_model, _pstates),
-                             _make_eval_agent(model, opponent_model, _pstates)])
-                    final = env.steps[-1]
-                    if final[0].reward > final[1].reward: ev_wins += 1
-                    ei += 1
+                for label, weight, opp_model, is_self in eval_opponents:
+                    n_games = max(1, round(weight * EVAL_GAMES))
+                    opp = (best_model if best_model is not None else model) if is_self else opp_model
+                    for _ in range(n_games):
+                        seed = ei * 137 + 42
+                        _pstates = {0: _fresh_state(), 1: _fresh_state()}
+                        env = make("crawl", configuration={"randomSeed": seed}, debug=True)
+                        env.run([_make_eval_agent(model, opp, _pstates),
+                                 _make_eval_agent(model, opp, _pstates)])
+                        final = env.steps[-1]
+                        if final[0].reward > final[1].reward: ev_wins += 1
+                        ei += 1
 
-                # 50% vs v50
-                for _ in range(n_v50):
-                    seed = ei * 137 + 42
-                    _pstates = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
-                    _pstates[0]["nodes"] = set()
-                    _pstates[1]["nodes"] = set()
-                    env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-                    env.run([_make_eval_agent(model, v50_model, _pstates),
-                             _make_eval_agent(model, v50_model, _pstates)])
-                    final = env.steps[-1]
-                    if final[0].reward > final[1].reward: ev_wins += 1
-                    ei += 1
-
-                # 25% vs v49
-                for _ in range(n_v49):
-                    seed = ei * 137 + 42
-                    _pstates = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
-                    _pstates[0]["nodes"] = set()
-                    _pstates[1]["nodes"] = set()
-                    env = make("crawl", configuration={"randomSeed": seed}, debug=True)
-                    env.run([_make_eval_agent(model, v49_model, _pstates),
-                             _make_eval_agent(model, v49_model, _pstates)])
-                    final = env.steps[-1]
-                    if final[0].reward > final[1].reward: ev_wins += 1
-                    ei += 1
-
-                ev_wr = ev_wins / EVAL_GAMES * 100
+                ev_wr = ev_wins / ei * 100 if ei > 0 else 0.0
                 eval_str = f" eval_M={ev_wr:5.1f}%"
                 if ev_wr > best_wr:
                     best_wr = ev_wr
@@ -692,9 +703,7 @@ def _run_eval(model, opponent_str, num_games, label):
     wins, losses, draws = 0, 0, 0
     for i in range(num_games):
         seed = i * 137 + 42
-        _pstates = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
-        _pstates[0]["nodes"] = set()
-        _pstates[1]["nodes"] = set()
+        _pstates = {0: _fresh_state(), 1: _fresh_state()}
         env = make("crawl", configuration={"randomSeed": seed}, debug=True)
 
         def _make_nn_agent_isolated(mdl, ps):
@@ -742,9 +751,7 @@ def _run_eval_nn(model, opponent_model, num_games, label):
     wins, losses, draws = 0, 0, 0
     for i in range(num_games):
         seed = i * 137 + 42
-        _pstates = {0: dict(_INITIAL_STATE), 1: dict(_INITIAL_STATE)}
-        _pstates[0]["nodes"] = set()
-        _pstates[1]["nodes"] = set()
+        _pstates = {0: _fresh_state(), 1: _fresh_state()}
         env = make("crawl", configuration={"randomSeed": seed}, debug=True)
 
         def _make_p_agent(m0, m1, ps):
@@ -787,26 +794,30 @@ def _run_eval_nn(model, opponent_model, num_games, label):
     return wins / num_games
 
 
-def final_evaluate(model, version):
-    model.load_state_dict(torch.load(f"nn_weights_v{version}.pt"))
-    model.eval()
-    print(f"\nLoaded best weights (nn_weights_v{version}.pt)", flush=True)
+def final_evaluate(version, eval_spec=DEFAULT_EVAL_SPEC):
+    """Evaluate saved best weights against random + all fixed eval opponents."""
+    best_path = f"nn_weights_v{version}.pt"
+    if not os.path.exists(best_path):
+        print(f"WARNING: {best_path} not found, skipping final evaluation")
+        return
+    eval_model = ActorCritic()
+    eval_model.load_state_dict(torch.load(best_path, map_location="cpu"))
+    eval_model.eval()
+    print(f"\nLoaded best weights ({best_path}) for final evaluation", flush=True)
 
-    _run_eval(model, "random", 500, "random")
+    _run_eval(eval_model, "random", 500, "random")
 
-    v49_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), V49_WEIGHTS)
-    if os.path.exists(v49_path):
-        v49 = ActorCritic()
-        v49.load_state_dict(torch.load(v49_path, map_location="cpu"))
-        v49.eval()
-        _run_eval_nn(model, v49, 500, "v49 best")
-
-    v50_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), V50_WEIGHTS)
-    if os.path.exists(v50_path):
-        v50 = ActorCritic()
-        v50.load_state_dict(torch.load(v50_path, map_location="cpu"))
-        v50.eval()
-        _run_eval_nn(model, v50, 500, "v50 best")
+    eval_entries = _parse_eval_spec(eval_spec)
+    _base_dir = os.path.dirname(os.path.abspath(__file__))
+    for label, _, path, is_self in eval_entries:
+        if is_self:
+            continue
+        full_path = os.path.join(_base_dir, path)
+        if os.path.exists(full_path):
+            opp = ActorCritic()
+            opp.load_state_dict(torch.load(full_path, map_location="cpu"))
+            opp.eval()
+            _run_eval_nn(eval_model, opp, 500, label)
 
 
 VERSION_OVERRIDE = int(sys.argv[1]) if len(sys.argv) > 1 else None
@@ -814,10 +825,16 @@ NUM_ITER = int(sys.argv[2]) if len(sys.argv) > 2 else 2000
 TERMINAL_WIN_ARG = float(sys.argv[3]) if len(sys.argv) > 3 else 5.0
 ENTROPY_ARG = float(sys.argv[4]) if len(sys.argv) > 4 else ENTROPY_COEF
 RESUME_ARG = sys.argv[5] if len(sys.argv) > 5 else None
+EVAL_ARG = sys.argv[6] if len(sys.argv) > 6 else DEFAULT_EVAL_SPEC
 
 if __name__ == "__main__":
     model, ver, best = train(num_iter=NUM_ITER, batch=100, lr=0.0003,
                              version=VERSION_OVERRIDE, terminal_win=TERMINAL_WIN_ARG,
-                             entropy_coef=ENTROPY_ARG, resume_path=RESUME_ARG)
-    final_evaluate(model, ver)
+                             entropy_coef=ENTROPY_ARG, resume_path=RESUME_ARG,
+                             eval_spec=EVAL_ARG)
+    final_evaluate(ver, eval_spec=EVAL_ARG)
+    # Load best weights for export (final_evaluate no longer mutates model)
+    best_path = f"nn_weights_v{ver}.pt"
+    if os.path.exists(best_path):
+        model.load_state_dict(torch.load(best_path, map_location="cpu"))
     export_weights(model, ver)
