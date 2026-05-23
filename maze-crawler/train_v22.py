@@ -363,20 +363,23 @@ def _make_nn_agent(p0_model, p1_model, player_states):
             occupied = {}
             for uid2, d2 in obs.robots.items():
                 occupied.setdefault((d2[1], d2[2]), []).append((uid2, d2))
-            for uid2, d2 in obs.robots.items():
-                if d2[4] != mp or uid2 in actions:
-                    continue
-                feat, msk = extract_unit(obs, config, mp, occupied,
-                                          reserved, actions, uid2, d2)
-                if feat is None:
-                    continue
-                s = torch.FloatTensor(feat).unsqueeze(0)
-                m = torch.FloatTensor(msk).unsqueeze(0)
-                with torch.no_grad():
-                    mdl = p0_model if mp == 0 else p1_model
-                    probs, _ = mdl(s, m)
-                    ai = torch.argmax(probs).item()
-                execute_action(uid2, d2, ai, actions, reserved)
+            for unit_type in [TYPE_SCOUT, TYPE_WORKER, TYPE_MINER, TYPE_FACTORY]:
+                for uid2, d2 in obs.robots.items():
+                    if uid2 in actions:
+                        continue
+                    if d2[4] != mp or d2[0] != unit_type:
+                        continue
+                    feat, msk = extract_unit(obs, config, mp, occupied,
+                                              reserved, actions, uid2, d2)
+                    if feat is None:
+                        continue
+                    s = torch.FloatTensor(feat).unsqueeze(0)
+                    m = torch.FloatTensor(msk).unsqueeze(0)
+                    with torch.no_grad():
+                        mdl = p0_model if mp == 0 else p1_model
+                        probs, _ = mdl(s, m)
+                        ai = torch.argmax(probs).item()
+                    execute_action(uid2, d2, ai, actions, reserved)
             return actions
         finally:
             _restore_state(player_states, mp, saved)
