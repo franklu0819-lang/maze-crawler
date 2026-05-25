@@ -291,42 +291,77 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
 
     # ── MOVE ── (uses factory_try_move which handles friendly crushing)
     if move_cd == 0:
+        # ── Check if we should stay at an existing mine ──
+        my_mines_nearby = []
+        for mk, mv in getattr(obs, "mines", {}).items():
+            mc2, mr2 = parse_key(mk)
+            if mv[2] == my_player and abs(mc2 - c) + abs(mr2 - r) <= 1:
+                my_mines_nearby.append((mc2, mr2))
+
+        if my_mines_nearby and gap > 2:
+            # Stay and collect energy — move onto mine cell if not already
+            mc2, mr2 = my_mines_nearby[0]
+            if (mc2, mr2) == (c, r):
+                actions[uid] = "IDLE"
+                reserved.add((c, r))
+                return
+            # Try to step onto the mine
+            for d in ("NORTH", "EAST", "WEST", "SOUTH"):
+                dc2, dr2, _ = DIRS[d]
+                if (c + dc2, r + dr2) == (mc2, mr2):
+                    if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player):
+                        return
+            # Can't reach mine cell, just idle
+            actions[uid] = "IDLE"
+            reserved.add((c, r))
+            return
+
+        if my_mines_nearby and gap <= 2:
+            # Must leave — clear mine_invested
+            STATE["mine_invested"] = None
+
         center = width // 4
         ew = ["EAST", "WEST"] if c <= center else ["WEST", "EAST"]
+
+        # Build BFS goals with mine target fusion
+        north_goals = [(c2, r + 2) for c2 in range(width) if in_bounds(c2, r + 2, obs, config)]
+        goals = north_goals
+        if mine_target:
+            goals = [mine_target] + goals
 
         # Tier 1: Direct NORTH if no known wall
         if can_go(obs, config, c, r, "NORTH"):
             if factory_try_move(uid, c, r, "NORTH", obs, config, actions, reserved, occupied, my_player):
                 return
 
-        # Tier 2: BFS to row+2, but only accept non-south first steps
-        step = bfs_to_row((c, r), r + 2, obs, config, can_go)
-        if step:
-            dc, dr, _ = DIRS[step]
-            if dr >= 0:  # NORTH, EAST, or WEST only
-                if factory_try_move(uid, c, r, step, obs, config, actions, reserved, occupied, my_player):
+        # Tier 2: BFS to goals (mine target + row+2)
+        step_dir = bfs_first_step((c, r), goals, obs, config, can_go)
+        if step_dir:
+            dc2, dr2, _ = DIRS[step_dir]
+            if dr2 >= 0:  # NORTH, EAST, or WEST only
+                if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player):
                     return
 
-        # Tier 3: Forced lateral — try EAST/WEST even if BFS didn't find them
+        # Tier 3: Forced lateral
         for d in ew:
             if can_go(obs, config, c, r, d):
                 if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player):
                     return
 
-        # Tier 4: Diagonal — go EAST/WEST if the cell north of that is open
+        # Tier 4: Diagonal
         for d in ew:
             if can_go(obs, config, c, r, d):
-                dc, dr, _ = DIRS[d]
-                side = (c + dc, r)
+                dc2, dr2, _ = DIRS[d]
+                side = (c + dc2, r)
                 if can_go(obs, config, side[0], side[1], "NORTH"):
                     if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player):
                         return
 
-        # Tier 5: BFS allowing south (when stuck >= 3)
+        # Tier 5: BFS allowing south (stuck >= 3)
         if stuck >= 3:
-            step = bfs_to_row((c, r), r + 2, obs, config, can_go)
-            if step:
-                if factory_try_move(uid, c, r, step, obs, config, actions, reserved, occupied, my_player):
+            step_dir = bfs_first_step((c, r), goals, obs, config, can_go)
+            if step_dir:
+                if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player):
                     return
 
         # Tier 6: SOUTH as last resort
@@ -341,11 +376,34 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
         if spawn_ok:
             spawn = (c, r + 1)
             if not friendly_at(occupied, spawn, my_player):
-                scout_cost = getattr(config, "scoutCost", 50)
-                worker_cost = getattr(config, "workerCost", 200)
-                miner_cost = getattr(config, "minerCost", 300)
-                # Priority 2: Worker for wall clearing
-                if worker_count < 1 and energy >= worker_cost + 100 and gap >= 2:
+                # Check if we have an existing mine nearby to collect from
+                my_mines_nearby_build = []
+                for mk, mv in getattr(obs, "mines", {}).items():
+                    mc2, mr2 = parse_key(mk)
+                    if mv[2] == my_player and abs(mc2 - c) + abs(mr2 - r) <= 1:
+                        my_mines_nearby_build.append((mc2, mr2))
+
+                if my_mines_nearby_build and gap > 2:
+                    # Don't build, keep collecting energy
+                    actions[uid] = "IDLE"
+                    reserved.add((c, r))
+                    return
+
+                # Build Miner if at mine target
+                if mine_target:
+                    dist_to_mine = abs(mine_target[0] - c) + abs(mine_target[1] - r)
+                    if dist_to_mine <= 1 and energy >= 300:
+                        has_miner = any(
+                            d2[4] == my_player and d2[0] == TYPE_MINER
+                            for d2 in obs.robots.values()
+                        )
+                        if not has_miner:
+                            actions[uid] = "BUILD_MINER"
+                            reserved.add(spawn)
+                            return
+
+                # Build Worker if we don't have one
+                if worker_count < 1 and energy >= 250:
                     actions[uid] = "BUILD_WORKER"
                     reserved.add(spawn)
                     return
