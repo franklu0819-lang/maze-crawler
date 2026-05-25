@@ -193,11 +193,65 @@ def try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player):
     return True
 
 
-def factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player, allow_crush=False):
-    """Factory movement: ignores friendly units (crushes them), only checks walls and reserved targets."""
+def get_enemy_factory_threat(obs, config, my_player):
+    """Return (hard_block, danger) for enemy factory threat avoidance.
+
+    `hard_block` — cells we must NEVER enter under any circumstance:
+        - every enemy factory's current cell
+      Entering one guarantees a mutual-destruction collision. The post-collision
+      tiebreaker (total team energy) empirically goes against us, so we treat
+      these cells as walls regardless of scroll pressure.
+
+    `danger` — cells the enemy factory could occupy NEXT turn:
+        - hard_block (they may IDLE)
+        - if their move_cd==0: 4 MOVE neighbors that pass `can_go`
+        - if their jump_cd==0: 4 JUMP_N/S/E/W landings (jumps ignore walls)
+      Cooldown gating is critical: without it the danger zone is so pessimistic
+      that whenever an enemy factory is in vision the agent retreats and
+      oscillates instead of pushing north (regressed otherwise-winnable seeds
+      like 1138 from a 223-step win to a 442-step scroll-out loss). With the
+      gate, danger only fires when the enemy can actually act this turn.
+    """
+    hard_block = set()
+    danger = set()
+    for uid, d in obs.robots.items():
+        if d[4] == my_player or d[0] != TYPE_FACTORY:
+            continue
+        ec, er = d[1], d[2]
+        emcd = d[5] if len(d) > 5 else 0
+        ejcd = d[6] if len(d) > 6 else 0
+        # Hard block: enemy factory current cell — never enter (mutual destruct).
+        hard_block.add((ec, er))
+        danger.add((ec, er))
+        # MOVE neighbors only if enemy can move THIS turn (move_cd == 0)
+        if emcd == 0:
+            for d_str in ("NORTH", "EAST", "WEST", "SOUTH"):
+                if can_go(obs, config, ec, er, d_str):
+                    dc, dr, _ = DIRS[d_str]
+                    danger.add((ec + dc, er + dr))
+        # JUMP landings only if enemy can jump THIS turn (jump_cd == 0)
+        if ejcd == 0:
+            for jdc, jdr in ((0, 2), (0, -2), (2, 0), (-2, 0)):
+                lc, lr = ec + jdc, er + jdr
+                if in_bounds(lc, lr, obs, config):
+                    danger.add((lc, lr))
+    return hard_block, danger
+
+
+def factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player,
+                     allow_crush=False, danger=None, allow_danger=False, hard_block=None):
+    """Factory movement: ignores friendly units (crushes them), only checks walls and reserved targets.
+
+    `hard_block` cells (e.g. enemy factory current cells) are ALWAYS rejected.
+    `danger` cells are rejected unless `allow_danger=True` (panic mode).
+    """
     dc, dr, _ = DIRS[d]
     nxt = (c + dc, r + dr)
     if nxt in reserved:
+        return False
+    if hard_block is not None and nxt in hard_block:
+        return False
+    if danger is not None and nxt in danger and not allow_danger:
         return False
     occ = occupied.get(nxt, [])
     friendlies = [o for o in occ if o[1][4] == my_player and o[1][0] != TYPE_FACTORY]
@@ -242,6 +296,14 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
     turn = STATE["turn"]
     stuck = STATE["factory_stuck"]
     width = config.width
+
+    # ── Enemy factory threat zones ──
+    # `enemy_hard_block` — enemy factory current cells. Always avoid: entering
+    #   one is a guaranteed mutual-destruction → losing tiebreaker.
+    # `enemy_danger`     — cells enemy factory could reach next turn (move +
+    #   jump). Avoid when possible; accept under scroll pressure (gap≤3) or
+    #   when our own cell is already in the zone.
+    enemy_hard_block, enemy_danger = get_enemy_factory_threat(obs, config, my_player)
 
     # Count units
     scout_count = sum(1 for d in obs.robots.values()
@@ -297,10 +359,21 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
 
     # ── JUMP ──
     if jump_cd == 0 and turn > 2 and in_bounds(c, r + 2, obs, config):
+        # Pre-compute open MOVE targets (for danger-escape detection)
+        move_targets = []
+        for d_str in ("NORTH", "EAST", "WEST", "SOUTH"):
+            if can_go(obs, config, c, r, d_str):
+                dc_t, dr_t, _ = DIRS[d_str]
+                move_targets.append((c + dc_t, r + dr_t))
+        # All MOVE options dangerous → JUMP is the only safe escape
+        danger_escape = bool(move_targets) and all(t in enemy_danger for t in move_targets)
+
         should_jump = False
         if gap <= 2:
             should_jump = True
         elif stuck >= 2:
+            should_jump = True
+        elif danger_escape:
             should_jump = True
         else:
             w = wb(obs, config, c, r)
@@ -309,9 +382,14 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                     should_jump = True
 
         if should_jump:
-            # Try JUMP_NORTH first
-            if in_bounds(c, r + 2, obs, config):
-                lr = r + 2
+            # Only land in enemy danger as a true last resort
+            allow_danger_jump = (gap <= 3)
+
+            # Try JUMP_NORTH first. NEVER land on enemy factory cell (hard_block).
+            lr = r + 2
+            if (in_bounds(c, lr, obs, config)
+                    and (c, lr) not in enemy_hard_block
+                    and ((c, lr) not in enemy_danger or allow_danger_jump)):
                 landing = wb(obs, config, c, lr)
                 if landing is None:
                     actions[uid] = "JUMP_NORTH"
@@ -324,11 +402,15 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                             reserved.add((c, lr))
                             return
 
-            # If NORTH jump blocked or dead-end, try lateral jumps only in emergency
-            if gap <= 3:
-                for jd, (jdc, jdr) in [("JUMP_EAST", (2, 0)), ("JUMP_WEST", (-2, 0))]:
+            # Lateral jumps: emergency (gap≤3) OR danger escape
+            if gap <= 3 or danger_escape:
+                for jd, (jdc, jdr) in (("JUMP_EAST", (2, 0)), ("JUMP_WEST", (-2, 0))):
                     lc, lr2 = c + jdc, r + jdr
                     if not in_bounds(lc, lr2, obs, config):
+                        continue
+                    if (lc, lr2) in enemy_hard_block:
+                        continue  # never crash into enemy factory
+                    if (lc, lr2) in enemy_danger and not allow_danger_jump:
                         continue
                     landing = wb(obs, config, lc, lr2)
                     if landing is None:
@@ -378,11 +460,13 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                 actions[uid] = "IDLE"
                 reserved.add((c, r))
                 return
-            # Try to step onto the mine
+            # Try to step onto the mine (allow_danger=True since mine is critical
+            # and (mc2,mr2) is rarely in enemy zone — but allow risk if it is).
             for d in ("NORTH", "EAST", "WEST", "SOUTH"):
                 dc2, dr2, _ = DIRS[d]
                 if (c + dc2, r + dr2) == (mc2, mr2):
-                    if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player):
+                    if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player,
+                                                            danger=enemy_danger, allow_danger=True, hard_block=enemy_hard_block):
                         return
             # Can't reach mine cell, just idle
             actions[uid] = "IDLE"
@@ -407,12 +491,25 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
             else:
                 goals = [mine_target] + goals
 
-        # When stuck or low gap, allow crushing own units to escape
-        crush = stuck >= 1 or gap <= 3
+        # If our current cell is in enemy reach, IDLE is itself unsafe — we
+        # must move, even into another danger cell (anything is better than
+        # standing still while enemy walks/jumps onto us).
+        must_escape = (c, r) in enemy_danger
+        # When stuck, low gap, or about to be hit, allow crushing own units
+        crush = (stuck >= 1) or (gap <= 3) or must_escape
+        # Allow stepping into enemy danger only when scroll pressure is genuinely
+        # high (gap<=3) OR we already sit on a cell the enemy will reach.
+        # NOTE: We deliberately do NOT include `stuck` here — stuck-because-of-
+        # enemy-avoidance is the desired behaviour. If we counted stuck, the
+        # factory would IDLE three turns to dodge a JUMP threat and then walk
+        # straight into the JUMP-landing on turn 4 (this is the seed 6344
+        # failure mode). When the scroll truly threatens us, gap<=3 takes over.
+        panic = (gap <= 3) or must_escape
 
         # Tier 1: Direct NORTH if no known wall
         if can_go(obs, config, c, r, "NORTH"):
-            if factory_try_move(uid, c, r, "NORTH", obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
+            if factory_try_move(uid, c, r, "NORTH", obs, config, actions, reserved, occupied, my_player,
+                                                allow_crush=crush, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                 return
 
         # Tier 2: BFS to goals (mine target + row+2), wider search when stuck
@@ -421,7 +518,8 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
         if step_dir:
             dc2, dr2, _ = DIRS[step_dir]
             if dr2 >= 0:  # NORTH, EAST, or WEST only
-                if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
+                if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player,
+                                                    allow_crush=crush, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                     return
 
         # Tier 2b: Pessimistic BFS when stuck (known-safe routes only)
@@ -430,13 +528,15 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
             if step_dir:
                 dc2, dr2, _ = DIRS[step_dir]
                 if dr2 >= 0:
-                    if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
+                    if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player,
+                                                        allow_crush=crush, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                         return
 
         # Tier 3: Forced lateral
         for d in ew:
             if can_go(obs, config, c, r, d):
-                if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
+                if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player,
+                                                    allow_crush=crush, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                     return
 
         # Tier 4: Diagonal
@@ -445,20 +545,26 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                 dc2, dr2, _ = DIRS[d]
                 side = (c + dc2, r)
                 if can_go(obs, config, side[0], side[1], "NORTH"):
-                    if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
+                    if factory_try_move(uid, c, r, d, obs, config, actions, reserved, occupied, my_player,
+                                                        allow_crush=crush, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                         return
 
-        # Tier 5: BFS allowing south (stuck >= 3)
+        # Tier 5: BFS allowing south (stuck >= 3). Stuck recovery without
+        # crashing into an enemy factory: keep allow_danger=panic so we still
+        # IDLE in preference to a guaranteed factory collision when scroll
+        # pressure is low.
         if stuck >= 3:
             step_dir = bfs_first_step((c, r), goals, obs, config, can_go)
             if step_dir:
-                if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player, allow_crush=True):
+                if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player,
+                                    allow_crush=True, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                     return
 
         # Tier 6: SOUTH as last resort
         if stuck >= 4 and gap >= 3:
             if can_go(obs, config, c, r, "SOUTH"):
-                if factory_try_move(uid, c, r, "SOUTH", obs, config, actions, reserved, occupied, my_player, allow_crush=True):
+                if factory_try_move(uid, c, r, "SOUTH", obs, config, actions, reserved, occupied, my_player,
+                                    allow_crush=True, danger=enemy_danger, allow_danger=panic, hard_block=enemy_hard_block):
                     return
 
     # ── BUILD (during move cooldown) ──
