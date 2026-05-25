@@ -15,6 +15,7 @@ STATE = {
     "last_factory_pos": None,
     "factory_stuck": 0,
     "walls": {},
+    "mine_invested": None,
 }
 
 TYPE_FACTORY, TYPE_SCOUT, TYPE_WORKER, TYPE_MINER = 0, 1, 2, 3
@@ -274,8 +275,6 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                 scout_cost = getattr(config, "scoutCost", 50)
                 worker_cost = getattr(config, "workerCost", 200)
                 miner_cost = getattr(config, "minerCost", 300)
-                has_nodes = bool(getattr(obs, "miningNodes", {})) or bool(STATE["nodes"])
-
                 # Priority 2: Worker for wall clearing
                 if worker_count < 1 and energy >= worker_cost + 100 and gap >= 2:
                     actions[uid] = "BUILD_WORKER"
@@ -335,9 +334,6 @@ def worker_action(uid, data, obs, config, actions, reserved, occupied, my_player
         target_row = min(obs.northBound, factory_pos[1] + 2)
     if move_north(uid, c, r, obs, config, actions, reserved, occupied, my_player, target_row):
         return
-
-    actions[uid] = "IDLE"
-    reserved.add((c, r))
 
     actions[uid] = "IDLE"
     reserved.add((c, r))
