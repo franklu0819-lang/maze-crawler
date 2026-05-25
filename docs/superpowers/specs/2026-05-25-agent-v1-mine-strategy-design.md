@@ -39,6 +39,8 @@ ROI_OK = expected_output >= 600
 
 If `ROI_OK`, the nearest mining node becomes a BFS priority target. If no node passes ROI, factory defaults to pure northward movement.
 
+Note: 600 is the investment threshold, not a departure limit. Once a mine is built, factory stays until gap forces it to leave, collecting up to the mine's 1000 cap.
+
 ## BFS Target Fusion (Approach A)
 
 Instead of a state machine, the factory's BFS goals naturally include mining nodes:
@@ -76,17 +78,15 @@ Key changes from current logic:
 my_mines_nearby = [m for m in my_mines if manhattan(factory, m) <= 1]
 if my_mines_nearby:
     mine = my_mines_nearby[0]
-    if mine.energy >= 600 or gap <= 2:
+    if gap <= 2:
         resume northward movement
     else:
         move onto mine cell or IDLE to collect
 ```
 
-No hard wait limit — naturally constrained by gap. Factory leaves when:
-- Collected >= 600 energy, OR
-- Gap <= 2 (safety override)
+Factory stays at the mine as long as gap > 2 (safe). No upper limit on energy collection — mine cap is 1000, everything beyond the 600 ROI threshold is pure profit. The only reason to leave is when the southern boundary catches up.
 
-When factory leaves (either condition), set `STATE["mine_invested"] = None`.
+When factory leaves (gap <= 2), set `STATE["mine_invested"] = None`.
 
 ## Miner Behavior (unchanged)
 
