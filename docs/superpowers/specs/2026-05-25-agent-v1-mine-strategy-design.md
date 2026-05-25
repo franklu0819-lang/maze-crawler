@@ -11,12 +11,12 @@ Redesign agent_v1's factory decision logic to leverage the mining economy. The c
 - `update_state` already records mining nodes to `STATE["nodes"]`
 - No changes to scout behavior
 
-### Phase 2: Mine Investment (when ROI > 600 energy)
+### Phase 2: Mine Investment (when ROI > 700 energy)
 - Factory BFS target includes the nearest reachable mining node
 - Factory builds Miner when it reaches the node
 - Miner walks to node and TRANSFORMs (takes ~3 turns: build + move + transform)
-- Factory stands on mine to collect energy (50/turn)
-- Leaves when collected >= 600 energy or gap is critical
+- Factory stands on mine to collect energy (50/turn, unlimited while gap safe)
+- Leaves only when gap <= 2 (southern boundary catching up)
 
 ### Phase 3: Pure Survival (when ROI insufficient)
 - No mine investment
@@ -34,12 +34,15 @@ stay_turns = gap_at_arrival - 2  # 2-row safety margin
 # Account for 3-turn setup overhead (build + move + TRANSFORM)
 effective_stay = max(0, stay_turns - 3)
 expected_output = effective_stay * 50
-ROI_OK = expected_output >= 600
+ROI_OK = expected_output >= 700
+
+# Filter out nodes that have scrolled behind the factory
+candidate_nodes = [n for n in STATE["nodes"] if n[1] >= factory_row and in_bounds(n[0], n[1])]
 ```
 
 If `ROI_OK`, the nearest mining node becomes a BFS priority target. If no node passes ROI, factory defaults to pure northward movement.
 
-Note: 600 is the investment threshold, not a departure limit. Once a mine is built, factory stays until gap forces it to leave, collecting up to the mine's 1000 cap.
+Note: 700 is the investment threshold, not a departure limit. Once a mine is built, factory stays until gap forces it to leave, collecting up to the mine's 1000 cap.
 
 ## BFS Target Fusion (Approach A)
 
@@ -57,8 +60,8 @@ Factory naturally drifts toward the mine while still heading north. When mine RO
 
 ```
 if build_cd == 0 and gap >= 2 and spawn cell clear:
-    if own mine nearby and collected < 600:
-        # Don't build, wait for energy collection
+    if own mine nearby and gap > 2:
+        # Don't build, stay and collect energy
         pass
     elif mine_target reached and no miner en route:
         BUILD_MINER  (cost 300)
@@ -84,7 +87,7 @@ if my_mines_nearby:
         move onto mine cell or IDLE to collect
 ```
 
-Factory stays at the mine as long as gap > 2 (safe). No upper limit on energy collection — mine cap is 1000, everything beyond the 600 ROI threshold is pure profit. The only reason to leave is when the southern boundary catches up.
+Factory stays at the mine as long as gap > 2 (safe). No upper limit on energy collection — mine cap is 1000, everything beyond the 700 ROI threshold is pure profit. The only reason to leave is when the southern boundary catches up.
 
 When factory leaves (gap <= 2), set `STATE["mine_invested"] = None`.
 
@@ -130,7 +133,7 @@ STATE = {
     "last_factory_pos": None,  # existing
     "factory_stuck": 0,        # existing
     "walls": {},               # existing
-    "mine_invested": None,     # (col, row) of mine we invested in, for tracking collection
+    "mine_invested": None,     # (col, row) of mine target; set when factory commits to a mine node, cleared when leaving (gap <= 2)
 }
 ```
 
