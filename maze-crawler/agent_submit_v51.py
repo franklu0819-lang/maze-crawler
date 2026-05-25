@@ -237,28 +237,14 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                       if d[4] == my_player and d[0] == TYPE_MINER)
     my_mines = sum(1 for k, v in getattr(obs, "mines", {}).items() if v[2] == my_player)
 
-    # ── Mine target selection (dynamic ROI based on gap, scroll speed, energy) ──
-    _start_int = getattr(config, "scrollStartInterval", 10)
-    _end_int = getattr(config, "scrollEndInterval", 2)
-    _ramp_steps = getattr(config, "scrollRampSteps", 450)
-    _progress = min(1.0, turn / _ramp_steps)
-    _scroll_interval = max(float(_end_int), _start_int - (_start_int - _end_int) * _progress)
-    panic_steps = gap * _scroll_interval
-    if panic_steps >= 100 and energy >= 400:
-        roi_threshold = 100
-    elif panic_steps >= 50 and energy >= 300:
-        roi_threshold = 200
-    elif panic_steps >= 25:
-        roi_threshold = 400
-    else:
-        roi_threshold = 9999
-
+    # ── Mine target selection (dynamic ROI: no new investment after turn 300) ──
+    roi_threshold = 550 if turn < 300 else 9999
     mine_target = None
     if STATE["mine_invested"]:
         mn = STATE["mine_invested"]
         if in_bounds(mn[0], mn[1], obs, config):
             roi = calc_mine_roi(mn, c, r, gap, turn, obs, config)
-            if roi >= roi_threshold:
+            if roi >= 550:
                 mine_target = mn
         if mine_target is None:
             STATE["mine_invested"] = None
