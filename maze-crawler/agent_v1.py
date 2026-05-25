@@ -16,6 +16,8 @@ STATE = {
     "factory_stuck": 0,
     "walls": {},
     "mine_invested": None,
+    "mine_wait": False,       # True after BUILD_MINER, wait for mine to appear
+    "mine_wait_since": 0,    # turn when we started waiting
 }
 
 TYPE_FACTORY, TYPE_SCOUT, TYPE_WORKER, TYPE_MINER = 0, 1, 2, 3
@@ -302,6 +304,26 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
             if mv[2] == my_player and abs(mc2 - c) + abs(mr2 - r) <= 1:
                 my_mines_nearby.append((mc2, mr2))
 
+        # ── Check mine_wait: waiting for miner to TRANSFORM ──
+        if STATE["mine_wait"]:
+            mine_exists_nearby = any(
+                mv[2] == my_player and abs(parse_key(mk)[0] - c) + abs(parse_key(mk)[1] - r) <= 1
+                for mk, mv in getattr(obs, "mines", {}).items()
+            )
+            waited = turn - STATE["mine_wait_since"]
+            if mine_exists_nearby:
+                STATE["mine_wait"] = False
+                # Don't return — fall through to my_mines_nearby collection logic
+            elif waited > 20 or gap <= 2:
+                # Timeout or danger — give up waiting
+                STATE["mine_wait"] = False
+                STATE["mine_invested"] = None
+            elif gap > 2:
+                # Stay put, wait for miner
+                actions[uid] = "IDLE"
+                reserved.add((c, r))
+                return
+
         if my_mines_nearby and gap > 2:
             # Stay and collect energy — move onto mine cell if not already
             mc2, mr2 = my_mines_nearby[0]
@@ -394,15 +416,17 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                     return
 
                 # Build Miner if at mine target
-                if mine_target:
+                if mine_target and energy >= 600:
                     dist_to_mine = abs(mine_target[0] - c) + abs(mine_target[1] - r)
-                    if dist_to_mine <= 1 and energy >= 300:
+                    if dist_to_mine <= 1:
                         has_miner = any(
                             d2[4] == my_player and d2[0] == TYPE_MINER
                             for d2 in obs.robots.values()
                         )
                         if not has_miner:
                             actions[uid] = "BUILD_MINER"
+                            STATE["mine_wait"] = True
+                            STATE["mine_wait_since"] = turn
                             reserved.add(spawn)
                             return
 
