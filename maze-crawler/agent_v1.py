@@ -234,6 +234,34 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                       if d[4] == my_player and d[0] == TYPE_MINER)
     my_mines = sum(1 for k, v in getattr(obs, "mines", {}).items() if v[2] == my_player)
 
+    # ── Mine target selection ──
+    mine_target = None
+    if STATE["mine_invested"]:
+        mn = STATE["mine_invested"]
+        if in_bounds(mn[0], mn[1], obs, config):
+            roi = calc_mine_roi(mn, c, r, gap, turn, obs, config)
+            if roi >= 700:
+                mine_target = mn
+        if mine_target is None:
+            STATE["mine_invested"] = None
+
+    if mine_target is None:
+        existing_mines = set(parse_key(k) for k in getattr(obs, "mines", {}).keys())
+        candidates = []
+        for node in STATE["nodes"]:
+            if node in existing_mines:
+                continue
+            if node[1] < r or not in_bounds(node[0], node[1], obs, config):
+                continue
+            roi = calc_mine_roi(node, c, r, gap, turn, obs, config)
+            if roi >= 700:
+                d = abs(node[0] - c) + abs(node[1] - r)
+                candidates.append((d, node))
+        if candidates:
+            candidates.sort()
+            mine_target = candidates[0][1]
+            STATE["mine_invested"] = mine_target
+
     # ── JUMP ──
     if jump_cd == 0 and turn > 2 and in_bounds(c, r + 2, obs, config):
         should_jump = False
