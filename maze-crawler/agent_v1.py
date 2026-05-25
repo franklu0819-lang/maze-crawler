@@ -117,6 +117,47 @@ def bfs_to_row(start, row, obs, config, passable_fn):
     return bfs_first_step(start, goals, obs, config, passable_fn)
 
 
+def bfs_distance(start, goal, obs, config, passable_fn, max_nodes=300):
+    """Return BFS distance from start to goal, or None if unreachable."""
+    if start == goal:
+        return 0
+    q = deque([(start, 0)])
+    visited = {start}
+    while q:
+        cur, dist = q.popleft()
+        for d in ("NORTH", "EAST", "WEST", "SOUTH"):
+            if not passable_fn(obs, config, cur[0], cur[1], d):
+                continue
+            dc, dr, _ = DIRS[d]
+            nxt = (cur[0] + dc, cur[1] + dr)
+            if nxt in visited:
+                continue
+            if nxt == goal:
+                return dist + 1
+            visited.add(nxt)
+            q.append((nxt, dist + 1))
+            if len(visited) >= max_nodes:
+                return None
+    return None
+
+
+def calc_mine_roi(mine_node, factory_c, factory_r, gap, step, obs, config):
+    """Calculate expected energy output from investing in a mine node.
+    Returns expected_output (energy), or 0 if not viable."""
+    mc, mr = mine_node
+    if mr < factory_r or not in_bounds(mc, mr, obs, config):
+        return 0
+    dist = bfs_distance((factory_c, factory_r), mine_node, obs, config, can_go)
+    if dist is None:
+        return 0
+    turns_to_reach = dist * 2  # factory moves every 2 turns
+    scroll_interval = max(1.0, 4 - 3 * step / 400)
+    gap_at_arrival = gap - turns_to_reach / scroll_interval
+    stay_turns = gap_at_arrival - 2  # safety margin
+    effective_stay = max(0, stay_turns - 3)  # build + move + TRANSFORM overhead
+    return effective_stay * 50
+
+
 def friendly_at(occupied, cell, my_player):
     return any(o[1][4] == my_player for o in occupied.get(cell, []))
 
