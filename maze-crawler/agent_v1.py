@@ -151,8 +151,12 @@ def calc_mine_roi(mine_node, factory_c, factory_r, gap, step, obs, config):
     if dist is None:
         return 0
     turns_to_reach = dist * 2  # factory moves every 2 turns
-    scroll_interval = max(1.0, 4 - 3 * step / 400)
-    gap_at_arrival = gap - turns_to_reach / scroll_interval
+    start_int = getattr(config, "scrollStartInterval", 10)
+    end_int = getattr(config, "scrollEndInterval", 2)
+    ramp_steps = getattr(config, "scrollRampSteps", 450)
+    progress = min(1.0, step / ramp_steps)
+    scroll_interval = max(float(end_int), start_int - (start_int - end_int) * progress)
+    gap_at_arrival = gap + dist - turns_to_reach / scroll_interval
     stay_turns = gap_at_arrival - 2  # safety margin
     effective_stay = max(0, stay_turns - 3)  # build + move + TRANSFORM overhead
     return effective_stay * 50
@@ -240,7 +244,7 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
         mn = STATE["mine_invested"]
         if in_bounds(mn[0], mn[1], obs, config):
             roi = calc_mine_roi(mn, c, r, gap, turn, obs, config)
-            if roi >= 700:
+            if roi >= 500:
                 mine_target = mn
         if mine_target is None:
             STATE["mine_invested"] = None
@@ -254,7 +258,7 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
             if node[1] < r or not in_bounds(node[0], node[1], obs, config):
                 continue
             roi = calc_mine_roi(node, c, r, gap, turn, obs, config)
-            if roi >= 700:
+            if roi >= 500:
                 d = abs(node[0] - c) + abs(node[1] - r)
                 candidates.append((d, node))
         if candidates:

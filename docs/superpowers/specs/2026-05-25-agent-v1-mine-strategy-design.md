@@ -26,7 +26,11 @@ Redesign agent_v1's factory decision logic to leverage the mining economy. The c
 ## ROI Calculation
 
 ```
-scroll_interval = max(1, 4 - 3 * step / 400)
+start_int = config.scrollStartInterval  # default 10
+end_int = config.scrollEndInterval      # default 2
+ramp_steps = config.scrollRampSteps     # default 450
+progress = min(1.0, step / ramp_steps)
+scroll_interval = max(end_int, start_int - (start_int - end_int) * progress)
 dist = BFS_distance(factory, mine_node)
 turns_to_reach = dist * 2  # factory moves every 2 turns
 gap_at_arrival = current_gap - ceil(turns_to_reach / scroll_interval)
@@ -118,11 +122,11 @@ Scout → Worker → Miner → Factory (non-factory units first for collision av
 
 ## Scroll Mechanics Reference
 
-- Start: every 4 turns
-- Ramp: linearly over 400 steps
-- End: every turn from step 400 onward
-- Formula: `scroll_interval = max(1, 4 - 3 * step / 400)`
-- Game ends at step 500
+- Start: every `scrollStartInterval` turns (default 10)
+- Ramp: linearly over `scrollRampSteps` steps (default 450)
+- End: every `scrollEndInterval` turns from ramp end onward (default 2)
+- Formula: `progress = min(1.0, step / ramp_steps); interval = max(end_int, start_int - (start_int - end_int) * progress)`
+- Game ends at step 501
 
 ## New State Fields
 
