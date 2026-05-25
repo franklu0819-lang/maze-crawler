@@ -66,6 +66,21 @@ def can_go(obs, config, c, r, d):
     return True
 
 
+def can_go_pessimistic(obs, config, c, r, d):
+    """Pessimistic: unknown cells treated as walls."""
+    dc, dr, bit = DIRS[d]
+    nc, nr = c + dc, r + dr
+    if not in_bounds(nc, nr, obs, config):
+        return False
+    w = wb(obs, config, c, r)
+    if w is None or (w & bit):
+        return False
+    w2 = wb(obs, config, nc, nr)
+    if w2 is None or (w2 & OPPOSITE_BIT[d]):
+        return False
+    return True
+
+
 def update_state(obs, config, my_player):
     STATE["turn"] += 1
     for key in getattr(obs, "miningNodes", {}) or {}:
@@ -346,7 +361,7 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
             if mine_exists_nearby:
                 STATE["mine_wait"] = False
                 # Don't return — fall through to my_mines_nearby collection logic
-            elif waited > 20 or gap <= 2:
+            elif waited > 5 or gap <= 2:
                 # Timeout or danger — give up waiting
                 STATE["mine_wait"] = False
                 STATE["mine_invested"] = None
@@ -385,7 +400,12 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
         north_goals = [(c2, r + 2) for c2 in range(width) if in_bounds(c2, r + 2, obs, config)]
         goals = north_goals
         if mine_target:
-            goals = [mine_target] + goals
+            # Navigate to cell SOUTH of mine node so miner spawns ON the node
+            approach = (mine_target[0], mine_target[1] - 1)
+            if approach[1] >= r and in_bounds(approach[0], approach[1], obs, config):
+                goals = [approach] + goals
+            else:
+                goals = [mine_target] + goals
 
         # When stuck or low gap, allow crushing own units to escape
         crush = stuck >= 1 or gap <= 3
@@ -403,6 +423,15 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
             if dr2 >= 0:  # NORTH, EAST, or WEST only
                 if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
                     return
+
+        # Tier 2b: Pessimistic BFS when stuck (known-safe routes only)
+        if stuck >= 2:
+            step_dir = bfs_first_step((c, r), goals, obs, config, can_go_pessimistic, max_nodes=bfs_limit)
+            if step_dir:
+                dc2, dr2, _ = DIRS[step_dir]
+                if dr2 >= 0:
+                    if factory_try_move(uid, c, r, step_dir, obs, config, actions, reserved, occupied, my_player, allow_crush=crush):
+                        return
 
         # Tier 3: Forced lateral
         for d in ew:
@@ -446,15 +475,15 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                         my_mines_nearby_build.append((mc2, mr2))
 
                 if my_mines_nearby_build and gap > 2:
-                    # Don't build, keep collecting energy
+                    # Keep collecting energy
                     actions[uid] = "IDLE"
                     reserved.add((c, r))
                     return
 
-                # Build Miner if at mine target
+                # Build Miner: factory must be at (mc, mr-1) so miner spawns ON the node
                 if mine_target and energy >= 600:
-                    dist_to_mine = abs(mine_target[0] - c) + abs(mine_target[1] - r)
-                    if dist_to_mine <= 1:
+                    mc, mr = mine_target
+                    if (c, r) == (mc, mr - 1) and spawn_ok:
                         has_miner = any(
                             d2[4] == my_player and d2[0] == TYPE_MINER
                             for d2 in obs.robots.values()
@@ -523,6 +552,13 @@ def worker_action(uid, data, obs, config, actions, reserved, occupied, my_player
                 actions[uid] = "REMOVE_NORTH"
                 reserved.add((c, r))
                 return
+        # Clear NORTH walls up to 4 rows ahead, lateral walls within 2
+        if abs(c - fc) <= 2 and 0 < (r - fr) <= 4:
+            w = wb(obs, config, c, r)
+            if w is not None and (w & BIT_N):
+                actions[uid] = "REMOVE_NORTH"
+                reserved.add((c, r))
+                return
         if abs(c - fc) + abs(r - fr) <= 2:
             for d, bit in [("NORTH", BIT_N), ("EAST", BIT_E), ("WEST", BIT_W)]:
                 w = wb(obs, config, c, r)
@@ -530,6 +566,15 @@ def worker_action(uid, data, obs, config, actions, reserved, occupied, my_player
                     actions[uid] = f"REMOVE_{d}"
                     reserved.add((c, r))
                     return
+
+    # Help stuck factory: navigate to factory's north cell to clear blocking wall
+    if factory_pos and STATE.get("factory_stuck", 0) >= 2 and energy >= wall_cost + 20:
+        fc, fr = factory_pos
+        north_cell = (fc, fr + 1)
+        if (c, r) != north_cell and in_bounds(north_cell[0], north_cell[1], obs, config):
+            step = bfs_first_step((c, r), [north_cell], obs, config, can_go)
+            if step and try_move(uid, c, r, step, obs, config, actions, reserved, occupied, my_player):
+                return
 
     if move_cd != 0:
         actions[uid] = "IDLE"
