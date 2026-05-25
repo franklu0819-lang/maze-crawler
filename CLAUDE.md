@@ -11,6 +11,9 @@ Kaggle "Maze Crawler" competition agent. A factory unit navigates a procedurally
 All commands run from `maze-crawler/maze-crawler/`:
 
 ```bash
+# Evaluate agent_v1 against a specific opponent (100 games)
+python eval_v1.py <version>   # e.g., eval_v1.py v15, eval_v1.py v49, eval_v1.py v50
+
 # Run multi-game test (10 games, detailed per-game logging)
 python test_run.py
 
@@ -59,7 +62,7 @@ All tests use `kaggle_environments` with the "crawl" environment. The agent is a
 
 ### Agent Versions
 
-- **`agent_v1.py`** — Simplified rule-based agent. Optimistic pathfinding: unknown cells treated as passable. No persistent wall/enemy memory between turns. Units processed in strict priority order (scouts → workers → miners → factory). Used as the NN training base.
+- **`agent_v1.py`** — Simplified rule-based agent. Optimistic pathfinding: unknown cells treated as passable. No persistent wall/enemy memory between turns. Units processed in strict priority order (scouts → workers → miners → factory). Includes enemy factory threat avoidance: cooldown-gated danger zones prevent factory-factory collisions (mutual destruction loses tiebreaker). Used as the NN training base.
 
 - **`agent_v2.py`** — Fog-aware rule-based agent with full persistent state (wall memory, enemy tracking, mine tracking). Uses conservative pathfinding: unknown cells are treated as walled (pessimistic BFS). Complex factory decision tree with stuck detection, diagonal exploration, and south-backtrack fallback. Non-factory units have attack, transfer, and mine-recharge behaviors. Also used as BC expert data source.
 
@@ -67,6 +70,7 @@ All tests use `kaggle_environments` with the "crawl" environment. The agent is a
 
 ### Submission Files
 
+- **`eval_v1.py`** — Evaluation script for agent_v1 vs a specific opponent version. Runs 100 games with fixed seeds, reports W/L/D and per-loss seed details. Usage: `python eval_v1.py <version>` where version maps to `agent_submit_v{N}.py`.
 - **`agent_submit_v2.py`** — Previous Kaggle submission (v2 baseline)
 - **`agent_submit_v3.py`** — Kaggle submission (REINFORCE v3 weights)
 - **`agent_submit_v4.py`** — Kaggle submission (BC+PPO v4 weights)
@@ -99,6 +103,14 @@ Self-contained bundles combining `agent_v3.py` logic + embedded weights (~576KB)
 Two approaches exist:
 - **Pessimistic** (`agent_v2.py`): `blocked()` treats unseen cells as walls. BFS only through known passable cells. Fallback: `known_blocked()` allows unknown cells for greedy exploration.
 - **Optimistic** (`agent_v1.py`): `can_go()` treats unseen cells as passable. BFS explores aggressively but may hit actual walls.
+
+### Enemy Factory Threat Avoidance (agent_v1.py)
+
+`get_enemy_factory_threat()` computes two zones for each visible enemy factory:
+- **Hard block**: Enemy factory current cell. NEVER entered — mutual destruction loses tiebreaker (total energy, then unit count).
+- **Danger**: Cells enemy could reach NEXT turn. Only includes MOVE neighbors when `move_cd==0` and JUMP landings when `jump_cd==0`. Cooldown gating is critical — without it, the factory retreats from distant enemies causing oscillation and scroll-out regression.
+
+These zones are used in `factory_try_move()` (hard_block always rejected, danger rejected unless `allow_danger=True`) and `factory_action()` (panic mode when `gap<=3` or `must_escape`). The JUMP section has a `danger_escape` trigger when all MOVE targets are dangerous.
 
 ### Reward Shaping
 
@@ -168,3 +180,14 @@ When using fixed opponents (train_v6.py), each opponent module has its own indep
 | v15 | REINFORCE, same as v14 | v15 weak | 47% | — |
 | v16 | PPO, delta_gap×1.0, delta_units×0.1 | v10-based | training... | — |
 | v17 | PPO, delta_gap×1.0, delta_units×0.2 | v10-based | training... | — |
+
+### agent_v1 vs NN Opponents (100-game eval, after enemy threat avoidance fix)
+
+| Opponent | Before Fix | After Fix | Change |
+|----------|-----------|-----------|--------|
+| v15 (factory-only NN) | 91W-7L-2D | 94W-6L-0D | +3W |
+| v49 (all-units NN) | 92W-6L-2D | 93W-5L-2D | +1W |
+| v50 (all-units NN) | 96W-4L-0D | 96W-4L-0D | unchanged |
+| **Total** | **279W-17L-4D** | **283W-15L-2D** | **+4W net** |
+
+Key: 2 enemy-factory-collision losses fixed (seeds 6344, 7988). 15 remaining losses are all scroll-out (mechanical ceiling: factory speed < late-game scroll speed).

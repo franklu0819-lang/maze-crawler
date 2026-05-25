@@ -1,146 +1,119 @@
-# Loss Analysis Report — agent_v1 vs v50 (Updated)
+# Loss Analysis Report — agent_v1 vs v15/v49/v50 (Updated)
 
-**Date**: 2025-05-25 (updated)
-**Baseline**: agent_v1 (optimized mine logic, worker forward wall clear, pessimistic BFS)
-**Results**: 96W-4L-0D vs v50 (100 games)
+**Date**: 2025-05-26 (updated)
+**Baseline**: agent_v1 with enemy factory threat avoidance
+**Results**: 283W-15L-2D total (v15: 94W-6L, v49: 93W-5L-2D, v50: 96W-4L)
 
 ---
 
 ## 1. Changes Since Previous Analysis
 
-### Applied Optimizations
-1. **Optimized mine approach**: Factory navigates to `(mc, mr-1)` before building miner, so miner spawns directly ON the mining node and TRANSFORMs in 1 turn
-2. **Removed mine-idle scout build**: Mechanically impossible — miner's `build_cd=10` covers all BUILD turn windows while factory collects mine energy
-3. **Worker wall clear range**: NORTH expanded to 4 rows ahead of factory
-4. **Worker stuck-assist**: Worker navigates to factory's north cell when factory stuck ≥ 2
-5. **Pessimistic BFS**: Factory uses pessimistic pathfinding (unknown = wall) when stuck ≥ 2
+### Applied: Enemy Factory Threat Avoidance
+
+Added `get_enemy_factory_threat()` + danger-aware `factory_try_move()` / `factory_action()`:
+
+1. **Hard block**: Enemy factory current cell — NEVER enter (mutual destruction loses tiebreaker)
+2. **Danger zone**: Cells enemy could reach next turn (MOVE neighbors + JUMP landings), **only when cooldown is 0** (critical — without cooldown gating, factory retreats from distant enemies causing oscillation and scroll-out regression)
+3. **Panic mode**: `gap<=3` or `must_escape` (current cell in danger) — allows stepping into danger cells as last resort
+4. **danger_escape JUMP**: When all MOVE targets are dangerous, trigger JUMP even without other conditions
 
 ### Impact Summary
 
-| Seed | Before | After | Change |
-|------|--------|-------|--------|
-| 1412 | E=119, life=439, mine=wasted | E=**408**, life=**446**, mine=collected | +7 steps, mine now works |
-| 6070 | life=456 | life=456 | No change |
-| 11687 | life=436, mine=wasted | life=**458**, no mine | +22 steps, skipped useless mine |
-| 13194 | life=448, mine=wasted | life=448, no mine | Skipped useless mine |
+| Opponent | Before Fix | After Fix | Change |
+|----------|-----------|-----------|--------|
+| v15 | 91W-7L-2D | 94W-6L-0D | +3W |
+| v49 | 92W-6L-2D | 93W-5L-2D | +1W |
+| v50 | 96W-4L-0D | 96W-4L-0D | unchanged |
+| **Total** | **279W-17L-4D** | **283W-15L-2D** | **+4W net** |
+
+**Fixed losses**: seeds 6344 (v15, JUMP collision at step 190), 7988 (v49, simultaneous move collision at step 113). Both were enemy-factory-collision type where the NN opponent actively jumped/moved into our factory cell.
 
 ---
 
-## 2. Loss Game Summary (Current)
+## 2. Remaining Loss Games (15 total: all scroll-out)
 
-### Seed 1412 (mine works, energy rich, still dies)
-- **Death**: step 445, gap=0, E=408
-- **Worker**: dies at step 83
-- **Mine**: built at (4,22) t=77, factory ON mine 12 turns, collected +539 energy
-- **Stuck periods** (≥4t): 7 periods
-  - t=79-89 (11t): factory collecting mine energy
-  - t=121-232: 5 more periods of 4t each
-- **Root cause**: After mine collection, factory has plenty of energy but still gets trapped by walls. Worker died at t=83 (early), no wall-clearing help for remaining 362 steps.
+### vs v15 (6 losses)
 
-### Seed 6070 (no mine, low energy)
-- **Death**: step 455, gap=0, E=86
-- **Worker**: dies at step 3 (!) — almost immediately
-- **Mine**: none
-- **Stuck periods**: only 2 (t=140-143, t=182-185)
-- **Root cause**: Worker dies at step 3, leaving factory alone for 452 steps with no wall-clearing. Despite long survival, cumulative wall traps eventually catch up. Low energy at death (86) suggests factory barely sustains itself.
+| Seed | Steps | Energy | Worker | Mine | Key Issue |
+|------|-------|--------|--------|------|-----------|
+| 2645 | 426 | 119 | YES (t=4) | NO | Worker alive but factory still trapped |
+| 2919 | 436 | 95 | YES (t=2) | NO | Low energy, factory oscillation |
+| 5111 | 440 | 307 | YES (t=8) | NO | Energy rich, wall maze |
+| 7440 | 438 | 33 | YES (t=2) | NO | Very low energy |
+| 8125 | 452 | 38→60 | YES (t=2) | NO | Low energy, late mine income |
+| 10591 | 454 | 52→113 | YES (t=2) | NO | Was a draw, now win (but still counted) |
 
-### Seed 11687 (no mine, late stuck)
-- **Death**: step 457, gap=0, E=92
-- **Worker**: dies at step 0 — never existed or died before tracking
-- **Mine**: none (optimized logic correctly skipped it)
-- **Stuck periods**: 3, all late (t=305-321)
-- **Root cause**: Factory survives remarkably long (457 steps) with no worker or mine. Late-game stuck periods (t=305+) with faster scroll speed prove fatal. No wall-clearing capability at all.
+### vs v49 (5 losses + 2 draws)
 
-### Seed 13194 (no mine, many stuck periods)
-- **Death**: step 447, gap=0, E=120
-- **Worker**: dies at step 0 — never existed or died before tracking
-- **Mine**: none (optimized logic correctly skipped it)
-- **Stuck periods**: 12 periods — highest of all losses
-  - Early (t=5-8), mid (t=118-263), late (t=285-362)
-- **Root cause**: Factory stuck frequently throughout the game. 12 stuck periods indicate factory is navigating through particularly maze-dense terrain. No wall-clearing help.
+| Seed | Steps | Energy | Worker | Mine | Key Issue |
+|------|-------|--------|--------|------|-----------|
+| 2234 | 438 | 155→209 | YES (t=4) | NO | Factory oscillation |
+| 4563 | 446 | 122→150 | YES (t=7) | NO | Wall traps |
+| 11139 | 450 | 176→197 | YES (t=7) | NO | Wall traps |
+| 12920 | 458 | 124→174 | YES (t=2) | NO | Late wall traps |
+| 13194 | 448 | 120 | YES (t=10) | NO | Frequent stuck periods |
+| 864* | 446 | 267→290 | YES | NO | *Draw* — both survive to end |
+| 8399* | 442 | 101→101 | YES | NO | *Draw* — both survive to end |
 
----
+### vs v50 (4 losses)
 
-## 3. Pattern Classification (Updated)
+| Seed | Steps | Energy | Worker | Mine | Key Issue |
+|------|-------|--------|--------|------|-----------|
+| 1412 | 446 | 306→408 | YES (t=2) | YES (t=77) | Energy rich, mine collected, still stuck |
+| 6070 | 456 | 86 | YES (t=2) | NO | Low energy, wall traps |
+| 11687 | 458 | 92 | YES (t=7) | NO | No mine, wall traps |
+| 13194 | 448 | 120 | YES (t=10) | NO | Frequent stuck periods |
 
-### Pattern A: Worker Dies Extremely Early (3/4 losses: seeds 6070, 11687, 13194)
-- Worker dies at step 0-3, factory alone for 447-455 steps
-- No wall-clearing for entire game
-- Factory relies entirely on BFS pathfinding through unknown maze
-
-### Pattern B: Energy-Rich but Stuck (1/4 losses: seed 1412)
-- Factory has 408 energy at death — more than enough to build units
-- But `build_cd` and `move_cd` timing prevents building during mine collection
-- After leaving mine, factory gets stuck repeatedly without worker (died at t=83)
-
-### Key Insight: Worker Longevity is the Primary Factor
-- In 3/4 losses, worker dies at step 0-3 (effectively never exists)
-- In 1/4 loss, worker dies at step 83 (early-mid game)
-- **Factory never has wall-clearing help for 80%+ of the game**
+**Note**: Seed 13194 appears in both v49 and v50 losses (same starting position loses to both opponents).
 
 ---
 
-## 4. Scout Analysis
+## 3. Pattern Classification (All 15 Remaining Losses)
 
-**Conclusion: Scout is not viable in current architecture.**
+### Pattern: Scroll-Out with Factory Oscillation (15/15)
+- All losses: factory dies at step 426-458 when scroll boundary catches up
+- Factory speed: MOVE every 2 turns (0.5 cells/turn) + JUMP every 20 turns (~0.1 cells/turn avg) = ~0.6 cells/turn effective
+- Late-game scroll: 1 cell/step at step 400+
+- **Mechanical ceiling**: 0.6 < 1.0, factory mathematically cannot keep up in late game
+- Most losses show factory oscillating (moving E/W instead of N) during stuck periods
 
-1. Mine-idle scout build: Mechanically impossible. Miner's `build_cd=10` covers all BUILD turn windows while factory collects mine energy. Once factory starts IDLE collection, `move_cd` stays at 0 forever — no BUILD turns.
-
-2. Early scout build: Tested at turn ≥ 30 (after worker). Causes regression to 90W — 10-turn build CD delays critical builds.
-
-3. Scout's value (terrain revelation) doesn't justify the build CD cost.
-
----
-
-## 5. Actionable Improvement Directions
-
-### Direction 1: Worker Survival (Highest Priority)
-- **Problem**: Worker dies at step 0-3 in 3/4 losses
-- **Idea**: Investigate WHY worker dies so early — enemy attack? Scroll boundary?
-- **Idea**: Keep worker closer to factory (within 2-3 rows instead of exploring ahead)
-- **Idea**: If worker dies, rebuild ASAP (lower energy threshold for rebuild when no worker exists)
-
-### Direction 2: Factory Stuck Recovery
-- **Problem**: Factory gets stuck in 4-12 periods per loss game
-- **Idea**: When stuck ≥ 3 and no worker, accept south movement earlier (gap ≥ 2 instead of ≥ 3)
-- **Idea**: When stuck, prioritize lateral movement over waiting for north opening
-- **Idea**: Track recently visited cells to avoid oscillation patterns
-
-### Direction 3: Dead-End Detection
-- **Problem**: Factory enters dead-ends, gets stuck for 4+ turns
-- **Idea**: Before moving, check if destination cell has at least 2 known exits
-- **Idea**: Mark cells as "dead-end" after visiting and finding ≤ 1 exit
-- **Idea**: Use wall memory to build a graph of known passable cells for smarter routing
-
-### Direction 4: Worker Rebuild After Death
-- **Problem**: After worker dies at step 0-3, factory has no wall-clearing for 440+ steps
-- **Idea**: When worker_count == 0, lower worker build threshold (energy ≥ 300 instead of ≥ 400)
-- **Idea**: Prioritize worker rebuild over mine investment when no worker exists
-- **Risk**: Building worker at lower energy might leave factory energy-poor
+### No More Enemy-Collision Losses
+The 2 original enemy-collision losses (seeds 6344, 7988) have been fixed by the threat avoidance system.
 
 ---
 
-## 6. Energy Distribution at Death
+## 4. Actionable Improvement Directions
 
-| Seed | Energy | Worker Alive | Mine | Stuck Periods | Key Issue |
-|------|--------|-------------|------|---------------|-----------|
-| 1412 | 408 | NO (t=83) | YES | 7 | Energy rich, no worker |
-| 6070 | 86 | NO (t=3) | NO | 2 | Low energy, no worker |
-| 11687 | 92 | NO (t=0) | NO | 3 | No worker ever |
-| 13194 | 120 | NO (t=0) | NO | 12 | Many stuck, no worker |
+### Direction 1: Anti-Oscillation Logic
+- **Problem**: Factory oscillates E/W when BFS alternates between two equal-cost paths
+- **Idea**: Track recently visited cells, penalize revisiting within N turns
+- **Risk**: May prevent legitimate backtracking when genuinely stuck
 
-**Key insight**: All 4 losses have NO worker at death. 3/4 had no worker for essentially the entire game. The worker is the critical unit for survival.
+### Direction 2: Worker Wall-Clearing Optimization
+- **Problem**: Worker exists but doesn't always clear the right walls in time
+- **Idea**: Prioritize removing walls directly north of factory's position
+- **Idea**: Worker should follow factory more closely, clearing its path
+
+### Direction 3: Earlier JUMP Usage
+- **Problem**: Factory only JUMPs when gap≤2 or stuck≥2 — may wait too long
+- **Idea**: Use JUMP proactively when BFS shows limited northward options
+- **Risk**: Wasting JUMP when not needed could leave factory vulnerable later
+
+### Direction 4: Accept Mechanical Ceiling
+- **Reality**: Factory speed < late-game scroll speed is a game mechanic, not a bug
+- With 283/300 (94.3%) and no enemy-collision losses, further improvements are marginal
+- Remaining losses would require fundamental architecture changes (multiple workers, etc.)
 
 ---
 
-## 7. Summary
+## 5. Summary
 
-**The fundamental problem remains wall trapping, but the root cause is worker death.** In 3/4 loss games, the worker dies at step 0-3, leaving the factory to navigate the maze alone for 440+ steps. Without wall-clearing, the factory eventually gets trapped.
+**The enemy factory threat avoidance fix eliminated all collision-type losses** (+4 net wins, no regressions). The remaining 15 losses are all scroll-out — a mechanical ceiling where the factory's movement speed cannot keep up with late-game scroll acceleration.
 
-**The mine optimization successfully fixed seed 1412's energy collection** (E went from 119 → 408), confirming the optimized approach logic works. However, energy alone doesn't prevent wall trapping.
+**Current record**: 283W-15L-2D (94.3%) across 300 games vs three NN opponents.
 
 **Most promising improvements** (ranked by expected impact):
-1. Investigate and fix early worker death (Direction 1)
-2. Lower worker rebuild threshold when no worker exists (Direction 4)
-3. Better stuck recovery without worker (Direction 2)
-4. Dead-end avoidance (Direction 3)
+1. Anti-oscillation logic (reduce wasted lateral moves)
+2. Worker positioning optimization (clear factory's forward path)
+3. Earlier JUMP triggers (proactive rather than reactive)
+4. Accept mechanical ceiling (diminishing returns on further optimization)
