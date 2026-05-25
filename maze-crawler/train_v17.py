@@ -461,9 +461,10 @@ def _next_version():
     return v
 
 
-def train(num_iter=200, batch=50, lr=0.0003, version=None, terminal_win=5.0):
-    global TERMINAL_WIN
+def train(num_iter=200, batch=50, lr=0.0003, version=None, terminal_win=5.0, entropy_coef=ENTROPY_COEF):
+    global TERMINAL_WIN, ENTROPY_COEF
     TERMINAL_WIN = terminal_win
+    ENTROPY_COEF = entropy_coef
     if version is None:
         version = _next_version()
     save_path = f"nn_weights_v{version}.pt"
@@ -681,10 +682,12 @@ def export_weights(model, version, path=None):
 VERSION_OVERRIDE = int(sys.argv[1]) if len(sys.argv) > 1 else None
 NUM_ITER = int(sys.argv[2]) if len(sys.argv) > 2 else 200
 TERMINAL_WIN_ARG = float(sys.argv[3]) if len(sys.argv) > 3 else 5.0
+ENTROPY_ARG = float(sys.argv[4]) if len(sys.argv) > 4 else ENTROPY_COEF
 
 if __name__ == "__main__":
     model, ver, best = train(num_iter=NUM_ITER, batch=100, lr=0.0003,
-                             version=VERSION_OVERRIDE, terminal_win=TERMINAL_WIN_ARG)
+                             version=VERSION_OVERRIDE, terminal_win=TERMINAL_WIN_ARG,
+                             entropy_coef=ENTROPY_ARG)
     model.load_state_dict(torch.load(f"nn_weights_v{ver}.pt"))
     evaluate_vs_random(model)
     export_weights(model, ver)
