@@ -62,11 +62,11 @@ All tests use `kaggle_environments` with the "crawl" environment. The agent is a
 
 ### Agent Versions
 
-- **`agent_v1.py`** — Simplified rule-based agent. Optimistic pathfinding: unknown cells treated as passable. No persistent wall/enemy memory between turns. Units processed in strict priority order (scouts → workers → miners → factory). Includes enemy factory threat avoidance: cooldown-gated danger zones prevent factory-factory collisions (mutual destruction loses tiebreaker). Used as the NN training base.
+- **`agent_v1.py`** — Rule-based agent with aggressive JUMP and BFS max_nodes=500. Optimistic pathfinding: unknown cells treated as passable. Units processed in strict priority order (scouts → workers → miners → factory). Includes enemy factory threat avoidance: cooldown-gated danger zones prevent factory-factory collisions (mutual destruction loses tiebreaker). Dynamic mine ROI with panic_steps-based thresholds.
 
 - **`agent_v2.py`** — Fog-aware rule-based agent with full persistent state (wall memory, enemy tracking, mine tracking). Uses conservative pathfinding: unknown cells are treated as walled (pessimistic BFS). Complex factory decision tree with stuck detection, diagonal exploration, and south-backtrack fallback. Non-factory units have attack, transfer, and mine-recharge behaviors. Also used as BC expert data source.
 
-- **`agent_v3.py`** — NN hybrid agent: factory decisions via a trained neural network (3-layer MLP, softmax over 9 actions), all other units use rule-based logic from `agent_v1.py`. Weights loaded from `nn_weights.py`. This is the submission agent template.
+- **`agent_v3.py`** — Enhanced rule-based agent (v1-based with improvements). Key differences from v1: (1) mine overhead fix: `stay_turns - 2` instead of `- 3` (miner at dist=1 spawns ON node); (2) worker build threshold raised to 600/800 (energy conservation for tiebreaker); (3) JUMP landing quality: prefer forward/lateral exits, only accept SOUTH-only landing when gap<=3. This is the active development agent.
 
 ### Submission Files
 
@@ -191,3 +191,14 @@ When using fixed opponents (train_v6.py), each opponent module has its own indep
 | **Total** | **279W-17L-4D** | **283W-15L-2D** | **+4W net** |
 
 Key: 2 enemy-factory-collision losses fixed (seeds 6344, 7988). 15 remaining losses are all scroll-out (mechanical ceiling: factory speed < late-game scroll speed).
+
+### agent_v1 vs Strong Opponents (100-game eval, after v3 improvements)
+
+| Opponent | v1 baseline | v3 (current) |
+|----------|------------|--------------|
+| random | 100W-0L-0D | 100W-0L-0D |
+| v15 (factory-only NN) | 94W-6L-0D | 95W-5L-0D |
+| v49 (all-units NN) | 90W-10L-0D | 90W-10L-0D |
+| v50 (all-units NN) | 95W-5L-0D | 97W-3L-0D |
+
+v3 improvements: mine overhead fix (3→2), worker build threshold (600/800), JUMP landing quality (prefer forward exits).

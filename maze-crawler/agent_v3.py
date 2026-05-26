@@ -175,7 +175,7 @@ def calc_mine_roi(mine_node, factory_c, factory_r, gap, step, obs, config):
     scroll_interval = max(float(end_int), start_int - (start_int - end_int) * progress)
     gap_at_arrival = gap + dist - turns_to_reach / scroll_interval
     stay_turns = gap_at_arrival - 2  # safety margin
-    effective_stay = max(0, stay_turns - 3)  # build + move + TRANSFORM overhead
+    effective_stay = max(0, stay_turns - 2)  # build + TRANSFORM overhead
     return effective_stay * 50
 
 
@@ -373,11 +373,17 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                 reserved.add((c, lr))
                 return
             else:
-                for d in ("NORTH", "EAST", "WEST", "SOUTH"):
+                # Prefer forward/lateral exits; avoid dead-end with only SOUTH
+                for d in ("NORTH", "EAST", "WEST"):
                     if can_go(obs, config, c, lr, d):
                         actions[uid] = "JUMP_NORTH"
                         reserved.add((c, lr))
                         return
+                # SOUTH-only: accept when low gap (any progress beats none)
+                if gap <= 3 and can_go(obs, config, c, lr, "SOUTH"):
+                    actions[uid] = "JUMP_NORTH"
+                    reserved.add((c, lr))
+                    return
 
         # Lateral jumps as fallback (not just emergency)
         for jd, (jdc, jdr) in (("JUMP_EAST", (2, 0)), ("JUMP_WEST", (-2, 0))):
@@ -577,12 +583,11 @@ def factory_action(uid, data, obs, config, actions, reserved, occupied, my_playe
                             reserved.add(spawn)
                             return
 
-                # Build Worker: normal early, rebuild mid/late, multiple allowed after step 400
+                # Build Worker: 200 cost, threshold varies by game phase
                 max_workers = 2 if turn > 400 else 1
                 if worker_count < max_workers:
-                    can_build = (energy >= 500 and (turn < 150 or energy >= 700))
-                    if not can_build and turn >= 100 and energy >= 400:
-                        can_build = True
+                    threshold = 800 if turn >= 150 else 600
+                    can_build = energy >= threshold
                     if can_build:
                         actions[uid] = "BUILD_WORKER"
                         reserved.add(spawn)
